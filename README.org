@@ -1,0 +1,115 @@
+#+title: Readme
+#+author: Dylan Beebe
+#+options: ^:nil
+#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/setup/html-theme-readtheorg.setup
+
+** General
+
+The purpose of this application is to provide a simple UI to handle vehicle fuel logs.
+
+** Requirements
+
+*** Language/SDK
+
+- Android application written in Kotlin.
+
+- Android 8.1 (Oreo), SDK 27
+
+*** Frameworks/Technology
+
+- Room (SQLite3 abstraction) database for offline data caching (future remote sync possibly with Firebase).
+
+- Jetpack Compose instead of views.
+
+*** Entities
+
+#+begin_src plantuml :result
+@startuml
+
+entity "user" as u {
+        ,* **String : userID (UUID)**
+        --
+}
+
+
+entity "vehicle" as v {
+        ,* **String : vehicleID (UUID)**
+        --
+        ,* String : nickname
+        String : make
+        String : model
+        Int : modelYear
+        String : plate
+        ,* **String : userFK**
+}
+
+
+entity "mileage" as m {
+        ,* **String : mileageID <<PK>> (UUID)**
+        --
+        ,* Datetime : dateAdded
+        ,* Double : latitude
+        ,* Double : longitude
+        ,* Double : odometerMiles
+        ,* Double : volumeGallons
+        ,* Boolean : isFullTank
+        ,* Enum : fuelType
+        ,* Double : totalDollars
+        String : diary
+        ,* Boolean : isExported
+        ,* **String : vehicleFK <<FK>>**
+        ..
+        <<unique>> (vehicleFK, dateAdded)
+}
+
+enum "fuelType" as ft {
+        REGULAR
+        PLUS
+        PREMIUM
+        E85
+        DIESEL
+}
+
+u ||..o{ v
+v ||..o{ m
+
+@enduml
+#+end_src
+
+#+RESULTS:
+[[file:/tmp/babel-IyP3KI/plantuml-rr2OGE.png]]
+
+- Primary key IDs use app-generated UUID instead of autoincrement.
+- Mileage entity enforces unique constraint on (vehicleFK + dateAdded) to prevent collisions due to delays, retries, etc.
+
+*** Entity Relationships
+
+- User /has many/ Vehicles
+
+- Vehicle /has many/ Mileage
+
+*** Functional Requirements
+
+- CRUD Vehicle
+
+- CRUD Mileage
+
+- UI notify user if location accuracy is poor or unavailable.
+
+- Compute "Price per Gallon" in UI when adding/viewing Mileage records.
+
+*** Non-functional Requirements
+
+- Illustrate core user workflows using PlantUML.
+
+- Version controlled using Git with public GitHub repo.
+
+- MIT license.
+
+- Publish on Play Store with modest convenience fee.
+
+*** Workflows
+
+
+
+[fn:1]: My thought is that lat/lon could be used to determine, agains public record, what business the fillup takes place at using a given lat/lon and date and time combination. Maybe a pipedream but it seems like it should be possible now at least.
