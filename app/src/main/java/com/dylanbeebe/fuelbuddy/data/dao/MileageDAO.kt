@@ -10,12 +10,12 @@ import com.dylanbeebe.fuelbuddy.data.model.Mileage
 @Dao
 interface MileageDAO : BaseDao<Mileage> {
     @Query("SELECT * FROM mileage")
-    fun getAll(): List<Mileage>
+    suspend fun getAll(): List<Mileage>
 
     @Query("SELECT mileageID, timestamp, totalDollars, vehicle FROM mileage")
-    fun getAllMinimal(): List<MileageMinimal>
+    suspend fun getAllMinimal(): List<MileageMinimal>
 
     @Transaction
     @Query("SELECT * FROM vehicle")
-    fun getVehicleAndAllMileages(): List<VehicleAndAllMileages>
+    suspend fun getVehicleAndAllMileages(): List<VehicleAndAllMileages>
 }

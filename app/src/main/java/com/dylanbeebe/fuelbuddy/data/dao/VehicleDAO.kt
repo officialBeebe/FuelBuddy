@@ -10,12 +10,12 @@ import com.dylanbeebe.fuelbuddy.data.dao.relations.UserAndAllVehicles
 @Dao
 interface VehicleDAO : BaseDao<Vehicle> {
     @Query("SELECT * FROM vehicle")
-    fun getAll(): List<Vehicle>
+    suspend fun getAll(): List<Vehicle>
 
     @Query("SELECT vehicleID, nickname, user FROM vehicle")
-    fun getAllMinimal(): List<VehicleMinimal>
+    suspend fun getAllMinimal(): List<VehicleMinimal>
 
     @Transaction
     @Query("SELECT * FROM User")
-    fun getUserAndAllVehicles(): List<UserAndAllVehicles>
+    suspend fun getUserAndAllVehicles(): List<UserAndAllVehicles>
 }

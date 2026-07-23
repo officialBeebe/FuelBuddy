@@ -10,6 +10,6 @@ import com.dylanbeebe.fuelbuddy.data.model.User
 @Dao
 interface UserDAO : BaseDao<User> {
     @Query("SELECT * FROM user")
-    fun getAll(): List<User>
+    suspend fun getAll(): List<User>
 
 }
