@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,15 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.room.Room
-import com.dylanbeebe.fuelbuddy.data.dao.UserDAO
-import com.dylanbeebe.fuelbuddy.data.model.User
-import com.dylanbeebe.fuelbuddy.data.repository.FuelBuddyDB
+import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import org.junit.Test
 import java.util.UUID
 
 class MainActivity : ComponentActivity() {
@@ -36,7 +30,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val userDAO = FuelBuddyDB.getDatabase(applicationContext).userDAO()
+//        val userDAO = FuelBuddyDB.getDatabase(applicationContext).userDAO()
 
         setContent {
             FuelBuddyTheme {
@@ -44,7 +38,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) { innerPadding ->
                     GreetingScreen(
-                        userDAO = userDAO,
+//                        userDAO = userDAO,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -74,21 +68,21 @@ fun Greeting(userID: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun GreetingScreen(userDAO: UserDAO, modifier: Modifier = Modifier) {
-    var userID by remember { mutableStateOf("Loading...") }
+fun GreetingScreen(modifier: Modifier = Modifier) {
+//    var userID by remember { mutableStateOf("Loading...") }
 
     // TODO: Remove this, create {User,Vehicle,Mileage}Repository and implement ViewModel for each.
-    LaunchedEffect(Unit) {
-        val existing = userDAO.getAll()
-        userID = if (existing.isEmpty()) {
-            val newUser = User(userID = UUID.randomUUID().toString())
-            userDAO.insert(newUser)
-            newUser.userID
-        } else {
-            existing.joinToString { it.userID }
-        }
-    }
-    Greeting(userID = userID, modifier = modifier)
+//    LaunchedEffect(Unit) {
+//        val existing = userDAO.getAll()
+//        userID = if (existing.isEmpty()) {
+//            val newUser = User(userID = UUID.randomUUID().toString())
+//            userDAO.insert(newUser)
+//            newUser.userID
+//        } else {
+//            existing.joinToString { it.userID }
+//        }
+//    }
+//    Greeting(userID = userID, modifier = modifier)
 }
 
 @Preview(
