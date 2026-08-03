@@ -105,7 +105,7 @@ v ||..o{ m
 
 - Version controlled using Git with public GitHub repo.
 
-- MIT license.
+- GPLv3 license.
 
 - Publish on Play Store with modest convenience fee.
 
