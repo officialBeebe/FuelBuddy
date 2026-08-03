@@ -64,6 +64,13 @@ entity "mileage" as m {
         <<unique>> (vehicle, timestamp)
 }
 
+entity "receipt" as mr {
+        ,* **String: receiptID <<PK>>**
+        --
+        ,* **String: filepath
+        ,* **String: mileage <<FK>>**
+}
+
 enum "fuelType" as ft {
         REGULAR
         PLUS
@@ -74,12 +81,10 @@ enum "fuelType" as ft {
 
 u ||..o{ v
 v ||..o{ m
+m ||..|| mr
 
 @enduml
 #+end_src
-
-#+RESULTS:
-[[file:/tmp/babel-GHkLVT/plantuml-siUEJ1.png]]
 
 - Mileage entity enforces unique constraint on (vehicleFK, timestamp) to prevent collisions due to delays, retries, etc.
 
@@ -94,6 +99,8 @@ v ||..o{ m
 - CRUD Vehicle
 
 - CRUD Mileage
+
+- CRUD MileageReceipt
 
 - UI notify user if location accuracy is poor or unavailable.
 
