@@ -2,20 +2,11 @@ package com.dylanbeebe.fuelbuddy.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.Transaction
-import com.dylanbeebe.fuelbuddy.data.dao.relations.MileageMinimal
-import com.dylanbeebe.fuelbuddy.data.dao.relations.VehicleAndAllMileages
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MileageDAO : BaseDao<Mileage> {
-    @Query("SELECT * FROM mileage")
-    suspend fun getAll(): List<Mileage>
-
-    @Query("SELECT mileageID, timestamp, totalDollars, vehicle FROM mileage")
-    suspend fun getAllMinimal(): List<MileageMinimal>
-
-    @Transaction
-    @Query("SELECT * FROM vehicle")
-    suspend fun getVehicleAndAllMileages(): List<VehicleAndAllMileages>
+    @Query("SELECT * FROM mileage WHERE vehicle = :vehicleID ORDER BY timestamp DESC")
+    fun getAllForVehicle(vehicleID: String): Flow<List<Mileage>>
 }
