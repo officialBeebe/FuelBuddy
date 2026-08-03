@@ -86,8 +86,6 @@ m ||..|| mr
 @enduml
 #+end_src
 
-[[erd.png]]
-
 - Mileage entity enforces unique constraint on (vehicleFK, timestamp) to prevent collisions due to delays, retries, etc.
 
 *** Entity Relationships
