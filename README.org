@@ -89,7 +89,8 @@ m ||..|| mr
 #+RESULTS:
 [[file:diagrams/erd.svg]]
 
-[[file:/diagrams/erd.svg]]
+[[file:./diagrams/erd.svg]]
+
 
 - Mileage entity enforces unique constraint on (vehicleFK, timestamp) to prevent collisions due to delays, retries, etc.
 
