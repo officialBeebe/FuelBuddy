@@ -1,0 +1,58 @@
+@startuml
+
+entity "user" as u {
+        * **String : userID <<PK>>**
+        --
+}
+
+
+entity "vehicle" as v {
+        * **String : vehicleID <<PK>>**
+        --
+        * String : nickname
+        String : make
+        String : model
+        Int : modelYear
+        String : plate
+        * **String : user <<FK>>**
+}
+
+
+entity "mileage" as m {
+        * **String : mileageID <<PK>>**
+        --
+        * String : timestamp
+        * Double : latitude
+        * Double : longitude
+        * Double : odometerMiles
+        * Double : volumeGallons
+        * Boolean : isFullTank
+        * Enum : fuelType
+        * Double : totalDollars
+        String : journal
+        * boolean : isExported
+        * **String : vehicle <<FK>>**
+        ..
+        <<unique>> (vehicle, timestamp)
+}
+
+entity "receipt" as mr {
+        * **String: receiptID <<PK>>**
+        --
+        * **String: filepath
+        * **String: mileage <<FK>>**
+}
+
+enum "fuelType" as ft {
+        REGULAR
+        PLUS
+        PREMIUM
+        E85
+        DIESEL
+}
+
+u ||..o{ v
+v ||..o{ m
+m ||..|| mr
+
+@enduml
