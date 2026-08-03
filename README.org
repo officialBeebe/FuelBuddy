@@ -3,66 +3,68 @@
 #+options: ^:nil
 #+SETUPFILE: https://fniessen.github.io/org-html-themes/org/setup/html-theme-readtheorg.setup
 
-** General
+* General
 
-*** Overview
+This application's purpose is to provide the individual user with a succint interface to record their vehicles' mileage logs and fiurther relay information such as fuel efficiency.
 
-This application's purpose is to provide the individual user with a succint interface to record their vehicles' mileage logs and further relay information such as fuel efficiency.
+* Design
 
-** Design
+** Requirements
 
-*** Requirements
-
-**** Functional Requirements
+*** Functional Requirements
 
 - CRUD Vehicle
 
 - CRUD Mileage
 
-- CRUD MileageReceipt
+- CRUD Mileage Attachment
 
-- UI notify user if location accuracy is poor or unavailable.
+- Notify user in new mileage UI if location accuracy is poor or unavailable.
 
-- Compute "Price per Gallon" in UI when adding/viewing Mileage records.
+- Notify user in new mileage UI if tank is not full.
 
-**** Non-functional Requirements
+- Compute "Price per Gallon" in mileage UI when viewing or creating new mileage records.
+
+- Compute and display average MPG in vehicle UI.
+
+- Render latest (non-exported) mileage records in vehicle UI indicating their non-exported status.
+
+- Export latest (non-exported) or custom range of mileage records.
+
+*** Non-functional Requirements
 
 - Illustrate core user workflows using PlantUML.
 
-- Version controlled using Git with public GitHub repo.
+- [[https://developer.android.com/topic/architecture][Maintainable app architecture]] utilizing [[https://developer.android.com/topic/architecture/recommendations][best practices and recommendations]].
 
-- GPLv3 license.
+- Version control source code using Git.
+
+- Publish source code in public GitHub repo under GPLv3 license.
+
+- Test-driven development of data layer comprising integration tests of CRUD and ViewModel state holders, and unit tests of core business logic (i.e. average MPG interpolation for non-full-tank mileage records).
 
 - Publish on Play Store with modest convenience fee.
 
-*** Language/SDK
+** Language/SDK
 
 - Android application written in Kotlin.
 
 - Android 8.1 (Oreo), SDK 27
 
-*** Frameworks/Technology
+** Frameworks/Technology
 
 - Room (SQLite3 abstraction) database for offline data caching (future remote sync possibly with Firebase).
 
 - Jetpack Compose instead of views.
 
-** Implementation
+* Implementation
 
-*** Models
-
-**** Entity Relationship Diagram
+** Entity Relationship Diagram
 
 [[file:./diagrams/erd.svg]]
 
-#+begin_src plantuml :file diagrams/erd.svg :tangle diagrams/erd.puml :exports none
+#+begin_src plantuml :file diagrams/erd.svg :tangle diagrams/erd.puml :exports none :results none
 @startuml
-
-entity "user" as u {
-        ,* **String : userID <<PK>>**
-        --
-}
-
 
 entity "vehicle" as v {
         ,* **String : vehicleID <<PK>>**
@@ -72,7 +74,6 @@ entity "vehicle" as v {
         String : model
         Int : modelYear
         String : plate
-        ,* **String : user <<FK>>**
 }
 
 
@@ -80,12 +81,13 @@ entity "mileage" as m {
         ,* **String : mileageID <<PK>>**
         --
         ,* String : timestamp
-        ,* Double : latitude
-        ,* Double : longitude
+        Double : latitude
+        Double : longitude
         ,* Double : odometerMiles
         ,* Double : volumeGallons
         ,* Boolean : isFullTank
         ,* Enum : fuelType
+        ,* Boolean : isTopTier
         ,* Double : totalDollars
         String : journal
         ,* boolean : isExported
@@ -94,11 +96,11 @@ entity "mileage" as m {
         <<unique>> (vehicle, timestamp)
 }
 
-entity "receipt" as mr {
-        ,* **String: receiptID <<PK>>**
+entity "mileage_attachment" as ma {
+        ,* **String : attachmentID <<PK>>**
         --
-        ,* **String: filepath
-        ,* **String: mileage <<FK>>**
+        ,* String : filepath
+        ,* **String : mileage <<FK>>**
 }
 
 enum "fuelType" as ft {
@@ -109,16 +111,36 @@ enum "fuelType" as ft {
         DIESEL
 }
 
-u ||..o{ v
 v ||..o{ m
-m ||..o| mr
+m ||..o{ ma
 
 @enduml
 #+end_src
 
+** Average MPG Interpolation
 
-*** Workflows
+:TODO: Determine what sort of interpolation algorithm shall be applied in this case.
 
+** Export Mileage Records
 
+The user must be able to quickly export the latest (non-exported) mileage records, and further select a custom date range of mileage records to export.
 
-[fn:1]: My thought is that lat/lon could be used to determine, agains public record, what business the fillup takes place at using a given lat/lon and date and time combination. Maybe a pipedream but it seems like it should be possible now at least.
+The user should have the options of exporting mileage records as plain CSV or JSON.
+
+The application delegates the mode of exportation to any system activity (i.e. email, SMS, etc).
+
+** Workflows
+
+* Future
+
+** User/Firebase/et al Sync
+
+To begin with, this is a device-local, single user application. If this app suddenly gains traction there would be cause to upgrade this model to a centralized cloud storage to keep user data safe during device migrations/local data loss.
+
+** Lat/Lon + Timestamp Business Delineations
+
+Currently the only way to infer what business the user filled up at would be to snap a picture of the receipt, or else. My thought is that lat/lon could be used to determine, agains public record, what business the fillup takes place at using a given lat/lon and date and time combination. Maybe a pipedream but it seems like it should be possible now at least.
+
+** Formatted PDF Mileage Exports
+
+The user would have the additional option of exportting a formatted report of either their latest (non-exported) mileage logs, or a custom date range. See [[https://github.com/officialBeebe/ChoreBuddy][Chore Buddy]] for formatting details.
