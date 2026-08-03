@@ -53,6 +53,6 @@ enum "fuelType" as ft {
 
 u ||..o{ v
 v ||..o{ m
-m ||..|| mr
+m ||..o| mr
 
 @enduml
