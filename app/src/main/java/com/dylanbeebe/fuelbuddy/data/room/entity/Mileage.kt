@@ -24,14 +24,14 @@ import java.util.UUID
 data class Mileage(
     @PrimaryKey val mileageID: String = UUID.randomUUID().toString(),
     val timestamp: String = LocalDateTime.now().toString(),
-    val latitude: Double?,
-    val longitude: Double?,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
     val odometerMiles: Double,
     val volumeGallons: Double,
     val isFullTank: Boolean,
     val fuelType: FuelType,
     val totalDollars: Double,
-    val journal: String?,
+    val journal: String? = null,
     val isExported: Boolean = false,
     val vehicle: String,
 )

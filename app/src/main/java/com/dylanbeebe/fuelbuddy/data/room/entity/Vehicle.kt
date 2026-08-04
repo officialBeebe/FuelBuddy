@@ -9,10 +9,10 @@ import java.util.UUID
 data class Vehicle(
     @PrimaryKey val vehicleID: String = UUID.randomUUID().toString(),
     val nickname: String,
-    val make: String?,
-    val model: String?,
-    val modelYear: Int?,
-    val plate: String?,
+    val make: String? = null,
+    val model: String? = null,
+    val modelYear: Int? = null,
+    val plate: String? = null,
 //    val user: String,
 )
 
