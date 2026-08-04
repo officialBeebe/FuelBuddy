@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface VehicleDAO : BaseDao<Vehicle> {
     @Query("SELECT * FROM vehicle")
-    fun getAll(): Flow<List<Vehicle>>
+    suspend fun getAll(): List<Vehicle>
 }

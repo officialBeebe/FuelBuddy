@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MileageDAO : BaseDao<Mileage> {
     @Query("SELECT * FROM mileage WHERE vehicle = :vehicleID ORDER BY timestamp DESC")
-    fun getAllForVehicle(vehicleID: String): Flow<List<Mileage>>
+    suspend fun getAllForVehicle(vehicleID: String): List<Mileage>
 }

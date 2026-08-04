@@ -4,15 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.dylanbeebe.fuelbuddy.data.dao.MileageDAO
-import com.dylanbeebe.fuelbuddy.data.dao.VehicleDAO
 import com.dylanbeebe.fuelbuddy.data.model.FuelType
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
-import com.dylanbeebe.fuelbuddy.data.room.repository.MileageRepository
-import com.dylanbeebe.fuelbuddy.data.room.repository.VehicleRepository
-import kotlinx.coroutines.flow.first
+import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
+import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
@@ -61,7 +58,7 @@ class SimpleEntityReadWriteTest {
         )
         vehicleRepository.insert(vehicle)
 
-        val vehicles = vehicleRepository.allVehicles.first()
+        val vehicles = vehicleRepository.allVehicles()
         assertThat(vehicles[0], equalTo(vehicle))
     }
 
@@ -90,7 +87,7 @@ class SimpleEntityReadWriteTest {
             vehicle = vehicle.vehicleID)
         mileageRepository.insert(mileage)
 
-        val vehicleMileages = mileageRepository.getAllForVehicle(vehicle.vehicleID).first()
+        val vehicleMileages = mileageRepository.getAllForVehicle(vehicle.vehicleID)
         assertThat(vehicleMileages[0], equalTo(mileage))
     }
 }
