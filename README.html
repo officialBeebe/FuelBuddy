@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-03 Mon 15:21 -->
+<!-- 2026-08-05 Wed 21:53 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Readme</title>
@@ -27,184 +27,234 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#org4e8de6b">1. General</a></li>
-<li><a href="#org00c3d73">2. Design</a>
+<li><a href="#org8fe65cc">1. General</a></li>
+<li><a href="#org0035848">2. Design</a>
 <ul>
-<li><a href="#orgf003e7d">2.1. Requirements</a>
+<li><a href="#org05e132f">2.1. Requirements</a>
 <ul>
-<li><a href="#orgfce24f5">2.1.1. Functional Requirements</a></li>
-<li><a href="#org164faa3">2.1.2. Non-functional Requirements</a></li>
+<li><a href="#org27a7717">2.1.1. Functional Requirements</a></li>
+<li><a href="#org7d0e89a">2.1.2. Non-functional Requirements</a></li>
 </ul>
 </li>
-<li><a href="#org7f2a242">2.2. Language/SDK</a></li>
-<li><a href="#org33afb42">2.3. Frameworks/Technology</a></li>
+<li><a href="#orgcc6beba">2.2. Language/SDK</a></li>
+<li><a href="#org4ca9ea0">2.3. Frameworks/Technology</a></li>
 </ul>
 </li>
-<li><a href="#orgb2dac0e">3. Implementation</a>
+<li><a href="#orgdb65425">3. Implementation</a>
 <ul>
-<li><a href="#org735e0dc">3.1. Entity Relationship Diagram</a></li>
-<li><a href="#org78c72a0">3.2. Average MPG Interpolation</a></li>
-<li><a href="#orga1810fe">3.3. Export Mileage Records</a></li>
-<li><a href="#orgfd1b632">3.4. Workflows</a></li>
+<li><a href="#org2804bd9">3.1. Entity Relationship Diagram</a></li>
+<li><a href="#orga4576c6">3.2. Timestamp</a></li>
+<li><a href="#org0bf5351">3.3. Location Accuracy Threshold</a></li>
+<li><a href="#org773f6c1">3.4. Average MPG</a></li>
+<li><a href="#orge41aee4">3.5. Export Mileage Records</a></li>
 </ul>
 </li>
-<li><a href="#org1b5a990">4. Future</a>
+<li><a href="#org62a3199">4. Screens</a>
 <ul>
-<li><a href="#orgc59f300">4.1. User/Firebase/et al Sync</a></li>
-<li><a href="#org0a69acf">4.2. Lat/Lon + Timestamp Business Delineations</a></li>
-<li><a href="#org60f1df5">4.3. Formatted PDF Mileage Exports</a></li>
+<li><a href="#org2d5ee7d">4.1. Home</a></li>
+<li><a href="#org8405ce5">4.2. Vehicle</a>
+<ul>
+<li><a href="#orgd03e178">4.2.1. Export Vehicle Mileage</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org87816b8">5. Future</a>
+<ul>
+<li><a href="#org894b211">5.1. User/Firebase/et al Sync</a></li>
+<li><a href="#org66493af">5.2. Lat/Lon + Timestamp Business Delineations</a></li>
+<li><a href="#org87eb9cf">5.3. Formatted PDF Mileage Exports</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org4e8de6b" class="outline-2">
-<h2 id="org4e8de6b"><span class="section-number-2">1.</span> General</h2>
+<div id="outline-container-org8fe65cc" class="outline-2">
+<h2 id="org8fe65cc"><span class="section-number-2">1.</span> General</h2>
 <div class="outline-text-2" id="text-1">
 <p>
-This application&rsquo;s purpose is to provide the individual user with a succint interface to record their vehicles&rsquo; mileage logs and fiurther relay information such as fuel efficiency.
+This application provides a succinct interface for recording vehicle mileage and reporting metrics such as fuel efficiency.
 </p>
 </div>
 </div>
-<div id="outline-container-org00c3d73" class="outline-2">
-<h2 id="org00c3d73"><span class="section-number-2">2.</span> Design</h2>
+<div id="outline-container-org0035848" class="outline-2">
+<h2 id="org0035848"><span class="section-number-2">2.</span> Design</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgf003e7d" class="outline-3">
-<h3 id="orgf003e7d"><span class="section-number-3">2.1.</span> Requirements</h3>
+<div id="outline-container-org05e132f" class="outline-3">
+<h3 id="org05e132f"><span class="section-number-3">2.1.</span> Requirements</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-orgfce24f5" class="outline-4">
-<h4 id="orgfce24f5"><span class="section-number-4">2.1.1.</span> Functional Requirements</h4>
+<div id="outline-container-org27a7717" class="outline-4">
+<h4 id="org27a7717"><span class="section-number-4">2.1.1.</span> Functional Requirements</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <ul class="org-ul">
-<li>CRUD Vehicle</li>
+<li>Add/view/edit/delete vehicles</li>
 
-<li>CRUD Mileage</li>
+<li>Add/view/edit/delete mileage records</li>
 
-<li>CRUD Mileage Attachment</li>
+<li>Add/view/delete mileage attachments</li>
 
-<li>Notify user in new mileage UI if location accuracy is poor or unavailable.</li>
+<li>Notify the user if location accuracy is poor or unavailable.</li>
 
-<li>Notify user in new mileage UI if tank is not full.</li>
+<li>Compute and display average MPG in the vehicle UI.</li>
 
-<li>Compute &ldquo;Price per Gallon&rdquo; in mileage UI when viewing or creating new mileage records.</li>
+<li>Compute and display price per gallon in the mileage UI.</li>
 
-<li>Compute and display average MPG in vehicle UI.</li>
+<li>Display a list of vehicles on the home screen.</li>
 
-<li>Render latest (non-exported) mileage records in vehicle UI indicating their non-exported status.</li>
+<li>Display mileage records in descending order on the vehicle screen.</li>
 
-<li>Export latest (non-exported) or custom range of mileage records.</li>
+<li>Render mileage records to indicate their non-exported status.</li>
+
+<li>Export mileage records.</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org164faa3" class="outline-4">
-<h4 id="org164faa3"><span class="section-number-4">2.1.2.</span> Non-functional Requirements</h4>
+<div id="outline-container-org7d0e89a" class="outline-4">
+<h4 id="org7d0e89a"><span class="section-number-4">2.1.2.</span> Non-functional Requirements</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <ul class="org-ul">
-<li>Illustrate core user workflows using PlantUML.</li>
+<li><a href="https://developer.android.com/topic/architecture">Maintainable application architecture</a> utilizing <a href="https://developer.android.com/topic/architecture/recommendations">Android best practices and recommendations</a>.</li>
 
-<li><a href="https://developer.android.com/topic/architecture">Maintainable app architecture</a> utilizing <a href="https://developer.android.com/topic/architecture/recommendations">best practices and recommendations</a>.</li>
+<li>Version-controlled source code using Git.</li>
 
-<li>Version control source code using Git.</li>
+<li>Public GitHub repository licensed under GPLv3.</li>
 
-<li>Publish source code in public GitHub repo under GPLv3 license.</li>
+<li>Test-driven development of the data layer, including integration tests for CRUD and ViewModel state holders, and unit tests for core business logic (e.g., average MPG calculation).</li>
 
-<li>Test-driven development of data layer comprising integration tests of CRUD and ViewModel state holders, and unit tests of core business logic (i.e. average MPG interpolation for non-full-tank mileage records).</li>
-
-<li>Publish on Play Store with modest convenience fee.</li>
+<li>Publish on the Play Store with a modest convenience fee.</li>
 </ul>
 </div>
 </div>
 </div>
-<div id="outline-container-org7f2a242" class="outline-3">
-<h3 id="org7f2a242"><span class="section-number-3">2.2.</span> Language/SDK</h3>
+<div id="outline-container-orgcc6beba" class="outline-3">
+<h3 id="orgcc6beba"><span class="section-number-3">2.2.</span> Language/SDK</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>Android application written in Kotlin.</li>
 
-<li>Android 8.1 (Oreo), SDK 27</li>
+<li>Minimum SDK: Android 8.1 (API 27).</li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org33afb42" class="outline-3">
-<h3 id="org33afb42"><span class="section-number-3">2.3.</span> Frameworks/Technology</h3>
+<div id="outline-container-org4ca9ea0" class="outline-3">
+<h3 id="org4ca9ea0"><span class="section-number-3">2.3.</span> Frameworks/Technology</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
-<li>Room (SQLite3 abstraction) database for offline data caching (future remote sync possibly with Firebase).</li>
+<li>Room (SQLite abstraction) for local persistence.</li>
 
-<li>Jetpack Compose instead of views.</li>
+<li>Jetpack Compose for UI.</li>
 </ul>
 </div>
 </div>
 </div>
-<div id="outline-container-orgb2dac0e" class="outline-2">
-<h2 id="orgb2dac0e"><span class="section-number-2">3.</span> Implementation</h2>
+<div id="outline-container-orgdb65425" class="outline-2">
+<h2 id="orgdb65425"><span class="section-number-2">3.</span> Implementation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org735e0dc" class="outline-3">
-<h3 id="org735e0dc"><span class="section-number-3">3.1.</span> Entity Relationship Diagram</h3>
+<div id="outline-container-org2804bd9" class="outline-3">
+<h3 id="org2804bd9"><span class="section-number-3">3.1.</span> Entity Relationship Diagram</h3>
 <div class="outline-text-3" id="text-3-1">
 
-<div id="orgbbce1fc" class="figure">
+<div id="org5d01f9b" class="figure">
 <p><img src="./diagrams/erd.svg" alt="erd.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org78c72a0" class="outline-3">
-<h3 id="org78c72a0"><span class="section-number-3">3.2.</span> Average MPG Interpolation</h3>
+<div id="outline-container-orga4576c6" class="outline-3">
+<h3 id="orga4576c6"><span class="section-number-3">3.2.</span> Timestamp</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
-:TODO: Determine what sort of interpolation algorithm shall be applied in this case.
+Timestamps are stored as UTC ISO-8601 (e.g., <code>Instant</code>) and further converted to <code>LocalDate</code> for display in the UI.
 </p>
 </div>
 </div>
-<div id="outline-container-orga1810fe" class="outline-3">
-<h3 id="orga1810fe"><span class="section-number-3">3.3.</span> Export Mileage Records</h3>
+<div id="outline-container-org0bf5351" class="outline-3">
+<h3 id="org0bf5351"><span class="section-number-3">3.3.</span> Location Accuracy Threshold</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
-The user must be able to quickly export the latest (non-exported) mileage records, and further select a custom date range of mileage records to export.
+An acceptable location accuracy threshold (meters via Location.getAccuracy()) will be defined, and validation will be implemented to flag records that exceed the threshold.
 </p>
-
+</div>
+</div>
+<div id="outline-container-org773f6c1" class="outline-3">
+<h3 id="org773f6c1"><span class="section-number-3">3.4.</span> Average MPG</h3>
+<div class="outline-text-3" id="text-3-4">
 <p>
-The user should have the options of exporting mileage records as plain CSV or JSON.
+The application queries the vehicle’s last 10 mileage records and computes average miles per gallon by dividing total miles driven by total gallons pumped. This is implemented in <code>VehicleDAO.selectAverageMilesPerGallonLNR</code> and exposed via <code>VehicleRepository.getAverageMPG</code>. Non-full-tank records are included as-is and <code>Vehicle.isFullTank</code> is retained as metadata, leaving options open for adjusting the algorithm.
 </p>
-
+</div>
+</div>
+<div id="outline-container-orge41aee4" class="outline-3">
+<h3 id="orge41aee4"><span class="section-number-3">3.5.</span> Export Mileage Records</h3>
+<div class="outline-text-3" id="text-3-5">
 <p>
-The application delegates the mode of exportation to any system activity (i.e. email, SMS, etc).
+The user taps the export button on the vehicle screen, selects either the latest (non-exported) records or a custom date range, and chooses CSV or JSON format. The application delegates export handling to a system activity (e.g., email, SMS). If all is successful, each record&rsquo;s <code>isExported</code> flag is set to <code>true</code>.
 </p>
 </div>
 </div>
-<div id="outline-container-orgfd1b632" class="outline-3">
-<h3 id="orgfd1b632"><span class="section-number-3">3.4.</span> Workflows</h3>
 </div>
-</div>
-<div id="outline-container-org1b5a990" class="outline-2">
-<h2 id="org1b5a990"><span class="section-number-2">4.</span> Future</h2>
+<div id="outline-container-org62a3199" class="outline-2">
+<h2 id="org62a3199"><span class="section-number-2">4.</span> Screens</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orgc59f300" class="outline-3">
-<h3 id="orgc59f300"><span class="section-number-3">4.1.</span> User/Firebase/et al Sync</h3>
-<div class="outline-text-3" id="text-4-1">
-<p>
-To begin with, this is a device-local, single user application. If this app suddenly gains traction there would be cause to upgrade this model to a centralized cloud storage to keep user data safe during device migrations/local data loss.
-</p>
+<div id="outline-container-org2d5ee7d" class="outline-3">
+<h3 id="org2d5ee7d"><span class="section-number-3">4.1.</span> Home</h3>
 </div>
-</div>
-<div id="outline-container-org0a69acf" class="outline-3">
-<h3 id="org0a69acf"><span class="section-number-3">4.2.</span> Lat/Lon + Timestamp Business Delineations</h3>
+
+<div id="outline-container-org8405ce5" class="outline-3">
+<h3 id="org8405ce5"><span class="section-number-3">4.2.</span> Vehicle</h3>
 <div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-orgd03e178" class="outline-4">
+<h4 id="orgd03e178"><span class="section-number-4">4.2.1.</span> Export Vehicle Mileage</h4>
+<div class="outline-text-4" id="text-4-2-1">
 <p>
-Currently the only way to infer what business the user filled up at would be to snap a picture of the receipt, or else. My thought is that lat/lon could be used to determine, agains public record, what business the fillup takes place at using a given lat/lon and date and time combination. Maybe a pipedream but it seems like it should be possible now at least.
+Exports are requested via form employing conditionally rendered fields.
+</p>
+
+
+<div id="orgaa76b74" class="figure">
+<p><img src="./diagrams/export-process.svg" alt="export-process.svg" class="org-svg" />
 </p>
 </div>
 </div>
-<div id="outline-container-org60f1df5" class="outline-3">
-<h3 id="org60f1df5"><span class="section-number-3">4.3.</span> Formatted PDF Mileage Exports</h3>
-<div class="outline-text-3" id="text-4-3">
+</div>
+</div>
+</div>
+<div id="outline-container-org87816b8" class="outline-2">
+<h2 id="org87816b8"><span class="section-number-2">5.</span> Future</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-org894b211" class="outline-3">
+<h3 id="org894b211"><span class="section-number-3">5.1.</span> User/Firebase/et al Sync</h3>
+<div class="outline-text-3" id="text-5-1">
 <p>
-The user would have the additional option of exportting a formatted report of either their latest (non-exported) mileage logs, or a custom date range. See <a href="https://github.com/officialBeebe/ChoreBuddy">Chore Buddy</a> for formatting details.
+Initially, this is a device-local, single-user application. Migration to centralized cloud storage would improve data durability across device changes and data loss scenarios.
+</p>
+</div>
+</div>
+<div id="outline-container-org66493af" class="outline-3">
+<h3 id="org66493af"><span class="section-number-3">5.2.</span> Lat/Lon + Timestamp Business Delineations</h3>
+<div class="outline-text-3" id="text-5-2">
+<p>
+Currently, the application cannot determine the business where a fill-up occurred. Potential enhancements include:
+</p>
+
+<ol class="org-ol">
+<li>With the latitude/longitude and timestamp of the mileage record, the system could resolve the business against a public dataset.</li>
+
+<li>Using Optical Character Recognition (OCR) and AI to extract business information from receipt images.</li>
+</ol>
+</div>
+</div>
+<div id="outline-container-org87eb9cf" class="outline-3">
+<h3 id="org87eb9cf"><span class="section-number-3">5.3.</span> Formatted PDF Mileage Exports</h3>
+<div class="outline-text-3" id="text-5-3">
+<p>
+Provide an option to export formatted PDF reports for either the latest (non-exported) mileage records or a custom date range. See <a href="https://github.com/officialBeebe/ChoreBuddy">Chore Buddy</a> for implementation reference.
 </p>
 </div>
 </div>
@@ -212,7 +262,7 @@ The user would have the additional option of exportting a formatted report of ei
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dylan Beebe</p>
-<p class="date">Created: 2026-08-03 Mon 15:21</p>
+<p class="date">Created: 2026-08-05 Wed 21:53</p>
 </div>
 </body>
 </html>

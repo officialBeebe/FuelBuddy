@@ -1,0 +1,46 @@
+@startuml
+
+<style>
+activityDiagram {
+        Linecolor purple
+        arrow {
+                FontColor black
+                LineColor black
+        }
+
+        .state * {
+                BackgroundColor lightblue
+        }
+
+        .export * {
+                BackgroundColor lightgreen
+        }
+
+        .cancel * {
+                BackgroundColor pink
+        }
+}
+</style>
+start
+
+if (Range?) then (Latest)
+else (Custom)
+        :Start Date (field visible); <<state>>
+        :End Date (field visible); <<state>>
+endif
+
+if (Datatype?) then (CSV)
+        :toCSV(); <<state>>
+else (JSON)
+        :toJSON(); <<state>>
+endif
+
+if (Export?) then (Export)
+        :Export; <<export>>
+else (Cancel)
+        :Cancel; <<cancel>>
+endif
+
+stop
+
+@enduml

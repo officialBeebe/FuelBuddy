@@ -1,61 +1,60 @@
 #+title: Readme
 #+author: Dylan Beebe
 #+options: ^:nil
-#+SETUPFILE: https://fniessen.github.io/org-html-themes/org/setup/html-theme-readtheorg.setup
+#+setupfile: https://fniessen.github.io/org-html-themes/org/setup/html-theme-readtheorg.setup
 
 * General
 
-This application's purpose is to provide the individual user with a succint interface to record their vehicles' mileage logs and fiurther relay information such as fuel efficiency.
+This application provides a succinct interface for recording vehicle mileage and reporting metrics such as fuel efficiency.
 
 * Design
 
 ** Requirements
 
 *** Functional Requirements
+- Add/view/edit/delete vehicles
 
-- CRUD Vehicle
+- Add/view/edit/delete mileage records
 
-- CRUD Mileage
+- Add/view/delete mileage attachments
 
-- CRUD Mileage Attachment
+- Notify the user if location accuracy is poor or unavailable.
 
-- Notify user in new mileage UI if location accuracy is poor or unavailable.
+- Compute and display average MPG in the vehicle UI.
 
-- Notify user in new mileage UI if tank is not full.
+- Compute and display price per gallon in the mileage UI.
 
-- Compute "Price per Gallon" in mileage UI when viewing or creating new mileage records.
+- Display a list of vehicles on the home screen.
 
-- Compute and display average MPG in vehicle UI.
+- Display mileage records in descending order on the vehicle screen.
 
-- Render latest (non-exported) mileage records in vehicle UI indicating their non-exported status.
+- Render mileage records to indicate their non-exported status.
 
-- Export latest (non-exported) or custom range of mileage records.
+- Export mileage records.
 
 *** Non-functional Requirements
 
-- Illustrate core user workflows using PlantUML.
+- [[https://developer.android.com/topic/architecture][Maintainable application architecture]] utilizing [[https://developer.android.com/topic/architecture/recommendations][Android best practices and recommendations]].
 
-- [[https://developer.android.com/topic/architecture][Maintainable app architecture]] utilizing [[https://developer.android.com/topic/architecture/recommendations][best practices and recommendations]].
+- Version-controlled source code using Git.
 
-- Version control source code using Git.
+- Public GitHub repository licensed under GPLv3.
 
-- Publish source code in public GitHub repo under GPLv3 license.
+- Test-driven development of the data layer, including integration tests for CRUD and ViewModel state holders, and unit tests for core business logic (e.g., average MPG calculation).
 
-- Test-driven development of data layer comprising integration tests of CRUD and ViewModel state holders, and unit tests of core business logic (i.e. average MPG interpolation for non-full-tank mileage records).
-
-- Publish on Play Store with modest convenience fee.
+- Publish on the Play Store with a modest convenience fee.
 
 ** Language/SDK
 
 - Android application written in Kotlin.
 
-- Android 8.1 (Oreo), SDK 27
+- Minimum SDK: Android 8.1 (API 27).
 
 ** Frameworks/Technology
 
-- Room (SQLite3 abstraction) database for offline data caching (future remote sync possibly with Firebase).
+- Room (SQLite abstraction) for local persistence.
 
-- Jetpack Compose instead of views.
+- Jetpack Compose for UI.
 
 * Implementation
 
@@ -65,6 +64,16 @@ This application's purpose is to provide the individual user with a succint inte
 
 #+begin_src plantuml :file diagrams/erd.svg :tangle diagrams/erd.puml :exports none :results none
 @startuml
+
+<style>
+classDiagram {
+        Linecolor purple
+        arrow {
+                FontColor black
+                LineColor black
+        }
+}
+</style>
 
 entity "vehicle" as v {
         ,* **String : vehicleID <<PK>>**
@@ -76,6 +85,12 @@ entity "vehicle" as v {
         String : plate
 }
 
+entity "vehicle_attachment" as va {
+    ,* **String : attachmentID <<PK>>**
+    --
+    ,* String : URI
+    ,* **String : vehicle <<FK>>**
+}
 
 entity "mileage" as m {
         ,* **String : mileageID <<PK>>**
@@ -83,6 +98,8 @@ entity "mileage" as m {
         ,* String : timestamp
         Double : latitude
         Double : longitude
+        Boolean : isAccurate
+        Double : locationDeviationMeters
         ,* Double : odometerMiles
         ,* Double : volumeGallons
         ,* Boolean : isFullTank
@@ -90,7 +107,7 @@ entity "mileage" as m {
         ,* Boolean : isTopTier
         ,* Double : totalDollars
         String : journal
-        ,* boolean : isExported
+        ,* Boolean : isExported
         ,* **String : vehicle <<FK>>**
         ..
         <<unique>> (vehicle, timestamp)
@@ -99,7 +116,7 @@ entity "mileage" as m {
 entity "mileage_attachment" as ma {
         ,* **String : attachmentID <<PK>>**
         --
-        ,* String : filepath
+        ,* String : URI
         ,* **String : mileage <<FK>>**
 }
 
@@ -111,36 +128,107 @@ enum "fuelType" as ft {
         DIESEL
 }
 
+v ||..o{ va
 v ||..o{ m
 m ||..o{ ma
+m ..> ft
 
 @enduml
 #+end_src
 
-** Average MPG Interpolation
+** Timestamp
 
-:TODO: Determine what sort of interpolation algorithm shall be applied in this case.
+Timestamps are stored as UTC ISO-8601 (e.g., ~Instant~) and further converted to ~LocalDate~ for display in the UI.
+
+** Location Accuracy Threshold
+
+An acceptable location accuracy threshold (meters via Location.getAccuracy()) will be defined, and validation will be implemented to flag records that exceed the threshold.
+
+** Average MPG
+
+The application queries the vehicle’s last 10 mileage records and computes average miles per gallon by dividing total miles driven by total gallons pumped. This is implemented in ~VehicleDAO.selectAverageMilesPerGallonLNR~ and exposed via ~VehicleRepository.getAverageMPG~. Non-full-tank records are included as-is and ~Vehicle.isFullTank~ is retained as metadata, leaving options open for adjusting the algorithm.
 
 ** Export Mileage Records
 
-The user must be able to quickly export the latest (non-exported) mileage records, and further select a custom date range of mileage records to export.
+The user taps the export button on the vehicle screen, selects either the latest (non-exported) records or a custom date range, and chooses CSV or JSON format. The application delegates export handling to a system activity (e.g., email, SMS). If all is successful, each record's ~isExported~ flag is set to ~true~.
 
-The user should have the options of exporting mileage records as plain CSV or JSON.
+* Screens
 
-The application delegates the mode of exportation to any system activity (i.e. email, SMS, etc).
+** Home
 
-** Workflows
+** Vehicle
+
+*** Export Vehicle Mileage
+
+Exports are requested via form employing conditionally rendered fields.
+
+#+begin_src plantuml :file diagrams/export-process.svg :tangle diagrams/export-process.puml :exports none :results none
+@startuml
+
+<style>
+activityDiagram {
+        Linecolor purple
+        arrow {
+                FontColor black
+                LineColor black
+        }
+
+        .state * {
+                BackgroundColor lightblue
+        }
+
+        .export * {
+                BackgroundColor lightgreen
+        }
+
+        .cancel * {
+                BackgroundColor pink
+        }
+}
+</style>
+start
+
+if (Range?) then (Latest)
+else (Custom)
+        :Start Date (field visible); <<state>>
+        :End Date (field visible); <<state>>
+endif
+
+if (Datatype?) then (CSV)
+        :toCSV(); <<state>>
+else (JSON)
+        :toJSON(); <<state>>
+endif
+
+if (Export?) then (Export)
+        :Export; <<export>>
+else (Cancel)
+        :Cancel; <<cancel>>
+endif
+
+stop
+
+@enduml
+
+#+end_src
+
+[[file:./diagrams/export-process.svg]]
+
 
 * Future
 
 ** User/Firebase/et al Sync
 
-To begin with, this is a device-local, single user application. If this app suddenly gains traction there would be cause to upgrade this model to a centralized cloud storage to keep user data safe during device migrations/local data loss.
+Initially, this is a device-local, single-user application. Migration to centralized cloud storage would improve data durability across device changes and data loss scenarios.
 
 ** Lat/Lon + Timestamp Business Delineations
 
-Currently the only way to infer what business the user filled up at would be to snap a picture of the receipt, or else. My thought is that lat/lon could be used to determine, agains public record, what business the fillup takes place at using a given lat/lon and date and time combination. Maybe a pipedream but it seems like it should be possible now at least.
+Currently, the application cannot determine the business where a fill-up occurred. Potential enhancements include:
+
+1. With the latitude/longitude and timestamp of the mileage record, the system could resolve the business against a public dataset.
+
+2. Using Optical Character Recognition (OCR) and AI to extract business information from receipt images.
 
 ** Formatted PDF Mileage Exports
 
-The user would have the additional option of exportting a formatted report of either their latest (non-exported) mileage logs, or a custom date range. See [[https://github.com/officialBeebe/ChoreBuddy][Chore Buddy]] for formatting details.
+Provide an option to export formatted PDF reports for either the latest (non-exported) mileage records or a custom date range. See [[https://github.com/officialBeebe/ChoreBuddy][Chore Buddy]] for implementation reference.

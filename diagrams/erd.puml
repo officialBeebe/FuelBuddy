@@ -1,5 +1,15 @@
 @startuml
 
+<style>
+classDiagram {
+        Linecolor purple
+        arrow {
+                FontColor black
+                LineColor black
+        }
+}
+</style>
+
 entity "vehicle" as v {
         * **String : vehicleID <<PK>>**
         --
@@ -10,6 +20,12 @@ entity "vehicle" as v {
         String : plate
 }
 
+entity "vehicle_attachment" as va {
+    * **String : attachmentID <<PK>>**
+    --
+    * String : URI
+    * **String : vehicle <<FK>>**
+}
 
 entity "mileage" as m {
         * **String : mileageID <<PK>>**
@@ -17,6 +33,8 @@ entity "mileage" as m {
         * String : timestamp
         Double : latitude
         Double : longitude
+        Boolean : isAccurate
+        Double : locationDeviationMeters
         * Double : odometerMiles
         * Double : volumeGallons
         * Boolean : isFullTank
@@ -24,7 +42,7 @@ entity "mileage" as m {
         * Boolean : isTopTier
         * Double : totalDollars
         String : journal
-        * boolean : isExported
+        * Boolean : isExported
         * **String : vehicle <<FK>>**
         ..
         <<unique>> (vehicle, timestamp)
@@ -33,7 +51,7 @@ entity "mileage" as m {
 entity "mileage_attachment" as ma {
         * **String : attachmentID <<PK>>**
         --
-        * String : filepath
+        * String : URI
         * **String : mileage <<FK>>**
 }
 
@@ -45,7 +63,9 @@ enum "fuelType" as ft {
         DIESEL
 }
 
+v ||..o{ va
 v ||..o{ m
 m ||..o{ ma
+m ..> ft
 
 @enduml
