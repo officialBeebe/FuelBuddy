@@ -21,20 +21,16 @@ entity "vehicle" as v {
 }
 
 entity "vehicle_attachment" as va {
-    * **String : attachmentID <<PK>>**
-    --
-    * String : URI
-    * **String : vehicle <<FK>>**
+        * **String : attachmentID <<PK>>**
+        --
+        * String : URI
+        * **String : vehicle <<FK>>**
 }
 
 entity "mileage" as m {
         * **String : mileageID <<PK>>**
         --
         * String : timestamp
-        Double : latitude
-        Double : longitude
-        Boolean : isAccurate
-        Double : locationDeviationMeters
         * Double : odometerMiles
         * Double : volumeGallons
         * Boolean : isFullTank
@@ -45,7 +41,17 @@ entity "mileage" as m {
         * Boolean : isExported
         * **String : vehicle <<FK>>**
         ..
+        ..
         <<unique>> (vehicle, timestamp)
+}
+
+entity "mileage_location" as ml {
+        * **String : locationID <<PK>>**
+        --
+        * **Float : accuracy**,
+        * **Double : latitude**,
+        * **Double : longitude**,
+        * **String : mileage <<FK>>**
 }
 
 entity "mileage_attachment" as ma {
@@ -65,7 +71,8 @@ enum "fuelType" as ft {
 
 v ||..o{ va
 v ||..o{ m
-m ||..o{ ma
 m ..> ft
+m ||..o{ ma
+m ||..o| ml
 
 @enduml

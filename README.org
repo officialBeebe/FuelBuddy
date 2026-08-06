@@ -86,20 +86,16 @@ entity "vehicle" as v {
 }
 
 entity "vehicle_attachment" as va {
-    ,* **String : attachmentID <<PK>>**
-    --
-    ,* String : URI
-    ,* **String : vehicle <<FK>>**
+        ,* **String : attachmentID <<PK>>**
+        --
+        ,* String : URI
+        ,* **String : vehicle <<FK>>**
 }
 
 entity "mileage" as m {
         ,* **String : mileageID <<PK>>**
         --
         ,* String : timestamp
-        Double : latitude
-        Double : longitude
-        Boolean : isAccurate
-        Double : locationDeviationMeters
         ,* Double : odometerMiles
         ,* Double : volumeGallons
         ,* Boolean : isFullTank
@@ -110,7 +106,17 @@ entity "mileage" as m {
         ,* Boolean : isExported
         ,* **String : vehicle <<FK>>**
         ..
+        ..
         <<unique>> (vehicle, timestamp)
+}
+
+entity "mileage_location" as ml {
+        ,* **String : locationID <<PK>>**
+        --
+        ,* **Float : accuracy**,
+        ,* **Double : latitude**,
+        ,* **Double : longitude**,
+        ,* **String : mileage <<FK>>**
 }
 
 entity "mileage_attachment" as ma {
@@ -130,19 +136,48 @@ enum "fuelType" as ft {
 
 v ||..o{ va
 v ||..o{ m
-m ||..o{ ma
 m ..> ft
+m ||..o{ ma
+m ||..o| ml
 
 @enduml
 #+end_src
 
 ** Timestamp
 
-Timestamps are stored as UTC ISO-8601 (e.g., ~Instant~) and further converted to ~LocalDate~ for display in the UI.
+Timestamps are stored an UTC ISO-8601 ~Instant~ and further converted to ~LocalDate~ for display in the UI.
 
-** Location Accuracy Threshold
+** Location
+
+Location data for mileage logs are persisted in a related table ~mileage_location~ assisted by Android's [[https://developer.android.com/reference/android/location/LocationManager][~LocationManager~]] which provides access to system location services, which returns a [[https://developer.android.com/reference/android/location/Location][~Location~]] object fit for our table.
+
+Forgoing time inclusion is a deliberate choice due in part of the fact that according the documentation, "no guarantee that different locations have times set from the same clock... providers may use any clock to set their time...". Majorly, **location settings are an elective feature and not required** for the application to function.
+
+** Attachments
+
+Attachments are stored at <<ATTACHMENT LOCATION>>.
+
+*** Photo Picker
+
+[[https://developer.android.com/training/data-storage/shared/photo-picker][Photo picker]] provides a browsable interface for the user to select an image from their device, using [[https://developer.android.com/reference/kotlin/androidx/activity/result/contract/ActivityResultContracts.PickVisualMedia][~PickVisualMedia~]] to [[https://developer.android.com/training/data-storage/shared/photo-picker#select-single-item][select a single media item]].
+
+Once the image has been selected, a copy is made to <ATTACHMENT LOCATION>> and its filepath is persisted in its respective ~vehicle_attachment~ or ~mileage_attachment~ table.
+
+*** Image capture.
+
+Image capture and storage is handled by [[https://developer.android.com/media/camera/camerax/take-photo][~ImageCapture~]] from Jetpack's CameraX library. On save, image filepaths will be persisted in their respective ~vehicle_attachment~ or ~mileage_attachment~ tables.
+
+**  Location Accuracy Threshold
 
 An acceptable location accuracy threshold (meters via Location.getAccuracy()) will be defined, and validation will be implemented to flag records that exceed the threshold.
+
+According to the [[https://developer.android.com/reference/android/location/Location][~Location~]] docs, horizontal accuracy radius is measured in float meters with a 68% chance the location is within that radius.
+
+#+begin_quote
+How small does our radius need to be, while residing outside of it ~30% of the time, for any system to infer which business a fuel-up occured at? Pretty far if we're on our way to El Paso, but not so if we're in town at the intersection of 2 or more stations...
+#+end_quote
+
+In any case, location accuracy is included in the ~mileage_location~ record, and the threshold is implemented in the business logic and not enforced at the data layer.
 
 ** Average MPG
 
@@ -158,7 +193,7 @@ The user taps the export button on the vehicle screen, selects either the latest
 
 ** Vehicle
 
-*** Export Vehicle Mileage
+*** Export Vehicle Mileage Form
 
 Exports are requested via form employing conditionally rendered fields.
 
