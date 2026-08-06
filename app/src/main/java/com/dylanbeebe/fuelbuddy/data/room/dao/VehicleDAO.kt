@@ -2,11 +2,17 @@ package com.dylanbeebe.fuelbuddy.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import kotlinx.coroutines.flow.Flow
+import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
+import com.dylanbeebe.fuelbuddy.data.room.relation.VehicleWithAttachments
 
 @Dao
 interface VehicleDAO : BaseDao<Vehicle> {
     @Query("SELECT * FROM vehicle")
-    suspend fun getAll(): List<Vehicle>
+    suspend fun getAll(): List<MinimalVehicle>
+
+    @Transaction
+    @Query("SELECT * FROM vehicle WHERE vehicleID = :vehicleID")
+    suspend fun getVehicleWithAttachments(vehicleID: String): VehicleWithAttachments
 }

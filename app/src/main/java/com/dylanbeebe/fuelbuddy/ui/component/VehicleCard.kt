@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.components
+package com.dylanbeebe.fuelbuddy.ui.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Column
@@ -15,11 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 
 @Composable
-fun VehicleCard(vehicle: Vehicle, modifier: Modifier = Modifier.fillMaxWidth()) {
+fun VehicleCard(vehicle: MinimalVehicle, modifier: Modifier = Modifier.fillMaxWidth()) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(24.dp),
@@ -54,11 +55,9 @@ fun VehicleCard(vehicle: Vehicle, modifier: Modifier = Modifier.fillMaxWidth()) 
 fun VehicleCardPreview() {
     FuelBuddyTheme {
         VehicleCard(
-            vehicle = Vehicle(
+            vehicle = MinimalVehicle(
+                vehicleID = "1234-5678-xxxx-oooo",
                 nickname = "The Kia",
-                make = "Kia",
-                model = "Sorento",
-                modelYear = 2015,
                 plate = "ih8dis1",
             )
         )

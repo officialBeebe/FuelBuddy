@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.screens
+package com.dylanbeebe.fuelbuddy.ui.screen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
@@ -15,9 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.VehicleViewModel
-import com.dylanbeebe.fuelbuddy.ui.components.VehicleCard
+import com.dylanbeebe.fuelbuddy.ui.component.VehicleCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 
 @Composable
@@ -47,7 +48,7 @@ fun HomeScreen(viewModel: VehicleViewModel = viewModel(), modifier: Modifier = M
 
 @Composable
 fun HomeScreenContent(
-    vehicles: List<Vehicle>,
+    vehicles: List<MinimalVehicle>,
     onAddVehicle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -77,17 +78,13 @@ fun HomeScreenPreview() {
     FuelBuddyTheme {
         HomeScreenContent(
             vehicles = listOf(
-                Vehicle(
+                MinimalVehicle(
+                    vehicleID = "1234-5678-xxxx-oooo",
                     nickname = "The Kia",
-                    make = "Kia",
-                    model = "Sorento",
-                    modelYear = 2015,
                     plate = "ih8dis1",),
-                Vehicle(
+                MinimalVehicle(
+                    vehicleID = "oooo-xxxx-8765-4321",
                     nickname = "Coop",
-                    make = "BMW",
-                    model = "Mini Cooper",
-                    modelYear = 2016,
                     plate = "i<3dis1",),
             ),
             // TODO: Implement `AddVehicleScreen.kt`

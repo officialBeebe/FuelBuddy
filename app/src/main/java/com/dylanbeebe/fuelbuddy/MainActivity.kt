@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import com.dylanbeebe.fuelbuddy.ui.screens.HomeScreen
+import com.dylanbeebe.fuelbuddy.ui.screen.HomeScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
