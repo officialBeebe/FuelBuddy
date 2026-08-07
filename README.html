@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2026-08-06 Thu 13:09 -->
+<!-- 2026-08-06 Thu 22:43 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Readme</title>
@@ -27,73 +27,74 @@
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents" role="doc-toc">
 <ul>
-<li><a href="#orga42577a">1. General</a></li>
-<li><a href="#orge117923">2. Design</a>
+<li><a href="#orgfcf9fcf">1. General</a></li>
+<li><a href="#org7e05886">2. Design</a>
 <ul>
-<li><a href="#orgd62bea1">2.1. Requirements</a>
+<li><a href="#org8dfce40">2.1. Requirements</a>
 <ul>
-<li><a href="#orgeb241ef">2.1.1. Functional Requirements</a></li>
-<li><a href="#org44ce943">2.1.2. Non-functional Requirements</a></li>
+<li><a href="#org2b2502b">2.1.1. Functional Requirements</a></li>
+<li><a href="#org743e7a0">2.1.2. Non-functional Requirements</a></li>
 </ul>
 </li>
-<li><a href="#org761168f">2.2. Language/SDK</a></li>
-<li><a href="#org4f080b5">2.3. Frameworks/Technology</a></li>
+<li><a href="#orge6223c7">2.2. Language/SDK</a></li>
+<li><a href="#orgc9c6dec">2.3. Frameworks/Technology</a></li>
 </ul>
 </li>
-<li><a href="#org332a663">3. Implementation</a>
+<li><a href="#org0ef4e6f">3. Implementation</a>
 <ul>
-<li><a href="#org025f116">3.1. Entity Relationship Diagram</a></li>
-<li><a href="#orga3302d7">3.2. Timestamp</a></li>
-<li><a href="#org575e914">3.3. Location</a></li>
-<li><a href="#org17b813c">3.4. Attachments</a>
+<li><a href="#orge8b2f4c">3.1. Entity Relationship Diagram</a></li>
+<li><a href="#orgac06c4a">3.2. Timestamp</a></li>
+<li><a href="#orge4ef8cf">3.3. Location</a></li>
+<li><a href="#org7b6d567">3.4. Attachments</a>
 <ul>
-<li><a href="#orgd75f564">3.4.1. Photo Picker</a></li>
-<li><a href="#orgcc6dc4b">3.4.2. Image capture.</a></li>
+<li><a href="#org68b20b0">3.4.1. Photo Picker</a></li>
+<li><a href="#org86b6e3c">3.4.2. Image capture.</a></li>
+<li><a href="#org385f4c2">3.4.3. Open Media File</a></li>
 </ul>
 </li>
-<li><a href="#org0b7261d">3.5. Location Accuracy Threshold</a></li>
-<li><a href="#orgd6146be">3.6. Average MPG</a></li>
-<li><a href="#org67bf19f">3.7. Export Mileage Records</a></li>
+<li><a href="#org9646e70">3.5. Location Accuracy Threshold</a></li>
+<li><a href="#org10757e9">3.6. Average MPG</a></li>
+<li><a href="#org828d693">3.7. Export Mileage Records</a></li>
 </ul>
 </li>
-<li><a href="#org536e0d8">4. Screens</a>
+<li><a href="#org22ddaf8">4. Screens</a>
 <ul>
-<li><a href="#orge686f23">4.1. Home</a></li>
-<li><a href="#org1f808a4">4.2. Vehicle</a>
+<li><a href="#org5ad8398">4.1. Home</a></li>
+<li><a href="#org1253c86">4.2. Vehicle</a>
 <ul>
-<li><a href="#org8104c4d">4.2.1. Export Vehicle Mileage Form</a></li>
+<li><a href="#org11b5d21">4.2.1. Export Vehicle Mileage Form</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#org362e908">5. Future</a>
+<li><a href="#org2b00fc3">5. Future</a>
 <ul>
-<li><a href="#orgbf5e754">5.1. User/Firebase/et al Sync</a></li>
-<li><a href="#org1f3f85e">5.2. Lat/Lon + Timestamp Business Delineations</a></li>
-<li><a href="#orgf8d45e0">5.3. Formatted PDF Mileage Exports</a></li>
+<li><a href="#org7dbfe72">5.1. User/Firebase/et al Sync</a></li>
+<li><a href="#orgd7a9722">5.2. Lat/Lon + Timestamp Business Delineations</a></li>
+<li><a href="#org57c1a9c">5.3. Formatted PDF Mileage Exports</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orga42577a" class="outline-2">
-<h2 id="orga42577a"><span class="section-number-2">1.</span> General</h2>
+<div id="outline-container-orgfcf9fcf" class="outline-2">
+<h2 id="orgfcf9fcf"><span class="section-number-2">1.</span> General</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 This application provides a succinct interface for recording vehicle mileage and reporting metrics such as fuel efficiency.
 </p>
 </div>
 </div>
-<div id="outline-container-orge117923" class="outline-2">
-<h2 id="orge117923"><span class="section-number-2">2.</span> Design</h2>
+<div id="outline-container-org7e05886" class="outline-2">
+<h2 id="org7e05886"><span class="section-number-2">2.</span> Design</h2>
 <div class="outline-text-2" id="text-2">
 </div>
-<div id="outline-container-orgd62bea1" class="outline-3">
-<h3 id="orgd62bea1"><span class="section-number-3">2.1.</span> Requirements</h3>
+<div id="outline-container-org8dfce40" class="outline-3">
+<h3 id="org8dfce40"><span class="section-number-3">2.1.</span> Requirements</h3>
 <div class="outline-text-3" id="text-2-1">
 </div>
-<div id="outline-container-orgeb241ef" class="outline-4">
-<h4 id="orgeb241ef"><span class="section-number-4">2.1.1.</span> Functional Requirements</h4>
+<div id="outline-container-org2b2502b" class="outline-4">
+<h4 id="org2b2502b"><span class="section-number-4">2.1.1.</span> Functional Requirements</h4>
 <div class="outline-text-4" id="text-2-1-1">
 <ul class="org-ul">
 <li>Add/view/edit/delete vehicles</li>
@@ -118,8 +119,8 @@ This application provides a succinct interface for recording vehicle mileage and
 </ul>
 </div>
 </div>
-<div id="outline-container-org44ce943" class="outline-4">
-<h4 id="org44ce943"><span class="section-number-4">2.1.2.</span> Non-functional Requirements</h4>
+<div id="outline-container-org743e7a0" class="outline-4">
+<h4 id="org743e7a0"><span class="section-number-4">2.1.2.</span> Non-functional Requirements</h4>
 <div class="outline-text-4" id="text-2-1-2">
 <ul class="org-ul">
 <li><a href="https://developer.android.com/topic/architecture">Maintainable application architecture</a> utilizing <a href="https://developer.android.com/topic/architecture/recommendations">Android best practices and recommendations</a>.</li>
@@ -135,8 +136,8 @@ This application provides a succinct interface for recording vehicle mileage and
 </div>
 </div>
 </div>
-<div id="outline-container-org761168f" class="outline-3">
-<h3 id="org761168f"><span class="section-number-3">2.2.</span> Language/SDK</h3>
+<div id="outline-container-orge6223c7" class="outline-3">
+<h3 id="orge6223c7"><span class="section-number-3">2.2.</span> Language/SDK</h3>
 <div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
 <li>Android application written in Kotlin.</li>
@@ -145,8 +146,8 @@ This application provides a succinct interface for recording vehicle mileage and
 </ul>
 </div>
 </div>
-<div id="outline-container-org4f080b5" class="outline-3">
-<h3 id="org4f080b5"><span class="section-number-3">2.3.</span> Frameworks/Technology</h3>
+<div id="outline-container-orgc9c6dec" class="outline-3">
+<h3 id="orgc9c6dec"><span class="section-number-3">2.3.</span> Frameworks/Technology</h3>
 <div class="outline-text-3" id="text-2-3">
 <ul class="org-ul">
 <li>Room (SQLite abstraction) for local persistence.</li>
@@ -156,30 +157,30 @@ This application provides a succinct interface for recording vehicle mileage and
 </div>
 </div>
 </div>
-<div id="outline-container-org332a663" class="outline-2">
-<h2 id="org332a663"><span class="section-number-2">3.</span> Implementation</h2>
+<div id="outline-container-org0ef4e6f" class="outline-2">
+<h2 id="org0ef4e6f"><span class="section-number-2">3.</span> Implementation</h2>
 <div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org025f116" class="outline-3">
-<h3 id="org025f116"><span class="section-number-3">3.1.</span> Entity Relationship Diagram</h3>
+<div id="outline-container-orge8b2f4c" class="outline-3">
+<h3 id="orge8b2f4c"><span class="section-number-3">3.1.</span> Entity Relationship Diagram</h3>
 <div class="outline-text-3" id="text-3-1">
 
-<div id="org08cdc2a" class="figure">
+<div id="org577a2c4" class="figure">
 <p><img src="./diagrams/erd.svg" alt="erd.svg" class="org-svg" />
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-orga3302d7" class="outline-3">
-<h3 id="orga3302d7"><span class="section-number-3">3.2.</span> Timestamp</h3>
+<div id="outline-container-orgac06c4a" class="outline-3">
+<h3 id="orgac06c4a"><span class="section-number-3">3.2.</span> Timestamp</h3>
 <div class="outline-text-3" id="text-3-2">
 <p>
 Timestamps are stored an UTC ISO-8601 <code>Instant</code> and further converted to <code>LocalDate</code> for display in the UI.
 </p>
 </div>
 </div>
-<div id="outline-container-org575e914" class="outline-3">
-<h3 id="org575e914"><span class="section-number-3">3.3.</span> Location</h3>
+<div id="outline-container-orge4ef8cf" class="outline-3">
+<h3 id="orge4ef8cf"><span class="section-number-3">3.3.</span> Location</h3>
 <div class="outline-text-3" id="text-3-3">
 <p>
 Location data for mileage logs are persisted in a related table <code>mileage_location</code> assisted by Android&rsquo;s <a href="https://developer.android.com/reference/android/location/LocationManager"><code>LocationManager</code></a> which provides access to system location services, which returns a <a href="https://developer.android.com/reference/android/location/Location"><code>Location</code></a> object fit for our table.
@@ -190,15 +191,15 @@ Forgoing time inclusion is a deliberate choice due in part of the fact that acco
 </p>
 </div>
 </div>
-<div id="outline-container-org17b813c" class="outline-3">
-<h3 id="org17b813c"><span class="section-number-3">3.4.</span> Attachments</h3>
+<div id="outline-container-org7b6d567" class="outline-3">
+<h3 id="org7b6d567"><span class="section-number-3">3.4.</span> Attachments</h3>
 <div class="outline-text-3" id="text-3-4">
 <p>
-Attachments are stored at <a id="org9ec6544"></a>.
+All attachments are stored in shared storage and therefore accessable by other apps and <b><b>not deleted</b></b> when the app is uninstalled.
 </p>
 </div>
-<div id="outline-container-orgd75f564" class="outline-4">
-<h4 id="orgd75f564"><span class="section-number-4">3.4.1.</span> Photo Picker</h4>
+<div id="outline-container-org68b20b0" class="outline-4">
+<h4 id="org68b20b0"><span class="section-number-4">3.4.1.</span> Photo Picker</h4>
 <div class="outline-text-4" id="text-3-4-1">
 <p>
 <a href="https://developer.android.com/training/data-storage/shared/photo-picker">Photo picker</a> provides a browsable interface for the user to select an image from their device, using <a href="https://developer.android.com/reference/kotlin/androidx/activity/result/contract/ActivityResultContracts.PickVisualMedia"><code>PickVisualMedia</code></a> to <a href="https://developer.android.com/training/data-storage/shared/photo-picker#select-single-item">select a single media item</a>.
@@ -209,17 +210,25 @@ Once the image has been selected, a copy is made to &lt;ATTACHMENT LOCATION&gt;&
 </p>
 </div>
 </div>
-<div id="outline-container-orgcc6dc4b" class="outline-4">
-<h4 id="orgcc6dc4b"><span class="section-number-4">3.4.2.</span> Image capture.</h4>
+<div id="outline-container-org86b6e3c" class="outline-4">
+<h4 id="org86b6e3c"><span class="section-number-4">3.4.2.</span> Image capture.</h4>
 <div class="outline-text-4" id="text-3-4-2">
 <p>
-Image capture and storage is handled by <a href="https://developer.android.com/media/camera/camerax/take-photo"><code>ImageCapture</code></a> from Jetpack&rsquo;s CameraX library. On save, image filepaths will be persisted in their respective <code>vehicle_attachment</code> or <code>mileage_attachment</code> tables.
+<a href="https://developer.android.com/media/camera/camerax">CameraX</a> and its <a href="https://developer.android.com/media/camera/camerax/take-photo"><code>ImageCapture</code></a> method. See codepen
+</p>
+</div>
+</div>
+<div id="outline-container-org385f4c2" class="outline-4">
+<h4 id="org385f4c2"><span class="section-number-4">3.4.3.</span> Open Media File</h4>
+<div class="outline-text-4" id="text-3-4-3">
+<p>
+Whether an vehicle or mileage attachment is identified using the photo picker or image capture methods, the resulting file&rsquo;s URI is persisted the <code>vehicle_attachment</code> or <code>mile_attachment</code> tables. When the app needs to display either type of attachment, it&rsquo;s just a matter of retrieving the image from the app-specific media store using <a href="https://developer.android.com/training/data-storage/shared/media#direct-file-paths">direct file paths</a> and the <a href="https://developer.android.com/reference/android/provider/MediaStore"><code>MediaStore</code></a> API.
 </p>
 </div>
 </div>
 </div>
-<div id="outline-container-org0b7261d" class="outline-3">
-<h3 id="org0b7261d"><span class="section-number-3">3.5.</span> Location Accuracy Threshold</h3>
+<div id="outline-container-org9646e70" class="outline-3">
+<h3 id="org9646e70"><span class="section-number-3">3.5.</span> Location Accuracy Threshold</h3>
 <div class="outline-text-3" id="text-3-5">
 <p>
 An acceptable location accuracy threshold (meters via Location.getAccuracy()) will be defined, and validation will be implemented to flag records that exceed the threshold.
@@ -240,16 +249,16 @@ In any case, location accuracy is included in the <code>mileage_location</code> 
 </p>
 </div>
 </div>
-<div id="outline-container-orgd6146be" class="outline-3">
-<h3 id="orgd6146be"><span class="section-number-3">3.6.</span> Average MPG</h3>
+<div id="outline-container-org10757e9" class="outline-3">
+<h3 id="org10757e9"><span class="section-number-3">3.6.</span> Average MPG</h3>
 <div class="outline-text-3" id="text-3-6">
 <p>
 The application queries the vehicle’s last 10 mileage records and computes average miles per gallon by dividing total miles driven by total gallons pumped. This is implemented in <code>VehicleDAO.selectAverageMilesPerGallonLNR</code> and exposed via <code>VehicleRepository.getAverageMPG</code>. Non-full-tank records are included as-is and <code>Vehicle.isFullTank</code> is retained as metadata, leaving options open for adjusting the algorithm.
 </p>
 </div>
 </div>
-<div id="outline-container-org67bf19f" class="outline-3">
-<h3 id="org67bf19f"><span class="section-number-3">3.7.</span> Export Mileage Records</h3>
+<div id="outline-container-org828d693" class="outline-3">
+<h3 id="org828d693"><span class="section-number-3">3.7.</span> Export Mileage Records</h3>
 <div class="outline-text-3" id="text-3-7">
 <p>
 The user taps the export button on the vehicle screen, selects either the latest (non-exported) records or a custom date range, and chooses CSV or JSON format. The application delegates export handling to a system activity (e.g., email, SMS). If all is successful, each record&rsquo;s <code>isExported</code> flag is set to <code>true</code>.
@@ -257,27 +266,27 @@ The user taps the export button on the vehicle screen, selects either the latest
 </div>
 </div>
 </div>
-<div id="outline-container-org536e0d8" class="outline-2">
-<h2 id="org536e0d8"><span class="section-number-2">4.</span> Screens</h2>
+<div id="outline-container-org22ddaf8" class="outline-2">
+<h2 id="org22ddaf8"><span class="section-number-2">4.</span> Screens</h2>
 <div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-orge686f23" class="outline-3">
-<h3 id="orge686f23"><span class="section-number-3">4.1.</span> Home</h3>
+<div id="outline-container-org5ad8398" class="outline-3">
+<h3 id="org5ad8398"><span class="section-number-3">4.1.</span> Home</h3>
 </div>
 
-<div id="outline-container-org1f808a4" class="outline-3">
-<h3 id="org1f808a4"><span class="section-number-3">4.2.</span> Vehicle</h3>
+<div id="outline-container-org1253c86" class="outline-3">
+<h3 id="org1253c86"><span class="section-number-3">4.2.</span> Vehicle</h3>
 <div class="outline-text-3" id="text-4-2">
 </div>
-<div id="outline-container-org8104c4d" class="outline-4">
-<h4 id="org8104c4d"><span class="section-number-4">4.2.1.</span> Export Vehicle Mileage Form</h4>
+<div id="outline-container-org11b5d21" class="outline-4">
+<h4 id="org11b5d21"><span class="section-number-4">4.2.1.</span> Export Vehicle Mileage Form</h4>
 <div class="outline-text-4" id="text-4-2-1">
 <p>
 Exports are requested via form employing conditionally rendered fields.
 </p>
 
 
-<div id="orga163ddd" class="figure">
+<div id="org9ef717a" class="figure">
 <p><img src="./diagrams/export-process.svg" alt="export-process.svg" class="org-svg" />
 </p>
 </div>
@@ -285,20 +294,20 @@ Exports are requested via form employing conditionally rendered fields.
 </div>
 </div>
 </div>
-<div id="outline-container-org362e908" class="outline-2">
-<h2 id="org362e908"><span class="section-number-2">5.</span> Future</h2>
+<div id="outline-container-org2b00fc3" class="outline-2">
+<h2 id="org2b00fc3"><span class="section-number-2">5.</span> Future</h2>
 <div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-orgbf5e754" class="outline-3">
-<h3 id="orgbf5e754"><span class="section-number-3">5.1.</span> User/Firebase/et al Sync</h3>
+<div id="outline-container-org7dbfe72" class="outline-3">
+<h3 id="org7dbfe72"><span class="section-number-3">5.1.</span> User/Firebase/et al Sync</h3>
 <div class="outline-text-3" id="text-5-1">
 <p>
 Initially, this is a device-local, single-user application. Migration to centralized cloud storage would improve data durability across device changes and data loss scenarios.
 </p>
 </div>
 </div>
-<div id="outline-container-org1f3f85e" class="outline-3">
-<h3 id="org1f3f85e"><span class="section-number-3">5.2.</span> Lat/Lon + Timestamp Business Delineations</h3>
+<div id="outline-container-orgd7a9722" class="outline-3">
+<h3 id="orgd7a9722"><span class="section-number-3">5.2.</span> Lat/Lon + Timestamp Business Delineations</h3>
 <div class="outline-text-3" id="text-5-2">
 <p>
 Currently, the application cannot determine the business where a fill-up occurred. Potential enhancements include:
@@ -311,8 +320,8 @@ Currently, the application cannot determine the business where a fill-up occurre
 </ol>
 </div>
 </div>
-<div id="outline-container-orgf8d45e0" class="outline-3">
-<h3 id="orgf8d45e0"><span class="section-number-3">5.3.</span> Formatted PDF Mileage Exports</h3>
+<div id="outline-container-org57c1a9c" class="outline-3">
+<h3 id="org57c1a9c"><span class="section-number-3">5.3.</span> Formatted PDF Mileage Exports</h3>
 <div class="outline-text-3" id="text-5-3">
 <p>
 Provide an option to export formatted PDF reports for either the latest (non-exported) mileage records or a custom date range. See <a href="https://github.com/officialBeebe/ChoreBuddy">Chore Buddy</a> for implementation reference.
@@ -323,7 +332,7 @@ Provide an option to export formatted PDF reports for either the latest (non-exp
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Dylan Beebe</p>
-<p class="date">Created: 2026-08-06 Thu 13:09</p>
+<p class="date">Created: 2026-08-06 Thu 22:43</p>
 </div>
 </body>
 </html>

@@ -155,7 +155,7 @@ Forgoing time inclusion is a deliberate choice due in part of the fact that acco
 
 ** Attachments
 
-Attachments are stored at <<ATTACHMENT LOCATION>>.
+All attachments are stored in shared storage and therefore accessable by other apps and **not deleted** when the app is uninstalled.
 
 *** Photo Picker
 
@@ -165,7 +165,11 @@ Once the image has been selected, a copy is made to <ATTACHMENT LOCATION>> and i
 
 *** Image capture.
 
-Image capture and storage is handled by [[https://developer.android.com/media/camera/camerax/take-photo][~ImageCapture~]] from Jetpack's CameraX library. On save, image filepaths will be persisted in their respective ~vehicle_attachment~ or ~mileage_attachment~ tables.
+[[https://developer.android.com/media/camera/camerax][CameraX]] and its [[https://developer.android.com/media/camera/camerax/take-photo][~ImageCapture~]] method. See codepen
+
+*** Open Media File
+
+Whether an vehicle or mileage attachment is identified using the photo picker or image capture methods, the resulting file's URI is persisted the ~vehicle_attachment~ or ~mile_attachment~ tables. When the app needs to display either type of attachment, it's just a matter of retrieving the image from the app-specific media store using [[https://developer.android.com/training/data-storage/shared/media#direct-file-paths][direct file paths]] and the [[https://developer.android.com/reference/android/provider/MediaStore][~MediaStore~]] API.
 
 **  Location Accuracy Threshold
 
