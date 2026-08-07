@@ -65,4 +65,7 @@ dependencies {
 
     // Compose Integration with ViewModels
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+
+    // Icons
+    implementation("androidx.compose.material:material-icons-core:1.7.8")
 }

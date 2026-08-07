@@ -1,6 +1,7 @@
 package com.dylanbeebe.fuelbuddy.ui
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
@@ -47,5 +48,13 @@ class VehicleViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(allVehicles = vehicleRepository.allVehicles()) }
         }
+    }
+}
+
+class VehicleViewModelFactory(
+    private val vehicleRepository: VehicleRepository,
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return VehicleViewModel(vehicleRepository) as T
     }
 }
