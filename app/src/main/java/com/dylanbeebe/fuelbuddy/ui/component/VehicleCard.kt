@@ -30,10 +30,11 @@ fun VehicleCard(
     onClick: (MinimalVehicle) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    VehicleSelectionCard(
-        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-        onClick = { onClick(minimalVehicle) },
+    OutlinedCard(
         modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        onClick = { onClick(minimalVehicle) },
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row {

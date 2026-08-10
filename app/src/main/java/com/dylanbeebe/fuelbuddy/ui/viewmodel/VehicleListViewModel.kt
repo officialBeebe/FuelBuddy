@@ -1,11 +1,10 @@
-package com.dylanbeebe.fuelbuddy.ui
+package com.dylanbeebe.fuelbuddy.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.data.room.relation.VehicleWithAttachments
+import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,29 +12,19 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-// ViewModel
-data class VehicleUIState(
+// --- List screen ---
+data class VehicleListUiState(
     val allVehicles: List<MinimalVehicle> = emptyList(),
-    val currentVehicle: VehicleWithAttachments? = null,
 )
 
-class VehicleViewModel(
+class VehicleListViewModel(
     private val vehicleRepository: VehicleRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(VehicleUIState())
-    val uiState: StateFlow<VehicleUIState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(VehicleListUiState())
+    val uiState: StateFlow<VehicleListUiState> = _uiState.asStateFlow()
 
-    init {
-        refresh()
-    }
-
-    fun selectVehicle(vehicleId: String) {
-        viewModelScope.launch {
-            val vehicle = vehicleRepository.getVehicleWithAttachments(vehicleId)
-            _uiState.update { it.copy(currentVehicle = vehicle) }
-        }
-    }
+    init { refresh() }
 
     fun addVehicle(vehicle: Vehicle) {
         viewModelScope.launch {
@@ -51,10 +40,9 @@ class VehicleViewModel(
     }
 }
 
-class VehicleViewModelFactory(
+class VehicleListViewModelFactory(
     private val vehicleRepository: VehicleRepository,
 ) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return VehicleViewModel(vehicleRepository) as T
-    }
+    override fun <T : ViewModel> create(modelClass: Class<T>): T =
+        VehicleListViewModel(vehicleRepository) as T
 }
