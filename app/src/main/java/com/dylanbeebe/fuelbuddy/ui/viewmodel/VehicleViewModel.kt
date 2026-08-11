@@ -10,7 +10,6 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dylanbeebe.fuelbuddy.FuelBuddyApplication
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.data.room.relation.VehicleWithAttachments
 import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
 import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
@@ -21,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class VehicleListUiState(
-    val allVehicles: List<MinimalVehicle> = emptyList(),
+    val allVehicles: List<Vehicle> = emptyList(),
 )
 
 

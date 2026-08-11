@@ -20,21 +20,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalMileage
+import com.dylanbeebe.fuelbuddy.data.model.FuelType
+import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 import java.time.Instant
+import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 
 @Composable
 fun MileageCard(
-    minimalMileage: MinimalMileage,
-    onClick: (MinimalMileage) -> Unit,
+    mileage: Mileage,
+    onClick: (Mileage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedCard(
-        onClick = { onClick(minimalMileage) },
+        onClick = { onClick(mileage) },
         colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         modifier = modifier
             .fillMaxWidth()
@@ -44,7 +46,7 @@ fun MileageCard(
             modifier = Modifier.padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            val date = Instant.parse(minimalMileage.timestamp)
+            val date = Instant.parse(mileage.timestamp)
                 .atZone(ZoneId.systemDefault())
                 .toLocalDate()
 
@@ -57,24 +59,24 @@ fun MileageCard(
                     text = date.format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
                     style = MaterialTheme.typography.headlineSmall
                 )
-                ExportStatusBadge(isExported = minimalMileage.isExported)
+                ExportStatusBadge(isExported = mileage.isExported)
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Text(
-                    text = "%.1f mi".format(minimalMileage.odometerMiles),
+                    text = "%.1f mi".format(mileage.odometerMiles),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.alignByBaseline()
                 )
                 Text(
-                    text = "%.2f gal".format(minimalMileage.volumeGallons),
+                    text = "%.2f gal".format(mileage.volumeGallons),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.alignByBaseline()
                 )
                 Text(
-                    text = "$%.2f".format(minimalMileage.totalDollars),
+                    text = "$%.2f".format(mileage.totalDollars),
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.alignByBaseline()
                 )
@@ -120,13 +122,18 @@ private fun ExportStatusBadge(isExported: Boolean) {
 fun MileageCardPreview() {
     FuelBuddyTheme {
         MileageCard(
-            minimalMileage = MinimalMileage(
-                mileageID = "1234-5678-xxxx-oooo",
+            mileage = Mileage(
+                mileageID = "test-mileage-uuid",
                 timestamp = Instant.now().toString(),
-                odometerMiles = 69420.0,
-                volumeGallons = 13.0,
-                totalDollars = 45.5,
-                isExported = false
+                latitude = -48.876667,
+                longitude = -123.393333,
+                odometerMiles = 80085.69,
+                volumeGallons = 6.9,
+                isFullTank = true,
+                fuelType = FuelType.REGULAR,
+                totalDollars = 19.84,
+                journal = "This is a test mileage log.",
+                vehicle = "test-vehicle-uuid"
             ),
             onClick = {}
         )

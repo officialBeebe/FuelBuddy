@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalMileage
-import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
 import com.dylanbeebe.fuelbuddy.data.model.FuelType
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
@@ -62,9 +60,12 @@ class SimpleEntityReadWriteTest {
 
         val vehicles = vehicleRepository.allVehicles()
 
-        val expectedVehicle = MinimalVehicle(
+        val expectedVehicle = Vehicle(
             vehicleID = vehicle.vehicleID,
             nickname = vehicle.nickname,
+            make = vehicle.make,
+            model = vehicle.model,
+            modelYear = vehicle.modelYear,
             plate = vehicle.plate
         )
         assertThat(vehicles[0], equalTo(expectedVehicle))
@@ -97,12 +98,18 @@ class SimpleEntityReadWriteTest {
 
         val vehicleMileages = mileageRepository.getAllForVehicle(vehicle.vehicleID)
 
-        val expectedMileage = MinimalMileage(
+        val expectedMileage = Mileage(
             mileageID = mileage.mileageID,
             timestamp = mileage.timestamp,
+            latitude = mileage.latitude,
+            longitude = mileage.longitude,
             odometerMiles = mileage.odometerMiles,
             volumeGallons = mileage.volumeGallons,
+            isFullTank = mileage.isFullTank,
+            fuelType = mileage.fuelType,
             totalDollars = mileage.totalDollars,
+            journal = mileage.journal,
+            vehicle = mileage.vehicle,
             isExported = mileage.isExported
         )
         assertThat(vehicleMileages[0], equalTo(expectedMileage))
