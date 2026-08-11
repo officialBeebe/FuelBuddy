@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalMileage
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
