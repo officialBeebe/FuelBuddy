@@ -14,40 +14,34 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dylanbeebe.fuelbuddy.data.room.dao.MinimalVehicle
-import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
 import com.dylanbeebe.fuelbuddy.ui.component.AddVehicleCard
 import com.dylanbeebe.fuelbuddy.ui.component.VehicleCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleListViewModel
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleListViewModelFactory
+import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleViewModel
 
 @Composable
 fun HomeScreen(
-    vehicleRepository: VehicleRepository, viewModel: VehicleListViewModel = viewModel(
-        factory = VehicleListViewModelFactory (
-            vehicleRepository
-        )
-    ), modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onVehicleClick: (String) -> Unit,
+    onAddVehicle: () -> Unit
 ) {
     /**
      * Home Screen
      *
      * Being the first screen the user encounters, the user's inventory of vehicles is displayed here along with button to add a new one.
      *
-     * Example:
-     *  _________________
-     * /                 \
-     * |    { The Kia }  |
-     * |                 |
-     * |     { Coop }    |
-     * |                 |
-     * | { Add Vehicle } |
-     * \_________________/
+     * Being the top-level composable, the NavController is hosted here.
      * */
-    val uiState by viewModel.uiState.collectAsState()
+    val vehicleViewModel: VehicleViewModel = viewModel(
+        factory = VehicleViewModel.Factory
+    )
+
+    val uiState by vehicleViewModel.uiState.collectAsState()
+
     HomeScreenContent(
         minimalVehicles = uiState.allVehicles,
-        onAddVehicle = { /* TODO: navController.navigate("vehicle_add"} */ },
+        onAddVehicle = onAddVehicle,
+        onVehicleClick = onVehicleClick,
         modifier = modifier
     )
 }
@@ -55,6 +49,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     minimalVehicles: List<MinimalVehicle>,
+    onVehicleClick: (String) -> Unit,
     onAddVehicle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -67,7 +62,8 @@ fun HomeScreenContent(
         items(minimalVehicles, key = { it.vehicleID }) { minimalVehicle ->
             VehicleCard(
                 minimalVehicle = minimalVehicle,
-                onClick = { /* TODO: navController.navigate("vehicle_edit/${it.vehicleID}") */ })
+                onClick = { onVehicleClick(it.vehicleID) }
+            )
         }
         item {
             AddVehicleCard(onAddVehicle)
@@ -95,8 +91,9 @@ fun HomeScreenPreview() {
                     plate = "i<3dis1",
                 ),
             ),
-            // TODO: Implement `AddVehicleScreen.kt`
-            onAddVehicle = {},
+            onVehicleClick = {},
+            onAddVehicle = {}
         )
+        // TODO: Implement `EditVehicleScreen.kt`
     }
 }

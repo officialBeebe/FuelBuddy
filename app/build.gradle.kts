@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+
+    // Kotlin serialization plugin for type safe routes and navigation arguments
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -69,4 +72,14 @@ dependencies {
 
     // Icons
     implementation("androidx.compose.material:material-icons-core:1.7.8")
+
+    /* Jetpack Compose Navigation dependencies
+    * - Navigation integration
+    * - Testing navigation
+    * - Serialization for routes
+    * */
+    val nav_version = "2.9.8"
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+    androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 }

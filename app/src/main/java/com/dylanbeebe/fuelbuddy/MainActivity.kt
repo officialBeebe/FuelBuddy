@@ -1,22 +1,17 @@
 package com.dylanbeebe.fuelbuddy
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import androidx.room.Room
-import androidx.test.core.app.ApplicationProvider
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
-import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
+import com.dylanbeebe.fuelbuddy.ui.navigation.NavGraph
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import com.dylanbeebe.fuelbuddy.ui.screen.HomeScreen
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -24,12 +19,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val db = Room.databaseBuilder(
-            applicationContext,
-            FuelBuddyDB::class.java,
-            "fuelbuddy-db"
-        ).build()
-        val vehicleRepository = VehicleRepository(db.vehicleDAO())
+        val app = application as FuelBuddyApplication
+        val vehicleRepository = app.vehicleRepository
 
         // DEBUG
         lifecycleScope.launch {
@@ -57,18 +48,14 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             FuelBuddyTheme {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize()
-                ) { innerPadding ->
-                    HomeScreen(
-                        vehicleRepository,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    NavGraph()
                 }
             }
         }
     }
 }
-
-// TODO: Implement Compose Navigation: https://developer.android.com/guide/navigation
 
