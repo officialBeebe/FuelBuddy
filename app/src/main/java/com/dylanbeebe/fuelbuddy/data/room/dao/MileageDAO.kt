@@ -12,7 +12,7 @@ interface MileageDAO : BaseDao<Mileage> {
 //    @Query("SELECT * FROM mileage WHERE vehicle = :vehicleID ORDER BY timestamp DESC")
 //    suspend fun getAllForVehicle(vehicleID: String): List<Mileage>
 //
-    @Query("SELECT mileageID, timestamp, odometerMiles FROM mileage WHERE vehicle = :vehicleID ORDER BY timestamp DESC")
+    @Query("SELECT mileageID, timestamp, odometerMiles, volumeGallons, totalDollars, isExported FROM mileage WHERE vehicle = :vehicleID ORDER BY timestamp DESC")
     suspend fun getAllForVehicle(vehicleID: String): List<MinimalMileage>
 
     @Transaction

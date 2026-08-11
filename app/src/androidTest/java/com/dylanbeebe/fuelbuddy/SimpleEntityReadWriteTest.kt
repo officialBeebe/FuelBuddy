@@ -100,7 +100,10 @@ class SimpleEntityReadWriteTest {
         val expectedMileage = MinimalMileage(
             mileageID = mileage.mileageID,
             timestamp = mileage.timestamp,
-            odometerMiles = mileage.odometerMiles
+            odometerMiles = mileage.odometerMiles,
+            volumeGallons = mileage.volumeGallons,
+            totalDollars = mileage.totalDollars,
+            isExported = mileage.isExported
         )
         assertThat(vehicleMileages[0], equalTo(expectedMileage))
     }
