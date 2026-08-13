@@ -8,17 +8,16 @@ object Home
 
 // Displays vehicle mileage logs.
 @Serializable
-object Vehicle
+data class Vehicle(val vehicleID: String)
 
 // Vehicle details for new and existing vehicles.
 @Serializable
-object EditVehicle
+data class EditVehicle(val vehicleID: String? = null)
 
 // Mileage details for new and existing mileage logs.
 @Serializable
-object EditMileage
+data class EditMileage(val vehicleID: String, val mileageID: String? = null)
 
 // Mileage export form.
 @Serializable
-object ExportMileage
-
+data class ExportMileage(val vehicleID: String)

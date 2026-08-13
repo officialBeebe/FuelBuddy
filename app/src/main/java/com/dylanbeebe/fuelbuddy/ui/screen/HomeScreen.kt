@@ -2,9 +2,18 @@ package com.dylanbeebe.fuelbuddy.ui.screen
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -14,10 +23,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.ui.component.AddVehicleCard
+import com.dylanbeebe.fuelbuddy.ui.component.AddVehicleButton
 import com.dylanbeebe.fuelbuddy.ui.component.VehicleCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleViewModel
+import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleListViewModel
 
 @Composable
 fun HomeScreen(
@@ -28,18 +37,18 @@ fun HomeScreen(
     /**
      * Home Screen
      *
-     * Being the first screen the user encounters, the user's inventory of vehicles is displayed here along with button to add a new one.
+     * Vehicle inventory is displayed here.
      *
-     * Being the top-level composable, the NavController is hosted here.
+     * Add new vehicle.
+     *
+     * Can launch vehicle screen by tapping on vehicle card.
      * */
-    val vehicleViewModel: VehicleViewModel = viewModel(
-        factory = VehicleViewModel.Factory
+    val vehicleListViewModel: VehicleListViewModel = viewModel(
+        factory = VehicleListViewModel.Factory
     )
-
-    val uiState by vehicleViewModel.uiState.collectAsState()
-
+    val uiState by vehicleListViewModel.uiState.collectAsState()
     HomeScreenContent(
-        vehicles = uiState.allVehicles,
+        vehicles = uiState,
         onAddVehicle = onAddVehicle,
         onVehicleClick = onVehicleClick,
         modifier = modifier
@@ -53,23 +62,38 @@ fun HomeScreenContent(
     onAddVehicle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp, 48.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        items(vehicles, key = { it.vehicleID }) { vehicle ->
-            VehicleCard(
-                vehicle = vehicle,
-                onClick = { onVehicleClick(it.vehicleID) }
-            )
+        Surface(
+            color = MaterialTheme.colorScheme.surfaceVariant,
+            shape = RoundedCornerShape(16.dp),
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+        ) {
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                items(vehicles, key = { it.vehicleID }) { vehicle ->
+                    VehicleCard(
+                        vehicle = vehicle,
+                        onClick = { onVehicleClick(it.vehicleID) }
+                    )
+                }
+            }
         }
-        item {
-            AddVehicleCard(onAddVehicle)
-        }
+        AddVehicleButton(onAddVehicle)
     }
 }
+
 
 @Preview(
     showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "HomeScreenPreviewDark"

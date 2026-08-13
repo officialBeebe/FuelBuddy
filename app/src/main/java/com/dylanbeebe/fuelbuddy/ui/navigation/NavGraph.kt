@@ -18,11 +18,21 @@ fun NavGraph() {
         navController = navController,
         startDestination = Home,
     ) {
-        composable<Home> { HomeScreen(
-            onVehicleClick = { vehicleID: String -> navController.navigate(Vehicle)},
-            onAddVehicle = { navController.navigate(EditVehicle)}
-        ) }
-        composable<Vehicle> { VehicleScreen() }
+        composable<Home> {
+            HomeScreen(
+                onVehicleClick = { vehicleID: String -> navController.navigate(Vehicle(vehicleID)) },
+                onAddVehicle = { navController.navigate(EditVehicle) }
+            )
+        }
+        composable<Vehicle> {
+            VehicleScreen(
+                onEditVehicle = { vehicleID: String -> navController.navigate(EditVehicle(vehicleID)) },
+                onEditMileage = { mileageID: String -> navController.navigate(EditMileage(mileageID)) },
+                onHome = { navController.navigate(Home) },
+                onAddMileage = { vehicleID: String -> navController.navigate(EditMileage(vehicleID = vehicleID)) },
+                onExportMileage = { vehicleID: String -> navController.navigate(ExportMileage(vehicleID)) }
+            )
+        }
         composable<EditVehicle> { EditVehicleScreen() }
         composable<EditMileage> { EditMileageScreen() }
         composable<ExportMileage> { ExportMileageScreen() }

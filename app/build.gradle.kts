@@ -10,7 +10,7 @@ plugins {
 android {
     namespace = "com.dylanbeebe.fuelbuddy"
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
@@ -44,6 +44,7 @@ android {
 dependencies {
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
@@ -51,6 +52,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.savedstate)
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.media3.test.utils)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -82,4 +85,10 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+// Coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+// Icons
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
 }

@@ -10,6 +10,7 @@ import com.dylanbeebe.fuelbuddy.data.model.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
 import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
 import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.After
@@ -36,8 +37,8 @@ class SimpleEntityReadWriteTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context, FuelBuddyDB::class.java).build()
-        vehicleRepository = VehicleRepository(db.vehicleDAO())
-        mileageRepository = MileageRepository(db.mileageDAO())
+        vehicleRepository = VehicleRepository(db.vehicleDAO(), db.vehicleAttachmentDAO())
+        mileageRepository = MileageRepository(db.mileageDAO(), db.mileageAttachmentDAO())
     }
 
     @After
@@ -58,7 +59,7 @@ class SimpleEntityReadWriteTest {
         )
         vehicleRepository.insert(vehicle)
 
-        val vehicles = vehicleRepository.allVehicles()
+        val vehicles = vehicleRepository.observeAllVehicles().first()
 
         val expectedVehicle = Vehicle(
             vehicleID = vehicle.vehicleID,
@@ -96,7 +97,7 @@ class SimpleEntityReadWriteTest {
             vehicle = vehicle.vehicleID)
         mileageRepository.insert(mileage).toString()
 
-        val vehicleMileages = mileageRepository.getAllForVehicle(vehicle.vehicleID)
+        val vehicleMileages = mileageRepository.observeAllForVehicle(vehicle.vehicleID).first()
 
         val expectedMileage = Mileage(
             mileageID = mileage.mileageID,

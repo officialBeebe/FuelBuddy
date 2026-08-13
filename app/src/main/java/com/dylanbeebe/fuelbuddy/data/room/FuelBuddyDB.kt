@@ -8,13 +8,17 @@ import com.dylanbeebe.fuelbuddy.data.dao.MileageDAO
 import com.dylanbeebe.fuelbuddy.data.dao.VehicleDAO
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.dao.MileageAttachmentDAO
+import com.dylanbeebe.fuelbuddy.data.room.dao.VehicleAttachmentDAO
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
 
 @Database(entities = [Vehicle::class, VehicleAttachment::class, Mileage::class, MileageAttachment::class], version = 1)
 abstract class FuelBuddyDB : RoomDatabase() {
     abstract fun vehicleDAO(): VehicleDAO
+    abstract fun vehicleAttachmentDAO(): VehicleAttachmentDAO
     abstract fun mileageDAO(): MileageDAO
+    abstract fun mileageAttachmentDAO(): MileageAttachmentDAO
 
     companion object {
         @Volatile

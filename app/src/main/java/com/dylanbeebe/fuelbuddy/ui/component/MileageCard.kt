@@ -1,6 +1,7 @@
 package com.dylanbeebe.fuelbuddy.ui.component
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,9 +9,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
@@ -18,11 +22,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.data.model.FuelType
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
+import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -32,15 +42,16 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun MileageCard(
     mileage: Mileage,
+    isExpanded: Boolean,
+    attachments: List<MileageAttachment>,
     onClick: (Mileage) -> Unit,
     modifier: Modifier = Modifier
 ) {
     OutlinedCard(
-        onClick = { onClick(mileage) },
-        colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .fillMaxWidth(),
+        colors = CardDefaults.outlinedCardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        onClick = { onClick(mileage) }
     ) {
         Column(
             modifier = Modifier.padding(16.dp),
@@ -63,23 +74,71 @@ fun MileageCard(
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                Text(
-                    text = "%.1f mi".format(mileage.odometerMiles),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.alignByBaseline()
-                )
-                Text(
-                    text = "%.2f gal".format(mileage.volumeGallons),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.alignByBaseline()
-                )
-                Text(
+               Text(
                     text = "$%.2f".format(mileage.totalDollars),
                     style = MaterialTheme.typography.bodyLarge,
+                   modifier = Modifier.alignByBaseline()
+                )
+                Text(
+                    text = if (mileage.isFullTank) "Full tank" else "Partial fill",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.alignByBaseline()
                 )
+            }
+
+            if (isExpanded) {
+                HorizontalDivider()
+                Text(
+                    text = "Odometer: %.1f mi".format(mileage.odometerMiles),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+                Text(
+                    text = "Gallons: %.2f gal".format(mileage.volumeGallons),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+
+                Text(
+                    text = "Fuel type: ${mileage.fuelType.name.lowercase().replaceFirstChar { it.uppercase() }}",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                if (mileage.latitude != null && mileage.longitude != null) {
+                    Text(
+                        text = "Location: %.4f, %.4f".format(mileage.latitude, mileage.longitude),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+                mileage.journal?.let { journal ->
+                    Text(
+                        text = journal,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+
+                if (attachments.isNotEmpty()) {
+                    HorizontalDivider()
+                    Text(
+                        text = "Attachments",
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                    attachments.forEach { attachment ->
+//                        Text(
+//                            text = attachment.URI,
+//                            style = MaterialTheme.typography.bodySmall,
+//                            color = MaterialTheme.colorScheme.onSurfaceVariant
+//                        )
+                        AsyncImage(
+                            model = File(attachment.URI),
+                            contentDescription = null,
+                            placeholder = rememberVectorPainter(Icons.Filled.Image),
+                            error = rememberVectorPainter(Icons.Filled.BrokenImage),
+                            modifier = Modifier.size(80.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -120,22 +179,35 @@ private fun ExportStatusBadge(isExported: Boolean) {
 @Preview(showBackground = true, widthDp = 320)
 @Composable
 fun MileageCardPreview() {
+    val testMileage = Mileage(
+        mileageID = "test-mileage-uuid",
+        timestamp = Instant.now().toString(),
+        latitude = -48.876667,
+        longitude = -123.393333,
+        odometerMiles = 80085.69,
+        volumeGallons = 6.9,
+        isFullTank = true,
+        fuelType = FuelType.REGULAR,
+        totalDollars = 19.84,
+        journal = "This is a test mileage log.",
+        vehicle = "test-vehicle-uuid"
+    )
     FuelBuddyTheme {
-        MileageCard(
-            mileage = Mileage(
-                mileageID = "test-mileage-uuid",
-                timestamp = Instant.now().toString(),
-                latitude = -48.876667,
-                longitude = -123.393333,
-                odometerMiles = 80085.69,
-                volumeGallons = 6.9,
-                isFullTank = true,
-                fuelType = FuelType.REGULAR,
-                totalDollars = 19.84,
-                journal = "This is a test mileage log.",
-                vehicle = "test-vehicle-uuid"
-            ),
-            onClick = {}
-        )
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            MileageCard(
+                mileage = testMileage,
+                isExpanded = false,
+                attachments = emptyList(),
+                onClick = {}
+            )
+            MileageCard(
+                mileage = testMileage,
+                isExpanded = true,
+                attachments = listOf(
+                    MileageAttachment(attachmentID = "a1", URI = "/test/attachment/uri", mileage = testMileage.mileageID)
+                ),
+                onClick = {}
+            )
+        }
     }
 }

@@ -14,7 +14,7 @@ class FuelBuddyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         db = Room.databaseBuilder(this, FuelBuddyDB::class.java, "fuelbuddy-db").build()
-        vehicleRepository = VehicleRepository(db.vehicleDAO())
-        mileageRepository = MileageRepository(db.mileageDAO()) // adjust to your actual DAO
+        vehicleRepository = VehicleRepository(db.vehicleDAO(), db.vehicleAttachmentDAO())
+        mileageRepository = MileageRepository(db.mileageDAO(), db.mileageAttachmentDAO())
     }
 }
