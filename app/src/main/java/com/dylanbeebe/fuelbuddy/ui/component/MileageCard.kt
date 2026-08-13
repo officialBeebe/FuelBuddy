@@ -42,8 +42,6 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun MileageCard(
     mileage: Mileage,
-    isExpanded: Boolean,
-    attachments: List<MileageAttachment>,
     onClick: (Mileage) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -85,60 +83,6 @@ fun MileageCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.alignByBaseline()
                 )
-            }
-
-            if (isExpanded) {
-                HorizontalDivider()
-                Text(
-                    text = "Odometer: %.1f mi".format(mileage.odometerMiles),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-
-                Text(
-                    text = "Gallons: %.2f gal".format(mileage.volumeGallons),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-
-                Text(
-                    text = "Fuel type: ${mileage.fuelType.name.lowercase().replaceFirstChar { it.uppercase() }}",
-                    style = MaterialTheme.typography.bodyMedium
-                )
-
-                if (mileage.latitude != null && mileage.longitude != null) {
-                    Text(
-                        text = "Location: %.4f, %.4f".format(mileage.latitude, mileage.longitude),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-                mileage.journal?.let { journal ->
-                    Text(
-                        text = journal,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-
-                if (attachments.isNotEmpty()) {
-                    HorizontalDivider()
-                    Text(
-                        text = "Attachments",
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                    attachments.forEach { attachment ->
-//                        Text(
-//                            text = attachment.URI,
-//                            style = MaterialTheme.typography.bodySmall,
-//                            color = MaterialTheme.colorScheme.onSurfaceVariant
-//                        )
-                        AsyncImage(
-                            model = File(attachment.URI),
-                            contentDescription = null,
-                            placeholder = rememberVectorPainter(Icons.Filled.Image),
-                            error = rememberVectorPainter(Icons.Filled.BrokenImage),
-                            modifier = Modifier.size(80.dp)
-                        )
-                    }
-                }
             }
         }
     }
@@ -196,16 +140,10 @@ fun MileageCardPreview() {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
             MileageCard(
                 mileage = testMileage,
-                isExpanded = false,
-                attachments = emptyList(),
                 onClick = {}
             )
             MileageCard(
                 mileage = testMileage,
-                isExpanded = true,
-                attachments = listOf(
-                    MileageAttachment(attachmentID = "a1", URI = "/test/attachment/uri", mileage = testMileage.mileageID)
-                ),
                 onClick = {}
             )
         }

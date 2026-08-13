@@ -33,13 +33,12 @@ import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleDetailViewModel
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleMileageViewModel
 import java.time.Instant
-import java.time.LocalDateTime
 
 @Composable
 fun VehicleScreen(
     modifier: Modifier = Modifier,
+    onMileageClick: (String) -> Unit,
     onEditVehicle: (String) -> Unit,
-    onEditMileage: (String) -> Unit,
     onHome: () -> Unit,
     onAddMileage: (String) -> Unit,
     onExportMileage: (String) -> Unit
@@ -51,7 +50,7 @@ fun VehicleScreen(
      *
      * Add and export mileage.
      *
-     * Can launch vehicle edit screen by tapping icon in details.
+     * Can launch vehicle edit screen.
      * */
     val vehicleDetailViewModel: VehicleDetailViewModel = viewModel(
         factory = VehicleDetailViewModel.Factory
@@ -65,11 +64,8 @@ fun VehicleScreen(
         vehicle = detailState.vehicle,
         vehicleAttachments = detailState.vehicleAttachments,
         vehicleMileage = mileageState.mileage,
-        expandedMileageID = mileageState.expandedMileageID,
-        expandedMileageAttachments = mileageState.expandedMileageAttachments,
-        onToggleMileageExpanded = vehicleMileageViewModel::toggleExpanded,
+        onMileageClick = onMileageClick,
         onEditVehicle = onEditVehicle,
-        onEditMileage = onEditMileage,
         onHome = onHome,
         onAddMileage = onAddMileage,
         onExportMileage = onExportMileage
@@ -82,11 +78,8 @@ fun VehicleScreenContent(
     vehicle: Vehicle?,
     vehicleAttachments: List<VehicleAttachment>?,
     vehicleMileage: List<Mileage>,
-    expandedMileageID: String?,
-    expandedMileageAttachments: List<MileageAttachment>,
-    onToggleMileageExpanded: (String) -> Unit,
+    onMileageClick: (String) -> Unit,
     onEditVehicle: (String) -> Unit,
-    onEditMileage: (String) -> Unit,
     onHome: () -> Unit,
     onAddMileage: (String) -> Unit,
     onExportMileage: (String) -> Unit
@@ -120,13 +113,8 @@ fun VehicleScreenContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 items(vehicleMileage, key = { it.mileageID }) { mileage ->
-                    val isExpanded = mileage.mileageID == expandedMileageID
                     MileageCard(
-                        mileage = mileage,
-                        isExpanded = isExpanded,
-                        attachments = if (isExpanded) expandedMileageAttachments else emptyList(),
-                        onClick = { onToggleMileageExpanded(it.mileageID) }
-                    )
+                        mileage = mileage, onClick = { onMileageClick(it.mileageID) })
                 }
 
             }
@@ -144,7 +132,10 @@ fun VehicleScreenContent(
 }
 
 @Preview(
-    showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "VehicleScreenPreviewDark"
+    showBackground = true,
+    widthDp = 320,
+    uiMode = UI_MODE_NIGHT_YES,
+    name = "VehicleScreenPreviewDark"
 )
 @Preview(showBackground = true, widthDp = 320)
 @Composable
@@ -188,14 +179,11 @@ fun VehicleScreenPreview() {
             vehicle = testVehicle,
             vehicleAttachments = testVehicleAttachmentList,
             vehicleMileage = testMileageList,
-            expandedMileageID = testMileage.mileageID,
-            expandedMileageAttachments = listOf(testMileageAttachment),
-            onToggleMileageExpanded = {},
             onEditVehicle = {},
-            onEditMileage = {},
+            onMileageClick = {},
+            onExportMileage = {},
             onHome = {},
             onAddMileage = {},
-            onExportMileage = {}
-        )
+            )
     }
 }
