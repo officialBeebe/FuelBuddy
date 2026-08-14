@@ -66,22 +66,27 @@ fun MileageCard(
             ) {
                 Text(
                     text = date.format(DateTimeFormatter.ofPattern("MMM d, yyyy")),
-                    style = MaterialTheme.typography.headlineSmall
+                    style = MaterialTheme.typography.headlineMedium
                 )
                 ExportStatusBadge(isExported = mileage.isExported)
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-               Text(
+            Row(
+                modifier = Modifier.padding(16.dp, 0.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Text(
+                    text = "%.2f gallons".format(mileage.volumeGallons),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+                Text(
                     text = "$%.2f".format(mileage.totalDollars),
-                    style = MaterialTheme.typography.bodyLarge,
-                   modifier = Modifier.alignByBaseline()
+                    style = MaterialTheme.typography.bodyLarge
                 )
                 Text(
                     text = if (mileage.isFullTank) "Full tank" else "Partial fill",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.alignByBaseline()
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }
@@ -108,7 +113,7 @@ private fun ExportStatusBadge(isExported: Boolean) {
         )
         Text(
             text = label,
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelLarge,
             color = tint
         )
     }

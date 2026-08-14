@@ -80,8 +80,8 @@ fun MileageScreenContent(
                 .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
         } ?: ""
         Text(
-            text = dateText, style = MaterialTheme.typography.headlineMedium.copy(
-                fontWeight = FontWeight.ExtraBold
+            text = dateText, style = MaterialTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.Bold
             )
         )
 
@@ -106,41 +106,41 @@ fun MileageScreenContent(
                             // Heading
                             Text(
                                 text = "Details",
-                                style = MaterialTheme.typography.headlineSmall.copy(
+                                style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.ExtraBold
                                 )
                             )
                             // Odometer
                             Text(
                                 text = "Odometer: %.1f mi".format(mileage.odometerMiles),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                             // Gallons
                             Text(
                                 text = "Volume: %.2f gallons".format(mileage.volumeGallons),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                             // Total cost
                             Text(
                                 text = "Total cost: $%.2f".format(mileage.totalDollars),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                             // Price per gallon
                             Text(
                                 text = "Price per gallon: $%.2f/gallon".format(mileage.totalDollars / mileage.volumeGallons),
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                             // Fill status
                             Text(
                                 text = "Fill status: " + if (mileage.isFullTank) "Full tank" else "Partial fill",
-                                style = MaterialTheme.typography.bodyMedium,
+                                style = MaterialTheme.typography.bodyLarge,
                             )
                             // Fuel type
                             Text(
                                 text = "Fuel type: ${
                                 mileage.fuelType.name.lowercase()
                                     .replaceFirstChar { it.uppercase() }
-                            }", style = MaterialTheme.typography.bodyMedium)
+                            }", style = MaterialTheme.typography.bodyLarge)
 
                             // Location section
                             if (mileage.latitude != null && mileage.longitude != null) {
@@ -148,7 +148,7 @@ fun MileageScreenContent(
                                 // Heading
                                 Text(
                                     text = "Location",
-                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                    style = MaterialTheme.typography.headlineMedium.copy(
                                         fontWeight = FontWeight.ExtraBold
                                     )
                                 )
@@ -156,12 +156,12 @@ fun MileageScreenContent(
                                 Text(
                                     text = "Latitude: %.4f".format(
                                         mileage.latitude
-                                    ), style = MaterialTheme.typography.bodyMedium
+                                    ), style = MaterialTheme.typography.bodyLarge
                                 )
                                 Text(
                                     text = "Longitude: %.4f".format(
                                         mileage.longitude
-                                    ), style = MaterialTheme.typography.bodyMedium
+                                    ), style = MaterialTheme.typography.bodyLarge
                                 )
                             }
 
@@ -171,14 +171,14 @@ fun MileageScreenContent(
                                 // Heading
                                 Text(
                                     text = "Journal",
-                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                    style = MaterialTheme.typography.headlineMedium.copy(
                                         fontWeight = FontWeight.ExtraBold
                                     )
                                 )
                                 // Journal entry
                                 Text(
                                     text = journal,
-                                    style = MaterialTheme.typography.bodyMedium,
+                                    style = MaterialTheme.typography.bodyLarge,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
@@ -189,7 +189,7 @@ fun MileageScreenContent(
                                 // Heading
                                 Text(
                                     text = "Attachments",
-                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                    style = MaterialTheme.typography.headlineMedium.copy(
                                         fontWeight = FontWeight.ExtraBold
                                     )
                                 )
