@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -38,8 +39,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun MileageScreen(
-    onEditMileage: (String) -> Unit,
-    onHome: () -> Unit
+    onEditMileage: (String) -> Unit, onHome: () -> Unit
 ) {
     /**
      * Mileage Screen
@@ -74,16 +74,18 @@ fun MileageScreenContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Box {
-            val dateText = mileage?.timestamp?.let {
-                Instant.parse(it)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate()
-                    .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
-            } ?: ""
-            Text(text = dateText)
-        }
+        // Title
+        val dateText = mileage?.timestamp?.let {
+            Instant.parse(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
+        } ?: ""
+        Text(
+            text = dateText, style = MaterialTheme.typography.headlineMedium.copy(
+                fontWeight = FontWeight.ExtraBold
+            )
+        )
 
+        // Interface
         Surface(
             color = MaterialTheme.colorScheme.surfaceVariant,
             shape = RoundedCornerShape(16.dp),
@@ -99,54 +101,112 @@ fun MileageScreenContent(
                 if (mileage != null) {
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            HorizontalDivider()
+                            // Details section
+
+                            // Heading
+                            Text(
+                                text = "Details",
+                                style = MaterialTheme.typography.headlineSmall.copy(
+                                    fontWeight = FontWeight.ExtraBold
+                                )
+                            )
+                            // Odometer
                             Text(
                                 text = "Odometer: %.1f mi".format(mileage.odometerMiles),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
+                            // Gallons
                             Text(
-                                text = "Gallons: %.2f gal".format(mileage.volumeGallons),
+                                text = "Volume: %.2f gallons".format(mileage.volumeGallons),
                                 style = MaterialTheme.typography.bodyMedium,
                             )
+                            // Total cost
+                            Text(
+                                text = "Total cost: $%.2f".format(mileage.totalDollars),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            // Price per gallon
+                            Text(
+                                text = "Price per gallon: $%.2f/gallon".format(mileage.totalDollars / mileage.volumeGallons),
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            // Fill status
+                            Text(
+                                text = "Fill status: " + if (mileage.isFullTank) "Full tank" else "Partial fill",
+                                style = MaterialTheme.typography.bodyMedium,
+                            )
+                            // Fuel type
                             Text(
                                 text = "Fuel type: ${
-                                    mileage.fuelType.name.lowercase().replaceFirstChar { it.uppercase() }
-                                }",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                                mileage.fuelType.name.lowercase()
+                                    .replaceFirstChar { it.uppercase() }
+                            }", style = MaterialTheme.typography.bodyMedium)
+
+                            // Location section
                             if (mileage.latitude != null && mileage.longitude != null) {
+                                HorizontalDivider()
+                                // Heading
                                 Text(
-                                    text = "Location: %.4f, %.4f".format(mileage.latitude, mileage.longitude),
-                                    style = MaterialTheme.typography.bodyMedium
+                                    text = "Location",
+                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                )
+                                // Coordinates
+                                Text(
+                                    text = "Latitude: %.4f".format(
+                                        mileage.latitude
+                                    ), style = MaterialTheme.typography.bodyMedium
+                                )
+                                Text(
+                                    text = "Longitude: %.4f".format(
+                                        mileage.longitude
+                                    ), style = MaterialTheme.typography.bodyMedium
                                 )
                             }
+
+                            // Journal section
                             mileage.journal?.let { journal ->
+                                HorizontalDivider()
+                                // Heading
+                                Text(
+                                    text = "Journal",
+                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                )
+                                // Journal entry
                                 Text(
                                     text = journal,
                                     style = MaterialTheme.typography.bodyMedium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                        }
-                    }
-                }
 
-                if (mileageAttachments.isNotEmpty()) {
-                    item {
-                        HorizontalDivider()
-                        Text(
-                            text = "Attachments",
-                            style = MaterialTheme.typography.labelMedium
-                        )
-                    }
-                    items(mileageAttachments, key = { it.attachmentID }) { attachment ->
-                        AsyncImage(
-                            model = File(attachment.URI),
-                            contentDescription = null,
-                            placeholder = rememberVectorPainter(Icons.Filled.Image),
-                            error = rememberVectorPainter(Icons.Filled.BrokenImage),
-                            modifier = Modifier.size(80.dp)
-                        )
+                            // Attachments section
+                            if (mileageAttachments.isNotEmpty()) {
+                                HorizontalDivider()
+                                // Heading
+                                Text(
+                                    text = "Attachments",
+                                    style = MaterialTheme.typography.headlineSmall.copy(
+                                        fontWeight = FontWeight.ExtraBold
+                                    )
+                                )
+// Attachments
+                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                    mileageAttachments.forEach { attachment ->
+                                        AsyncImage(
+                                            model = File(attachment.URI),
+                                            contentDescription = null,
+                                            placeholder = rememberVectorPainter(Icons.Filled.Image),
+                                            error = rememberVectorPainter(Icons.Filled.BrokenImage),
+                                            modifier = Modifier.size(80.dp)
+                                        )
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
