@@ -37,8 +37,10 @@ class MileageDetailViewModel(
         viewModelScope.launch { mileageRepository.update(mileage) }
     }
 
-    fun deleteMileage(mileage: Mileage) {
-        viewModelScope.launch { mileageRepository.delete(mileage) }
+    fun deleteMileage() {
+        viewModelScope.launch {
+            uiState.value.mileage?.let { mileageRepository.delete(it) }
+        }
     }
 
     companion object {

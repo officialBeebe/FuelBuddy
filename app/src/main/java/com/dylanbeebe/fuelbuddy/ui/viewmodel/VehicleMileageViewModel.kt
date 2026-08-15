@@ -39,13 +39,8 @@ class VehicleMileageViewModel(
             .map { mileage -> VehicleMileageUiState(mileage = mileage) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), VehicleMileageUiState())
 
-
     fun addMileage(mileage: Mileage) {
         viewModelScope.launch { mileageRepository.insert(mileage) }
-    }
-
-    fun deleteMileage(mileage: Mileage) {
-        viewModelScope.launch { mileageRepository.delete(mileage) }
     }
 
     companion object {

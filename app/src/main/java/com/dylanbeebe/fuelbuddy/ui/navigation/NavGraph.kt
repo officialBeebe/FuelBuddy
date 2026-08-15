@@ -35,7 +35,7 @@ fun NavGraph() {
                     )
                 },
                 onEditVehicle = { vehicleID: String -> navController.navigate(EditVehicle(vehicleID)) },
-                onHome = { navController.navigate(Home) },
+                onBack = { navController.popBackStack() },
                 onAddMileage = { vehicleID: String -> navController.navigate(EditMileage(vehicleID = vehicleID)) },
                 onExportMileage = { vehicleID: String ->
                     navController.navigate(
@@ -56,7 +56,7 @@ fun NavGraph() {
                         )
                     )
                 },
-                onHome = { navController.navigate(Home) }
+                onBack = { navController.popBackStack() }
             )
         }
         composable<EditVehicle> { EditVehicleScreen() }
