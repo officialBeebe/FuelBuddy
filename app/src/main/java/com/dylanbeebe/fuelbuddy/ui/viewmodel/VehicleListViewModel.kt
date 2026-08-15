@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**VehicleListViewModel
  *
@@ -27,8 +28,8 @@ class VehicleListViewModel(
         vehicleRepository.observeAllVehicles()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    suspend fun addVehicle(vehicle: Vehicle) {
-        vehicleRepository.insert(vehicle)
+    fun addVehicle(vehicle: Vehicle) {
+        viewModelScope.launch { vehicleRepository.insert(vehicle) }
     }
 
     companion object {

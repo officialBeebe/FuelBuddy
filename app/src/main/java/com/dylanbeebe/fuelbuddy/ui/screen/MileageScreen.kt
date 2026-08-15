@@ -13,15 +13,24 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.BrokenImage
+import androidx.compose.material.icons.filled.ChevronLeft
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
@@ -31,6 +40,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
+import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.MileageDetailViewModel
 import java.io.File
 import java.time.Instant
@@ -39,7 +49,8 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun MileageScreen(
-    onEditMileage: (String) -> Unit, onHome: () -> Unit
+    onEditMileage: (String) -> Unit,
+    onBack: () -> Unit
 ) {
     /**
      * Mileage Screen
@@ -56,7 +67,11 @@ fun MileageScreen(
         mileage = detailState.mileage,
         mileageAttachments = detailState.mileageAttachments,
         onEditMileage = onEditMileage,
-        onHome = onHome
+        onDeleteMileage = {
+            mileageDetailViewModel.deleteMileage()
+            onBack()
+        },
+        onBack = onBack
     )
 }
 
@@ -65,25 +80,58 @@ fun MileageScreenContent(
     mileage: Mileage?,
     mileageAttachments: List<MileageAttachment>,
     onEditMileage: (String) -> Unit,
-    onHome: () -> Unit,
+    onDeleteMileage: () -> Unit,
+    onBack: () -> Unit,
 ) {
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp, 48.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+//        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        // Title
-        val dateText = mileage?.timestamp?.let {
-            Instant.parse(it).atZone(ZoneId.systemDefault()).toLocalDate()
-                .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
-        } ?: ""
-        Text(
-            text = dateText, style = MaterialTheme.typography.headlineLarge.copy(
-                fontWeight = FontWeight.Bold
-            )
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                // Go back
+                ClickableIcon(
+                    icon = Icons.Filled.ChevronLeft,
+                    contentDescription = "Go back",
+                    onClick = { onBack() }
+                )
+                // Title
+                val dateText = mileage?.timestamp?.let {
+                    Instant.parse(it).atZone(ZoneId.systemDefault()).toLocalDate()
+                        .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
+                } ?: ""
+                Text(
+                    text = dateText,
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    )
+                )
+            }
+
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                // TODO: Implement the following as "trashcan" and "pencil" icons
+                ClickableIcon(
+                    icon = Icons.Filled.Edit,
+                    contentDescription = "Edit mileage",
+                    onClick = { onEditMileage(mileage?.mileageID.orEmpty()) }
+                )
+                ClickableIcon(
+                    icon = Icons.Filled.Delete,
+                    contentDescription = "Delete mileage",
+                    onClick = { showDeleteConfirmation = true }
+                )
+            }
+        }
+
 
         // Interface
         Surface(
@@ -96,7 +144,7 @@ fun MileageScreenContent(
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+//                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (mileage != null) {
                     item {
@@ -138,9 +186,9 @@ fun MileageScreenContent(
                             // Fuel type
                             Text(
                                 text = "Fuel type: ${
-                                mileage.fuelType.name.lowercase()
-                                    .replaceFirstChar { it.uppercase() }
-                            }", style = MaterialTheme.typography.bodyLarge)
+                                    mileage.fuelType.name.lowercase()
+                                        .replaceFirstChar { it.uppercase() }
+                                }", style = MaterialTheme.typography.bodyLarge)
 
                             // Location section
                             if (mileage.latitude != null && mileage.longitude != null) {
@@ -211,10 +259,26 @@ fun MileageScreenContent(
                 }
             }
         }
+    }
 
-        Row {
-            // HomeButton(onHome)
-            // EditMileageButton(onEditMileage(mileage?.mileageID))
-        }
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = { Text("Delete mileage entry?") },
+            text = { Text("This can't be undone.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDeleteConfirmation = false
+                    mileage?.let { onDeleteMileage() }
+                }) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirmation = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
