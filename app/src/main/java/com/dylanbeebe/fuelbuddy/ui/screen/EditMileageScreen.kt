@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.AlertDialog
@@ -56,6 +57,7 @@ import com.dylanbeebe.fuelbuddy.data.model.FuelType
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
+import com.dylanbeebe.fuelbuddy.ui.component.rememberCameraLauncher
 import com.dylanbeebe.fuelbuddy.ui.component.rememberMultiPhotoPickerLauncher
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.MileageDetailViewModel
 import java.io.File
@@ -248,26 +250,9 @@ fun EditMileageScreenContent(
 
                 // Attachments
                 item {
-                    val pickPhotos =
-                        rememberMultiPhotoPickerLauncher(subdir = "mileage_attachments") { files ->
-                            if (mileage != null) {
-                                files.forEach { file ->
-                                    onAddAttachment(
-                                        MileageAttachment(
-                                            filePath = file.absolutePath,
-                                            mileage = mileage.mileageID
-                                        )
-                                    )
-                                }
-                            } else {
-                                stagedAttachments = stagedAttachments + files
-                            }
-                        }
-
                     val displayItems: List<AttachmentDisplayItem> =
                         mileageAttachments.map { AttachmentDisplayItem.Existing(it) } +
                                 stagedAttachments.map { AttachmentDisplayItem.Staged(it) }
-
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -321,12 +306,52 @@ fun EditMileageScreenContent(
                                 )
                             }
 
+                            // Take photo
+                            val takePhoto = rememberCameraLauncher(subdir = "mileage_attachments") { file ->
+                                if (mileage != null) {
+                                    onAddAttachment(MileageAttachment(filePath = file.absolutePath, mileage = mileage.mileageID))
+                                } else {
+                                    stagedAttachments = stagedAttachments + file
+                                }
+                            }
                             Box(
                                 modifier = Modifier
                                     .size(80.dp)
                                     .clip(RoundedCornerShape(16.dp))
                                     .background(MaterialTheme.colorScheme.primary)
-                                    .clickable(onClickLabel = "Add photos") { pickPhotos() },
+                                    .clickable(onClickLabel = "Take photo") { takePhoto() },
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.PhotoCamera,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.onPrimary,
+                                    modifier = Modifier.size(60.dp)
+                                )
+                            }
+
+                            // Photo picker
+                            val pickPhotos =
+                                rememberMultiPhotoPickerLauncher(subdir = "mileage_attachments") { files ->
+                                    if (mileage != null) {
+                                        files.forEach { file ->
+                                            onAddAttachment(
+                                                MileageAttachment(
+                                                    filePath = file.absolutePath,
+                                                    mileage = mileage.mileageID
+                                                )
+                                            )
+                                        }
+                                    } else {
+                                        stagedAttachments = stagedAttachments + files
+                                    }
+                                }
+                            Box(
+                                modifier = Modifier
+                                    .size(80.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(MaterialTheme.colorScheme.primary)
+                                    .clickable(onClickLabel = "Pick photo") { pickPhotos() },
                                 contentAlignment = Alignment.Center
                             ) {
                                 Icon(

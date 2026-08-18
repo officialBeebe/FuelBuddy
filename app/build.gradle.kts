@@ -88,13 +88,13 @@ dependencies {
     androidTestImplementation("androidx.navigation:navigation-testing:$nav_version")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
-// Coil
+    // Coil
     implementation("io.coil-kt:coil-compose:2.7.0")
 
-// Icons
+    // Icons
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
 
-// Jetpack photo picker library
+    // Jetpack photo picker library
     implementation("androidx.photopicker:photopicker-compose:1.0.0-alpha01")
 
 }
