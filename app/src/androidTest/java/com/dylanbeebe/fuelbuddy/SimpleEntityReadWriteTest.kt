@@ -86,8 +86,6 @@ class SimpleEntityReadWriteTest {
 
         val mileage = Mileage(
             timestamp = LocalDateTime.now().toString(),
-            latitude = -48.876667,
-            longitude = -123.393333,
             odometerMiles = 80085.69,
             volumeGallons = 6.9,
             isFullTank = true,
@@ -102,8 +100,6 @@ class SimpleEntityReadWriteTest {
         val expectedMileage = Mileage(
             mileageID = mileage.mileageID,
             timestamp = mileage.timestamp,
-            latitude = mileage.latitude,
-            longitude = mileage.longitude,
             odometerMiles = mileage.odometerMiles,
             volumeGallons = mileage.volumeGallons,
             isFullTank = mileage.isFullTank,
