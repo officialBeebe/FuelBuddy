@@ -16,5 +16,16 @@ interface MileageDAO : BaseDao<Mileage> {
     @Transaction
     @Query("SELECT * FROM mileage WHERE mileageID = :mileageID")
     fun observeMileageWithAttachments(mileageID: String): Flow<MileageWithAttachments?>
+
+    @Query("""
+    SELECT * FROM mileage
+    WHERE vehicle = :vehicleID
+      AND isExported = 0
+    ORDER BY timestamp DESC
+""")
+    suspend fun getUnexportedForVehicle(vehicleID: String): List<Mileage>
+
+    @Query("SELECT * FROM Mileage WHERE vehicle = :vehicleID AND timestamp BETWEEN :start AND :end ORDER BY timestamp")
+    suspend fun getForVehicleInRange(vehicleID: String, start: String, end: String): List<Mileage>
 }
 

@@ -28,10 +28,6 @@ class VehicleListViewModel(
         vehicleRepository.observeAllVehicles()
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    fun addVehicle(vehicle: Vehicle) {
-        viewModelScope.launch { vehicleRepository.insert(vehicle) }
-    }
-
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {

@@ -49,15 +49,13 @@ class MainActivity : ComponentActivity() {
                 vehicleRepository.insert(theKia)
                 vehicleRepository.addAttachment(
                     VehicleAttachment(
-                        URI = "/the/kia/test/attachment",
+                        filePath = "/the/kia/test/attachment",
                         vehicle = theKia.vehicleID
                     )
                 )
                 val now = Clock.System.now()
                 val theKiaMileage1 = Mileage(
                     timestamp = now.toString(),
-                    latitude = -48.876667,
-                    longitude = -123.393333,
                     odometerMiles = 80085.69,
                     volumeGallons = 6.9,
                     isFullTank = true,
@@ -69,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 mileageRepository.insert(theKiaMileage1)
                 mileageRepository.addAttachment(
                     MileageAttachment(
-                        URI = "/the/kia/test/attachment",
+                        filePath = "/the/kia/test/attachment",
                         mileage = theKiaMileage1.mileageID
                     )
                 )

@@ -17,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "com.dylanbeebe.fuelbuddy"
-        minSdk = 27
+        minSdk = 34
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -51,10 +51,12 @@ dependencies {
     implementation(libs.androidx.compose.ui.text.google.fonts)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.foundation.layout)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.savedstate)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.media3.test.utils)
+    implementation(libs.androidx.ui)
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
@@ -91,4 +93,8 @@ dependencies {
 
 // Icons
     implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+// Jetpack photo picker library
+    implementation("androidx.photopicker:photopicker-compose:1.0.0-alpha01")
+
 }

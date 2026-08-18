@@ -16,6 +16,6 @@ import java.util.UUID
 )
 data class VehicleAttachment(
     @PrimaryKey val attachmentID: String = UUID.randomUUID().toString(),
-    val URI: String,
+    val filePath: String,
     val vehicle: String
 )

@@ -110,15 +110,6 @@ entity "mileage" as m {
         <<unique>> (vehicle, timestamp)
 }
 
-entity "mileage_location" as ml {
-        ,* **String : locationID <<PK>>**
-        --
-        ,* **Float : accuracy**,
-        ,* **Double : latitude**,
-        ,* **Double : longitude**,
-        ,* **String : mileage <<FK>>**
-}
-
 entity "mileage_attachment" as ma {
         ,* **String : attachmentID <<PK>>**
         --
@@ -138,7 +129,6 @@ v ||..o{ va
 v ||..o{ m
 m ..> ft
 m ||..o{ ma
-m ||..o| ml
 
 @enduml
 #+end_src
@@ -146,12 +136,6 @@ m ||..o| ml
 ** Timestamp
 
 Timestamps are stored an UTC ISO-8601 ~Instant~ and further converted to ~LocalDate~ for display in the UI.
-
-** Location
-
-Location data for mileage logs are persisted in a related table ~mileage_location~ assisted by Android's [[https://developer.android.com/reference/android/location/LocationManager][~LocationManager~]] which provides access to system location services, which returns a [[https://developer.android.com/reference/android/location/Location][~Location~]] object fit for our table.
-
-Forgoing time inclusion is a deliberate choice due in part of the fact that according the documentation, "no guarantee that different locations have times set from the same clock... providers may use any clock to set their time...". Majorly, **location settings are an elective feature and not required** for the application to function.
 
 ** Attachments
 
@@ -259,6 +243,10 @@ stop
 ** User/Firebase/et al Sync
 
 Initially, this is a device-local, single-user application. Migration to centralized cloud storage would improve data durability across device changes and data loss scenarios.
+
+** Location
+
+Location data for mileage logs may eventually be recorded in a `mileage_location` relationship using Android's [[https://developer.android.com/reference/android/location/LocationManager][~LocationManager~]]; receipt uploads suffice for now, removing the need for permission to access device's fine location for now.
 
 ** Lat/Lon + Timestamp Business Delineations
 

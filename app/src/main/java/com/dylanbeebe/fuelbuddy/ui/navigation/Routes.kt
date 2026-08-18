@@ -8,7 +8,7 @@ object Home
 
 // Displays vehicle mileage logs.
 @Serializable
-data class Vehicle(val vehicleID: String)
+data class VehicleDetail(val vehicleID: String)
 
 // Displays a single mileage entry's details and attachments.
 @Serializable

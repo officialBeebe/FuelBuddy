@@ -1,8 +1,11 @@
 package com.dylanbeebe.fuelbuddy.ui.screen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,7 +23,9 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -33,13 +38,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
+import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.MileageDetailViewModel
 import java.io.File
@@ -49,8 +59,7 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun MileageScreen(
-    onEditMileage: (String) -> Unit,
-    onBack: () -> Unit
+    onEditMileage: (String) -> Unit, onBack: () -> Unit
 ) {
     /**
      * Mileage Screen
@@ -84,6 +93,7 @@ fun MileageScreenContent(
     onBack: () -> Unit,
 ) {
     var showDeleteConfirmation by remember { mutableStateOf(false) }
+    var viewingAttachmentPath by remember { mutableStateOf<String?>(null) }
 
     Column(
         modifier = Modifier
@@ -102,34 +112,24 @@ fun MileageScreenContent(
                 ClickableIcon(
                     icon = Icons.Filled.ChevronLeft,
                     contentDescription = "Go back",
-                    onClick = { onBack() }
-                )
+                    onClick = { onBack() })
                 // Title
                 val dateText = mileage?.timestamp?.let {
                     Instant.parse(it).atZone(ZoneId.systemDefault()).toLocalDate()
                         .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
                 } ?: ""
                 Text(
-                    text = dateText,
-                    style = MaterialTheme.typography.headlineLarge.copy(
+                    text = dateText, style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold
                     )
                 )
             }
 
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                // TODO: Implement the following as "trashcan" and "pencil" icons
-                ClickableIcon(
-                    icon = Icons.Filled.Edit,
-                    contentDescription = "Edit mileage",
-                    onClick = { onEditMileage(mileage?.mileageID.orEmpty()) }
-                )
-                ClickableIcon(
-                    icon = Icons.Filled.Delete,
-                    contentDescription = "Delete mileage",
-                    onClick = { showDeleteConfirmation = true }
-                )
-            }
+//            ClickableIcon(
+//                icon = Icons.Filled.Delete,
+//                contentDescription = "Delete mileage",
+//                onClick = { showDeleteConfirmation = true }
+//            )
         }
 
 
@@ -190,29 +190,6 @@ fun MileageScreenContent(
                                         .replaceFirstChar { it.uppercase() }
                                 }", style = MaterialTheme.typography.bodyLarge)
 
-                            // Location section
-                            if (mileage.latitude != null && mileage.longitude != null) {
-                                HorizontalDivider()
-                                // Heading
-                                Text(
-                                    text = "Location",
-                                    style = MaterialTheme.typography.headlineMedium.copy(
-                                        fontWeight = FontWeight.ExtraBold
-                                    )
-                                )
-                                // Coordinates
-                                Text(
-                                    text = "Latitude: %.4f".format(
-                                        mileage.latitude
-                                    ), style = MaterialTheme.typography.bodyLarge
-                                )
-                                Text(
-                                    text = "Longitude: %.4f".format(
-                                        mileage.longitude
-                                    ), style = MaterialTheme.typography.bodyLarge
-                                )
-                            }
-
                             // Journal section
                             mileage.journal?.let { journal ->
                                 HorizontalDivider()
@@ -242,15 +219,54 @@ fun MileageScreenContent(
                                     )
                                 )
                                 // Attachments
-                                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                FlowRow(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(
+                                        8.dp, Alignment.CenterHorizontally
+                                    ),
+                                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                                ) {
                                     mileageAttachments.forEach { attachment ->
-                                        AsyncImage(
-                                            model = File(attachment.URI),
-                                            contentDescription = null,
-                                            placeholder = rememberVectorPainter(Icons.Filled.Image),
-                                            error = rememberVectorPainter(Icons.Filled.BrokenImage),
-                                            modifier = Modifier.size(80.dp)
-                                        )
+                                        SubcomposeAsyncImage(
+                                            model = File(attachment.filePath),
+                                            contentDescription = "Attachment",
+                                            contentScale = ContentScale.Crop,
+                                            modifier = Modifier
+                                                .size(80.dp)
+                                                .clip(RoundedCornerShape(16.dp))
+                                                .clickable {
+                                                    viewingAttachmentPath = attachment.filePath
+                                                },
+                                            loading = {
+                                                Box(
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Icon(
+                                                        Icons.Filled.Image,
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                                        modifier = Modifier.size(60.dp)
+                                                    )
+                                                }
+                                            },
+                                            error = {
+                                                Box(
+                                                    Modifier
+                                                        .fillMaxSize()
+                                                        .background(MaterialTheme.colorScheme.errorContainer),
+                                                    contentAlignment = Alignment.Center
+                                                ) {
+                                                    Icon(
+                                                        Icons.Filled.BrokenImage,
+                                                        contentDescription = null,
+                                                        tint = MaterialTheme.colorScheme.onErrorContainer,
+                                                        modifier = Modifier.size(60.dp)
+                                                    )
+                                                }
+                                            })
                                     }
                                 }
                             }
@@ -259,6 +275,54 @@ fun MileageScreenContent(
                 }
             }
         }
+        FloatingActionButton(
+                onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
+                modifier = Modifier.size(64.dp).align(Alignment.End),
+                shape = RoundedCornerShape(16.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit mileage",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            // Delete FAB
+//            FloatingActionButton(
+//                onClick = { showDeleteConfirmation = true },
+//                modifier = Modifier.size(64.dp),
+//                shape = RoundedCornerShape(16.dp),
+//                containerColor = MaterialTheme.colorScheme.error,
+//                contentColor = MaterialTheme.colorScheme.onError,
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Delete,
+//                    contentDescription = "Delete mileage",
+//                    modifier = Modifier.size(32.dp)
+//                )
+//            }
+//
+//            // Edit FAB
+//            FloatingActionButton(
+//                onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
+//                modifier = Modifier.size(64.dp),
+//                shape = RoundedCornerShape(16.dp),
+//                containerColor = MaterialTheme.colorScheme.primary,
+//                contentColor = MaterialTheme.colorScheme.onPrimary,
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Edit,
+//                    contentDescription = "Edit mileage",
+//                    modifier = Modifier.size(32.dp)
+//                )
+//            }
+//        }
     }
 
     if (showDeleteConfirmation) {
@@ -278,7 +342,18 @@ fun MileageScreenContent(
                 TextButton(onClick = { showDeleteConfirmation = false }) {
                     Text("Cancel")
                 }
-            }
-        )
+            })
+    }
+
+    viewingAttachmentPath?.let { path ->
+        Dialog(onDismissRequest = { viewingAttachmentPath = null }) {
+            AsyncImage(
+                model = File(path),
+                contentDescription = "Attachment preview",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { viewingAttachmentPath = null })
+        }
     }
 }

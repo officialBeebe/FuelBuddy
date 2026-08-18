@@ -10,39 +10,44 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 
 @Composable
-fun AddVehicleButton(
-    onAddVehicle: () -> Unit,
-    modifier: Modifier = Modifier
+fun ActionFAB(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     FloatingActionButton(
-        onClick = onAddVehicle,
+        onClick = onClick,
         modifier = modifier.size(64.dp),
         shape = RoundedCornerShape(16.dp),
         containerColor = MaterialTheme.colorScheme.primary,
         contentColor = MaterialTheme.colorScheme.onPrimary,
     ) {
         Icon(
-            imageVector = Icons.Default.Add,
-            contentDescription = "Add Vehicle",
+            imageVector = icon,
+            contentDescription = contentDescription,
             modifier = Modifier.size(32.dp)
         )
     }
 }
 
 @Preview(
-    showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "AddVehicleCardPreviewDark"
+    showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "ActionFabPreviewDark"
 )
 @Preview(showBackground = true, widthDp = 320)
 @Composable
-fun AddVehicleCardPreview() {
+fun ActionFABPreview() {
     FuelBuddyTheme {
-        AddVehicleButton(
-            onAddVehicle = {}
+        ActionFAB(
+            icon = Icons.Default.Add,
+            contentDescription = "Add vehicle",
+            onClick = {}
         )
     }
 }

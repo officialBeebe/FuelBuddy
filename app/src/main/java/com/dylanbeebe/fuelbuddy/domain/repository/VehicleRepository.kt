@@ -6,6 +6,7 @@ import com.dylanbeebe.fuelbuddy.data.room.dao.VehicleAttachmentDAO
 import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
 import com.dylanbeebe.fuelbuddy.data.room.relation.VehicleWithAttachments
 import kotlinx.coroutines.flow.Flow
+import java.io.File
 
 class VehicleRepository(
     private val vehicleDAO: VehicleDAO,
@@ -20,6 +21,11 @@ class VehicleRepository(
     suspend fun update(vehicle: Vehicle) = vehicleDAO.update(vehicle)
     suspend fun delete(vehicle: Vehicle) = vehicleDAO.delete(vehicle)
 
-    suspend fun addAttachment(attachment: VehicleAttachment) = vehicleAttachmentDAO.insert(attachment)
-    suspend fun removeAttachment(attachment: VehicleAttachment) = vehicleAttachmentDAO.delete(attachment)
+    suspend fun addAttachment(attachment: VehicleAttachment) =
+        vehicleAttachmentDAO.insert(attachment)
+
+    suspend fun removeAttachment(attachment: VehicleAttachment) {
+        vehicleAttachmentDAO.delete(attachment)
+        File(attachment.filePath).delete()
+    }
 }

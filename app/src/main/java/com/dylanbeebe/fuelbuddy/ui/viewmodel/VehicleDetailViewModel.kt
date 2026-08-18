@@ -13,8 +13,10 @@ import com.dylanbeebe.fuelbuddy.data.model.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
 import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
 import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -27,17 +29,31 @@ class VehicleDetailViewModel(
     savedStateHandle: SavedStateHandle,
     private val vehicleRepository: VehicleRepository,
 ) : ViewModel() {
-    private val _vehicleID: String = checkNotNull(savedStateHandle["vehicleID"])
+    private val _vehicleID: String? = savedStateHandle["vehicleID"]
 
     val uiState: StateFlow<VehicleDetailUiState> =
-        vehicleRepository.observeVehicleWithAttachments(_vehicleID)
-            .map {
-                VehicleDetailUiState(
-                    vehicle = it?.vehicle,
-                    vehicleAttachments = (it?.attachments ?: emptyList())
+        if (_vehicleID == null) {
+            MutableStateFlow(VehicleDetailUiState()).asStateFlow()
+        } else {
+            vehicleRepository.observeVehicleWithAttachments(_vehicleID)
+                .map {
+                    VehicleDetailUiState(
+                        vehicle = it?.vehicle,
+                    )
+                }
+                .stateIn(
+                    viewModelScope,
+                    SharingStarted.WhileSubscribed(5000),
+                    VehicleDetailUiState()
                 )
-            }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), VehicleDetailUiState())
+        }
+
+    fun addVehicle(vehicle: Vehicle, attachments: List<VehicleAttachment> = emptyList()) {
+        viewModelScope.launch {
+            vehicleRepository.insert(vehicle)
+            attachments.forEach { vehicleRepository.addAttachment(it) }
+        }
+    }
 
     fun updateVehicle(vehicle: Vehicle) {
         viewModelScope.launch { vehicleRepository.update(vehicle) }
@@ -47,16 +63,6 @@ class VehicleDetailViewModel(
         viewModelScope.launch {
             uiState.value.vehicle?.let { vehicleRepository.delete(it) }
         }
-    }
-
-    fun addAttachment(uri: String) {
-        viewModelScope.launch {
-            vehicleRepository.addAttachment(VehicleAttachment(URI = uri, vehicle = _vehicleID))
-        }
-    }
-
-    fun removeAttachment(attachment: VehicleAttachment) {
-        viewModelScope.launch { vehicleRepository.removeAttachment(attachment) }
     }
 
     companion object {
@@ -72,5 +78,4 @@ class VehicleDetailViewModel(
 
 data class VehicleDetailUiState(
     val vehicle: Vehicle? = null,
-    val vehicleAttachments: List<VehicleAttachment> = emptyList()
 )

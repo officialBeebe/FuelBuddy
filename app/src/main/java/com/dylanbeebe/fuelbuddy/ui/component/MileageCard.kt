@@ -131,8 +131,6 @@ fun MileageCardPreview() {
     val testMileage = Mileage(
         mileageID = "test-mileage-uuid",
         timestamp = Instant.now().toString(),
-        latitude = -48.876667,
-        longitude = -123.393333,
         odometerMiles = 80085.69,
         volumeGallons = 6.9,
         isFullTank = true,

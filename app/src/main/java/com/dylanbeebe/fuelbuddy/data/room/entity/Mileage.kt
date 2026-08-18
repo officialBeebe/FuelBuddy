@@ -5,9 +5,12 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import kotlinx.serialization.Serializable
+import java.time.Instant
 import java.time.LocalDateTime
 import java.util.UUID
 
+@Serializable
 @Entity(
     foreignKeys = [ForeignKey(
         entity = Vehicle::class,
@@ -23,9 +26,7 @@ import java.util.UUID
 @TypeConverters(FuelTypeConverter::class)
 data class Mileage(
     @PrimaryKey val mileageID: String = UUID.randomUUID().toString(),
-    val timestamp: String = LocalDateTime.now().toString(),
-    val latitude: Double? = null,
-    val longitude: Double? = null,
+    val timestamp: String = Instant.now().toString(),
     val odometerMiles: Double,
     val volumeGallons: Double,
     val isFullTank: Boolean,

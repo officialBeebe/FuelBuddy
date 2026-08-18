@@ -9,14 +9,21 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.ImportExport
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +45,7 @@ import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import com.dylanbeebe.fuelbuddy.data.model.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
+import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.component.MileageCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
@@ -73,7 +81,6 @@ fun VehicleScreen(
     val mileageState by vehicleMileageViewModel.uiState.collectAsState()
     VehicleScreenContent(
         vehicle = detailState.vehicle,
-        vehicleAttachments = detailState.vehicleAttachments,
         vehicleMileage = mileageState.mileage,
         onMileageClick = onMileageClick,
         onEditVehicle = onEditVehicle,
@@ -91,7 +98,6 @@ fun VehicleScreen(
 @Composable
 fun VehicleScreenContent(
     vehicle: Vehicle?,
-    vehicleAttachments: List<VehicleAttachment>?,
     vehicleMileage: List<Mileage>,
     onMileageClick: (String) -> Unit,
     onEditVehicle: (String) -> Unit,
@@ -132,24 +138,24 @@ fun VehicleScreenContent(
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                // TODO: Implement the following as "trashcan" and "pencil" icons
-                // Edit
+//                // Edit
+//                ClickableIcon(
+//                    icon = Icons.Filled.Edit,
+//                    contentDescription = "Edit vehicle",
+//                    onClick = { onEditVehicle(vehicle?.vehicleID.orEmpty()) }
+//                )
+
+                // Export
                 ClickableIcon(
-                    icon = Icons.Filled.Edit,
-                    contentDescription = "Edit vehicle",
-                    onClick = { onEditVehicle(vehicle?.vehicleID.orEmpty()) }
-                )
-                // Delete
-                ClickableIcon(
-                    icon = Icons.Filled.Delete,
+                    icon = Icons.Filled.Send,
                     contentDescription = "Delete vehicle",
-                    onClick = { showDeleteConfirmation = true }
+                    onClick = { vehicle?.let { onExportMileage(it.vehicleID) } }
                 )
             }
         }
 
 //        Row {
-            // TODO: Average MPG, Average monthly gallons?, Average monthly miles?
+        // TODO: Average MPG, Average monthly gallons?, Average monthly miles?
 //        }
 
         // TODO: :START: Make composable: CardSurface
@@ -173,12 +179,41 @@ fun VehicleScreenContent(
             }
         }
         // TODO: :FINISH: Make composable: CardSurface
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Edit FAB
+            FloatingActionButton(
+                onClick = { onEditVehicle(vehicle?.vehicleID.orEmpty()) },
+                modifier = Modifier.size(64.dp),
+                shape = RoundedCornerShape(16.dp),
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit vehicle",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
 
-        Row() {
-//            AddMileageButton(onAddMileage(vehicleID)
-//            ExportMileageButton(onExportMileage(vehicleID))
+            // Add FAB
+            FloatingActionButton(
+                onClick = { vehicle?.let { onAddMileage(it.vehicleID) } },
+                modifier = Modifier.size(64.dp),
+                shape = RoundedCornerShape(16.dp),
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add mileage",
+                    modifier = Modifier.size(32.dp)
+                )
+            }
         }
-
     }
     // TODO: :FINISH: Make composable: ScreenColumn
 
@@ -221,13 +256,6 @@ fun VehicleScreenPreview() {
         modelYear = 2015,
         plate = "ih8dis1",
     )
-    val testVehicleAttachment = VehicleAttachment(
-        attachmentID = "the-test-attachment-uuid",
-        URI = "/test/attachment/uri",
-        vehicle = testVehicle.vehicleID
-    )
-    val testVehicleAttachmentList = listOf(testVehicleAttachment)
-
     val testMileage = Mileage(
         mileageID = "the-test-mileage-uuid",
         timestamp = Instant.now().toString(),
@@ -240,17 +268,9 @@ fun VehicleScreenPreview() {
         vehicle = testVehicle.vehicleID
     )
     val testMileageList = listOf(testMileage)
-
-    val testMileageAttachment = MileageAttachment(
-        attachmentID = "the-test-mileage-attachment-uuid",
-        URI = "/test/mileage/attachment/uri",
-        mileage = testMileage.mileageID
-    )
-
     FuelBuddyTheme {
         VehicleScreenContent(
             vehicle = testVehicle,
-            vehicleAttachments = testVehicleAttachmentList,
             vehicleMileage = testMileageList,
             onEditVehicle = {},
             onDeleteVehicle = {},
