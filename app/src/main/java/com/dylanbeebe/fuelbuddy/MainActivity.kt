@@ -36,54 +36,54 @@ class MainActivity : ComponentActivity() {
         val mileageRepository = app.mileageRepository
 
         // DEBUG
-        lifecycleScope.launch {
-            if (vehicleRepository.observeAllVehicles().first().isEmpty()) {
-                // Debug insert 1
-                val theKia = Vehicle(
-                        nickname = "The Kia",
-                        make = "Kia",
-                        model = "Soul",
-                        modelYear = 2019,
-                        plate = "IH8DIS1",
-                    )
-                vehicleRepository.insert(theKia)
-                vehicleRepository.addAttachment(
-                    VehicleAttachment(
-                        filePath = "/the/kia/test/attachment",
-                        vehicle = theKia.vehicleID
-                    )
-                )
-                val now = Clock.System.now()
-                val theKiaMileage1 = Mileage(
-                    timestamp = now.toString(),
-                    odometerMiles = 80085.69,
-                    volumeGallons = 6.9,
-                    isFullTank = true,
-                    fuelType = FuelType.REGULAR,
-                    totalDollars = 19.84,
-                    journal = "This is a test mileage log.",
-                    vehicle = theKia.vehicleID
-                )
-                mileageRepository.insert(theKiaMileage1)
-                mileageRepository.addAttachment(
-                    MileageAttachment(
-                        filePath = "/the/kia/test/attachment",
-                        mileage = theKiaMileage1.mileageID
-                    )
-                )
-
-                // Debug insert 2
-                vehicleRepository.insert(
-                    Vehicle(
-                        nickname = "Coop",
-                        make = "BMW",
-                        model = "Mini Cooper",
-                        modelYear = 2016,
-                        plate = "I<3DIS1",
-                    )
-                )
-            }
-        }
+//        lifecycleScope.launch {
+//            if (vehicleRepository.observeAllVehicles().first().isEmpty()) {
+//                // Debug insert 1
+//                val theKia = Vehicle(
+//                        nickname = "The Kia",
+//                        make = "Kia",
+//                        model = "Soul",
+//                        modelYear = 2019,
+//                        plate = "IH8DIS1",
+//                    )
+//                vehicleRepository.insert(theKia)
+//                vehicleRepository.addAttachment(
+//                    VehicleAttachment(
+//                        filePath = "/the/kia/test/attachment",
+//                        vehicle = theKia.vehicleID
+//                    )
+//                )
+//                val now = Clock.System.now()
+//                val theKiaMileage1 = Mileage(
+//                    timestamp = now.toString(),
+//                    odometerMiles = 80085.69,
+//                    volumeGallons = 6.9,
+//                    isFullTank = true,
+//                    fuelType = FuelType.REGULAR,
+//                    totalDollars = 19.84,
+//                    journal = "This is a test mileage log.",
+//                    vehicle = theKia.vehicleID
+//                )
+//                mileageRepository.insert(theKiaMileage1)
+//                mileageRepository.addAttachment(
+//                    MileageAttachment(
+//                        filePath = "/the/kia/test/attachment",
+//                        mileage = theKiaMileage1.mileageID
+//                    )
+//                )
+//
+//                // Debug insert 2
+//                vehicleRepository.insert(
+//                    Vehicle(
+//                        nickname = "Coop",
+//                        make = "BMW",
+//                        model = "Mini Cooper",
+//                        modelYear = 2016,
+//                        plate = "I<3DIS1",
+//                    )
+//                )
+//            }
+//        }
 
         setContent {
             FuelBuddyTheme {
