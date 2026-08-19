@@ -37,9 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
-import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleDetailViewModel
 
@@ -115,13 +113,6 @@ fun EditVehicleScreenContent(
                     )
                 )
             }
-            // Delete (only meaningful for an existing vehicle)
-//            if (vehicle != null) {
-//                ClickableIcon(
-//                    icon = Icons.Filled.Delete,
-//                    contentDescription = "Delete vehicle",
-//                    onClick = { showDeleteConfirmation = true })
-//            }
         }
 
         Surface(

@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.data.model
+package com.dylanbeebe.fuelbuddy.data.room.entity
 
 import androidx.room.TypeConverter
 

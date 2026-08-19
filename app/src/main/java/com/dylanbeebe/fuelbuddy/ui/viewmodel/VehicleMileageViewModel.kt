@@ -12,17 +12,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dylanbeebe.fuelbuddy.FuelBuddyApplication
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
-import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.repository.MileageRepositoryImpl
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -39,13 +33,13 @@ enum class ExportFormat { CSV, JSON }
 
 class VehicleMileageViewModel(
     savedStateHandle: SavedStateHandle,
-    private val mileageRepository: MileageRepository,
+    private val mileageRepositoryImpl: MileageRepositoryImpl,
     private val appContext: Context,
 ) : ViewModel() {
     private val _vehicleID: String = checkNotNull(savedStateHandle["vehicleID"])
 
     val uiState: StateFlow<VehicleMileageUiState> =
-        mileageRepository.observeAllForVehicle(_vehicleID)
+        mileageRepositoryImpl.observeAllForVehicle(_vehicleID)
             .map { mileage -> VehicleMileageUiState(mileage = mileage) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), VehicleMileageUiState())
 
@@ -59,10 +53,10 @@ class VehicleMileageViewModel(
     ) {
         viewModelScope.launch {
             val toExport: List<Mileage> = when (rangeMode) {
-                ExportRangeMode.LATEST -> mileageRepository.getUnexportedForVehicle(_vehicleID)
+                ExportRangeMode.LATEST -> mileageRepositoryImpl.getUnexportedForVehicle(_vehicleID)
                 ExportRangeMode.CUSTOM -> {
                     if (startDate == null || endDate == null) return@launch
-                    mileageRepository.getForVehicleInRange(
+                    mileageRepositoryImpl.getForVehicleInRange(
                         _vehicleID,
                         startDate.atStartOfDay().toString(),
                         endDate.atTime(23, 59, 59).toString(),
@@ -72,8 +66,8 @@ class VehicleMileageViewModel(
             if (toExport.isEmpty()) return@launch
 
             val content = when (format) {
-                ExportFormat.CSV -> mileageRepository.buildExportCsv(toExport)
-                ExportFormat.JSON -> mileageRepository.buildExportJson(toExport)
+                ExportFormat.CSV -> mileageRepositoryImpl.buildExportCsv(toExport)
+                ExportFormat.JSON -> mileageRepositoryImpl.buildExportJson(toExport)
             }
             val extension = if (format == ExportFormat.CSV) "csv" else "json"
             val mimeType = if (format == ExportFormat.CSV) "text/csv" else "application/json"
@@ -92,7 +86,7 @@ class VehicleMileageViewModel(
 
             onReady(intent)
 
-            toExport.forEach { m -> mileageRepository.update(m.copy(isExported = true)) }
+            toExport.forEach { m -> mileageRepositoryImpl.update(m.copy(isExported = true)) }
         }
     }
 
@@ -101,7 +95,7 @@ class VehicleMileageViewModel(
             initializer {
                 val savedStateHandle = createSavedStateHandle()
                 val app = (this[APPLICATION_KEY] as FuelBuddyApplication)
-                VehicleMileageViewModel(savedStateHandle, app.mileageRepository, app)
+                VehicleMileageViewModel(savedStateHandle, app.mileageRepositoryImpl, app)
             }
         }
     }

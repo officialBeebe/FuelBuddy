@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.data.model
+package com.dylanbeebe.fuelbuddy.data.room.entity
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import kotlinx.serialization.Serializable
 import java.time.Instant
-import java.time.LocalDateTime
 import java.util.UUID
 
 @Serializable

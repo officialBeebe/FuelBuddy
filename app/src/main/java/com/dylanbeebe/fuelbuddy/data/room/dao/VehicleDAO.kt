@@ -3,7 +3,7 @@ package com.dylanbeebe.fuelbuddy.data.dao
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.relation.VehicleWithAttachments
 import kotlinx.coroutines.flow.Flow
 

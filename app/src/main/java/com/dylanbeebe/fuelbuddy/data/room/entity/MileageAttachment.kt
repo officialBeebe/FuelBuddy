@@ -3,7 +3,6 @@ package com.dylanbeebe.fuelbuddy.data.room.entity
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
 import java.util.UUID
 
 @Entity(

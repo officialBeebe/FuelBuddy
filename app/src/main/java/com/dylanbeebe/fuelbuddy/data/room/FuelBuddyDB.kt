@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dylanbeebe.fuelbuddy.data.dao.MileageDAO
 import com.dylanbeebe.fuelbuddy.data.dao.VehicleDAO
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.dao.MileageAttachmentDAO
 import com.dylanbeebe.fuelbuddy.data.room.dao.VehicleAttachmentDAO
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment

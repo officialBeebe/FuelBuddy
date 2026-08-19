@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -53,8 +54,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
-import com.dylanbeebe.fuelbuddy.data.model.FuelType
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.FuelType
+import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.component.rememberCameraLauncher
@@ -366,24 +367,28 @@ fun EditMileageScreenContent(
                 }
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp)
         ) {
-            // Delete FAB
-            FloatingActionButton(
-                onClick = { showDeleteConfirmation = true },
-                modifier = Modifier.size(64.dp),
-                shape = RoundedCornerShape(16.dp),
-                containerColor = MaterialTheme.colorScheme.error,
-                contentColor = MaterialTheme.colorScheme.onError,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = "Delete mileage",
-                    modifier = Modifier.size(32.dp)
-                )
+            if (mileage != null) {
+                // Delete FAB
+                FloatingActionButton(
+                    onClick = { showDeleteConfirmation = true },
+                    modifier = Modifier
+                        .size(64.dp)
+                        .align(Alignment.CenterStart),
+                    shape = RoundedCornerShape(16.dp),
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete mileage",
+                        modifier = Modifier.size(32.dp)
+                    )
+                }
             }
 
             // Save FAB
@@ -422,7 +427,9 @@ fun EditMileageScreenContent(
                         onSaveMileage(mileageToSave, attachmentsToSave)
                     }
                 },
-                modifier = Modifier.size(64.dp),
+                modifier = Modifier
+                    .size(64.dp)
+                    .align(Alignment.CenterEnd),
                 shape = RoundedCornerShape(16.dp),
                 containerColor = MaterialTheme.colorScheme.primary,
                 contentColor = MaterialTheme.colorScheme.onPrimary,

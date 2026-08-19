@@ -4,7 +4,6 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
 import com.dylanbeebe.fuelbuddy.ui.screen.EditMileageScreen
 import com.dylanbeebe.fuelbuddy.ui.screen.EditVehicleScreen
 import com.dylanbeebe.fuelbuddy.ui.screen.ExportMileageScreen

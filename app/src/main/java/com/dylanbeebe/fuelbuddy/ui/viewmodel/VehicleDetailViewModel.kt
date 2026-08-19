@@ -9,10 +9,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dylanbeebe.fuelbuddy.FuelBuddyApplication
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
-import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
-import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
+import com.dylanbeebe.fuelbuddy.data.room.repository.VehicleRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -27,7 +26,7 @@ import kotlinx.coroutines.launch
  * */
 class VehicleDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val vehicleRepository: VehicleRepository,
+    private val vehicleRepositoryImpl: VehicleRepositoryImpl,
 ) : ViewModel() {
     private val _vehicleID: String? = savedStateHandle["vehicleID"]
 
@@ -35,7 +34,7 @@ class VehicleDetailViewModel(
         if (_vehicleID == null) {
             MutableStateFlow(VehicleDetailUiState()).asStateFlow()
         } else {
-            vehicleRepository.observeVehicleWithAttachments(_vehicleID)
+            vehicleRepositoryImpl.observeVehicleWithAttachments(_vehicleID)
                 .map {
                     VehicleDetailUiState(
                         vehicle = it?.vehicle,
@@ -50,18 +49,18 @@ class VehicleDetailViewModel(
 
     fun addVehicle(vehicle: Vehicle, attachments: List<VehicleAttachment> = emptyList()) {
         viewModelScope.launch {
-            vehicleRepository.insert(vehicle)
-            attachments.forEach { vehicleRepository.addAttachment(it) }
+            vehicleRepositoryImpl.insert(vehicle)
+            attachments.forEach { vehicleRepositoryImpl.addAttachment(it) }
         }
     }
 
     fun updateVehicle(vehicle: Vehicle) {
-        viewModelScope.launch { vehicleRepository.update(vehicle) }
+        viewModelScope.launch { vehicleRepositoryImpl.update(vehicle) }
     }
 
     fun deleteVehicle() {
         viewModelScope.launch {
-            uiState.value.vehicle?.let { vehicleRepository.delete(it) }
+            uiState.value.vehicle?.let { vehicleRepositoryImpl.delete(it) }
         }
     }
 
@@ -70,7 +69,7 @@ class VehicleDetailViewModel(
             initializer {
                 val savedStateHandle = createSavedStateHandle()
                 val app = (this[APPLICATION_KEY] as FuelBuddyApplication)
-                VehicleDetailViewModel(savedStateHandle, app.vehicleRepository)
+                VehicleDetailViewModel(savedStateHandle, app.vehicleRepositoryImpl)
             }
         }
     }

@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 import com.dylanbeebe.fuelbuddy.ui.component.VehicleCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
@@ -75,6 +75,7 @@ fun HomeScreenContent(
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
+            // Invisible back arrow for consistent title padding
             Icon(
                 imageVector = Icons.Filled.ChevronLeft,
                 contentDescription = null,

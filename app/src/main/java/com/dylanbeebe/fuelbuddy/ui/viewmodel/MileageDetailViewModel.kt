@@ -9,9 +9,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dylanbeebe.fuelbuddy.FuelBuddyApplication
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
-import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
+import com.dylanbeebe.fuelbuddy.data.room.repository.MileageRepositoryImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class MileageDetailViewModel(
     savedStateHandle: SavedStateHandle,
-    private val mileageRepository: MileageRepository
+    private val mileageRepositoryImpl: MileageRepositoryImpl
 ) : ViewModel() {
     private val _mileageID: String? = savedStateHandle["mileageID"]
     private val _vehicleID: String? = savedStateHandle["vehicleID"]
@@ -31,7 +31,7 @@ class MileageDetailViewModel(
         if (_mileageID == null) {
             MutableStateFlow(MileageDetailUiState(vehicleID = _vehicleID)).asStateFlow()
         } else {
-            mileageRepository.observeMileageWithAttachments(_mileageID)
+            mileageRepositoryImpl.observeMileageWithAttachments(_mileageID)
                 .map {
                     MileageDetailUiState(
                         mileage = it?.mileage,
@@ -44,27 +44,27 @@ class MileageDetailViewModel(
 
     fun addMileage(mileage: Mileage, attachments: List<MileageAttachment> = emptyList()) {
         viewModelScope.launch {
-            mileageRepository.insert(mileage)
-            attachments.forEach { mileageRepository.addAttachment(it) }
+            mileageRepositoryImpl.insert(mileage)
+            attachments.forEach { mileageRepositoryImpl.addAttachment(it) }
         }
     }
 
     fun updateMileage(mileage: Mileage) {
-        viewModelScope.launch { mileageRepository.update(mileage) }
+        viewModelScope.launch { mileageRepositoryImpl.update(mileage) }
     }
 
     fun deleteMileage() {
         viewModelScope.launch {
-            uiState.value.mileage?.let { mileageRepository.delete(it) }
+            uiState.value.mileage?.let { mileageRepositoryImpl.delete(it) }
         }
     }
 
     fun addAttachment(attachment: MileageAttachment) {
-        viewModelScope.launch { mileageRepository.addAttachment(attachment) }
+        viewModelScope.launch { mileageRepositoryImpl.addAttachment(attachment) }
     }
 
     fun removeAttachment(attachment: MileageAttachment) {
-        viewModelScope.launch { mileageRepository.removeAttachment(attachment) }
+        viewModelScope.launch { mileageRepositoryImpl.removeAttachment(attachment) }
     }
 
     companion object {
@@ -72,7 +72,7 @@ class MileageDetailViewModel(
             initializer {
                 val savedStateHandle = createSavedStateHandle()
                 val app = (this[APPLICATION_KEY] as FuelBuddyApplication)
-                MileageDetailViewModel(savedStateHandle, app.mileageRepository)
+                MileageDetailViewModel(savedStateHandle, app.mileageRepositoryImpl)
             }
         }
     }

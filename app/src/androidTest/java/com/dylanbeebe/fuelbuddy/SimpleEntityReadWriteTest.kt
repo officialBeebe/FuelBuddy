@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.dylanbeebe.fuelbuddy.data.model.FuelType
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.FuelType
+import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
-import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
-import com.dylanbeebe.fuelbuddy.domain.repository.VehicleRepository
+import com.dylanbeebe.fuelbuddy.data.room.repository.MileageRepositoryImpl
+import com.dylanbeebe.fuelbuddy.data.room.repository.VehicleRepositoryImpl
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
@@ -28,8 +28,8 @@ import java.time.LocalDateTime
 class SimpleEntityReadWriteTest {
 //    private lateinit var vehicleDAO: VehicleDAO
 //    private lateinit var mileageDAO: MileageDAO
-    private lateinit var vehicleRepository: VehicleRepository
-    private lateinit var mileageRepository: MileageRepository
+    private lateinit var vehicleRepositoryImpl: VehicleRepositoryImpl
+    private lateinit var mileageRepositoryImpl: MileageRepositoryImpl
     private lateinit var db: FuelBuddyDB
 
     @Before
@@ -37,8 +37,8 @@ class SimpleEntityReadWriteTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context, FuelBuddyDB::class.java).build()
-        vehicleRepository = VehicleRepository(db.vehicleDAO(), db.vehicleAttachmentDAO())
-        mileageRepository = MileageRepository(db.mileageDAO(), db.mileageAttachmentDAO())
+        vehicleRepositoryImpl = VehicleRepositoryImpl(db.vehicleDAO(), db.vehicleAttachmentDAO())
+        mileageRepositoryImpl = MileageRepositoryImpl(db.mileageDAO(), db.mileageAttachmentDAO())
     }
 
     @After
@@ -57,9 +57,9 @@ class SimpleEntityReadWriteTest {
             modelYear = 2015,
             plate = "ih8dis1",
         )
-        vehicleRepository.insert(vehicle)
+        vehicleRepositoryImpl.insert(vehicle)
 
-        val vehicles = vehicleRepository.observeAllVehicles().first()
+        val vehicles = vehicleRepositoryImpl.observeAllVehicles().first()
 
         val expectedVehicle = Vehicle(
             vehicleID = vehicle.vehicleID,
@@ -82,7 +82,7 @@ class SimpleEntityReadWriteTest {
             modelYear = 2015,
             plate = "ih8dis1",
         )
-        vehicleRepository.insert(vehicle)
+        vehicleRepositoryImpl.insert(vehicle)
 
         val mileage = Mileage(
             timestamp = LocalDateTime.now().toString(),
@@ -93,9 +93,9 @@ class SimpleEntityReadWriteTest {
             totalDollars = 19.84,
             journal = "This is a test mileage log.",
             vehicle = vehicle.vehicleID)
-        mileageRepository.insert(mileage).toString()
+        mileageRepositoryImpl.insert(mileage).toString()
 
-        val vehicleMileages = mileageRepository.observeAllForVehicle(vehicle.vehicleID).first()
+        val vehicleMileages = mileageRepositoryImpl.observeAllForVehicle(vehicle.vehicleID).first()
 
         val expectedMileage = Mileage(
             mileageID = mileage.mileageID,

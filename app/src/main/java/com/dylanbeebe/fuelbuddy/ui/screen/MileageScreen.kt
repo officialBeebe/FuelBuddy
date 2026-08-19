@@ -13,13 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.ChevronLeft
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.AlertDialog
@@ -39,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -47,9 +43,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
+import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
-import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.viewmodel.MileageDetailViewModel
 import java.io.File
@@ -100,7 +95,6 @@ fun MileageScreenContent(
             .fillMaxSize()
             .padding(16.dp, 48.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -124,12 +118,6 @@ fun MileageScreenContent(
                     )
                 )
             }
-
-//            ClickableIcon(
-//                icon = Icons.Filled.Delete,
-//                contentDescription = "Delete mileage",
-//                onClick = { showDeleteConfirmation = true }
-//            )
         }
 
 
@@ -144,13 +132,11 @@ fun MileageScreenContent(
             LazyColumn(
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-//                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 if (mileage != null) {
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                             // Details section
-
                             // Heading
                             Text(
                                 text = "Details",
@@ -288,41 +274,6 @@ fun MileageScreenContent(
                     modifier = Modifier.size(32.dp)
                 )
             }
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            // Delete FAB
-//            FloatingActionButton(
-//                onClick = { showDeleteConfirmation = true },
-//                modifier = Modifier.size(64.dp),
-//                shape = RoundedCornerShape(16.dp),
-//                containerColor = MaterialTheme.colorScheme.error,
-//                contentColor = MaterialTheme.colorScheme.onError,
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Delete,
-//                    contentDescription = "Delete mileage",
-//                    modifier = Modifier.size(32.dp)
-//                )
-//            }
-//
-//            // Edit FAB
-//            FloatingActionButton(
-//                onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
-//                modifier = Modifier.size(64.dp),
-//                shape = RoundedCornerShape(16.dp),
-//                containerColor = MaterialTheme.colorScheme.primary,
-//                contentColor = MaterialTheme.colorScheme.onPrimary,
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Default.Edit,
-//                    contentDescription = "Edit mileage",
-//                    modifier = Modifier.size(32.dp)
-//                )
-//            }
-//        }
     }
 
     if (showDeleteConfirmation) {

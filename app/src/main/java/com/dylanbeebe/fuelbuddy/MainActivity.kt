@@ -5,25 +5,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.lifecycleScope
-import com.dylanbeebe.fuelbuddy.data.model.FuelType
-import com.dylanbeebe.fuelbuddy.data.model.Mileage
-import com.dylanbeebe.fuelbuddy.data.model.Vehicle
-import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
-import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
 import com.dylanbeebe.fuelbuddy.ui.navigation.NavGraph
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
-import java.net.URI
-import java.time.LocalDateTime
-import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalTime::class)
@@ -31,11 +17,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val app = application as FuelBuddyApplication
-        val vehicleRepository = app.vehicleRepository
-        val mileageRepository = app.mileageRepository
-
         // DEBUG
+//        val app = application as FuelBuddyApplication
+//        val vehicleRepository = app.vehicleRepositoryImpl
+//        val mileageRepository = app.mileageRepositoryImpl
+
 //        lifecycleScope.launch {
 //            if (vehicleRepository.observeAllVehicles().first().isEmpty()) {
 //                // Debug insert 1

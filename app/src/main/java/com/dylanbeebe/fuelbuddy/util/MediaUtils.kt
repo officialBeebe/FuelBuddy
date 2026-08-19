@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.component
+package com.dylanbeebe.fuelbuddy.util
 
 import android.content.Context
 import android.net.Uri
