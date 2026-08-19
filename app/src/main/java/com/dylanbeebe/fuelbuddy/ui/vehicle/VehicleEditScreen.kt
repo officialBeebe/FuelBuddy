@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.screen
+package com.dylanbeebe.fuelbuddy.ui.vehicle
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleDetailViewModel
 
 @Composable
 fun EditVehicleScreen(

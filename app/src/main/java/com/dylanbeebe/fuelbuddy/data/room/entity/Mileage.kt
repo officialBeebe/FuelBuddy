@@ -5,6 +5,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 import kotlinx.serialization.Serializable
 import java.time.Instant
 import java.util.UUID

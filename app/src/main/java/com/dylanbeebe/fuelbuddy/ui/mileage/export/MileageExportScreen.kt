@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.screen
+package com.dylanbeebe.fuelbuddy.ui.mileage.export
 
 import android.content.Intent
 import androidx.compose.foundation.clickable
@@ -46,10 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.ExportFormat
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.ExportRangeMode
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleDetailViewModel
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleMileageViewModel
+import com.dylanbeebe.fuelbuddy.ui.vehicle.VehicleDetailViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
@@ -190,7 +187,7 @@ fun ExportMileageScreenContent(
                 modifier = Modifier
                     .size(64.dp)
                     .align(Alignment.CenterStart),
-                shape = RoundedCornerShape(16.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
                 containerColor = MaterialTheme.colorScheme.surfaceVariant,
                 contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
             ) {
@@ -202,13 +199,14 @@ fun ExportMileageScreenContent(
             }
 
             // Export FAB
-            val exportEnabled = rangeMode == ExportRangeMode.LATEST || (startDate != null && endDate != null)
+            val exportEnabled =
+                rangeMode == ExportRangeMode.LATEST || (startDate != null && endDate != null)
             FloatingActionButton(
                 onClick = { if (exportEnabled) onExport(rangeMode, startDate, endDate, format) },
                 modifier = Modifier
                     .size(64.dp)
                     .align(Alignment.CenterEnd),
-                shape = RoundedCornerShape(16.dp),
+                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
                 containerColor = if (exportEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
                 contentColor = if (exportEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
             ) {

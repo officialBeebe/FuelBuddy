@@ -32,7 +32,7 @@ class MileageRepositoryImpl (
     override suspend fun delete(mileage: Mileage) = mileageDAO.delete(mileage)
 
     override suspend fun addAttachment(attachment: MileageAttachment) = mileageAttachmentDAO.insert(attachment)
-    override suspend fun removeAttachment(attachment: MileageAttachment) {
+    override suspend fun deleteAttachment(attachment: MileageAttachment) {
         mileageAttachmentDAO.delete(attachment)
         File(attachment.filePath).delete()
     }

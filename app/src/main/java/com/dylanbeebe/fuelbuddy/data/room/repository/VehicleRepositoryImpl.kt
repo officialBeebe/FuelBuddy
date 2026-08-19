@@ -28,7 +28,7 @@ class VehicleRepositoryImpl(
     override suspend fun addAttachment(attachment: VehicleAttachment) =
         vehicleAttachmentDAO.insert(attachment)
 
-    override suspend fun removeAttachment(attachment: VehicleAttachment) {
+    override suspend fun deleteAttachment(attachment: VehicleAttachment) {
         vehicleAttachmentDAO.delete(attachment)
         File(attachment.filePath).delete()
     }

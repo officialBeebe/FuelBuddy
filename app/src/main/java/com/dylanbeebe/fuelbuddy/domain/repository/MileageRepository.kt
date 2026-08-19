@@ -14,7 +14,7 @@ interface MileageRepository {
     suspend fun update(mileage: Mileage)
     suspend fun delete(mileage: Mileage)
     suspend fun addAttachment(attachment: MileageAttachment)
-    suspend fun removeAttachment(attachment: MileageAttachment)
+    suspend fun deleteAttachment(attachment: MileageAttachment)
     fun buildExportCsv(mileage: List<Mileage>): String
     fun buildExportJson(mileage: List<Mileage>): String
 }

@@ -1,6 +1,6 @@
-package com.dylanbeebe.fuelbuddy.ui.screen
+package com.dylanbeebe.fuelbuddy.ui.home
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +33,6 @@ import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 import com.dylanbeebe.fuelbuddy.ui.component.VehicleCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleListViewModel
 
 @Composable
 fun HomeScreen(
@@ -121,7 +120,7 @@ fun HomeScreenContent(
 
 
 @Preview(
-    showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "HomeScreenPreviewDark"
+    showBackground = true, widthDp = 320, uiMode = Configuration.UI_MODE_NIGHT_YES, name = "HomeScreenPreviewDark"
 )
 @Preview(showBackground = true, widthDp = 320)
 @Composable
@@ -129,20 +128,20 @@ fun HomeScreenPreview() {
     FuelBuddyTheme {
         HomeScreenContent(
             vehicles = listOf(
-            Vehicle(
-                vehicleID = "the-test-vehicle-uuid",
-                nickname = "The Kia",
-                make = "Kia",
-                model = "Sorento",
-                modelYear = 2015,
-                plate = "ih8dis1",
-            ),
+                Vehicle(
+                    vehicleID = "the-test-vehicle-uuid",
+                    nickname = "The Kia",
+                    make = "Kia",
+                    model = "Sorento",
+                    modelYear = 2015,
+                    plate = "ih8dis1",
+                ),
 //                MinimalVehicle(
 //                    vehicleID = "oooo-xxxx-8765-4321",
 //                    nickname = "Coop",
 //                    plate = "i<3dis1",
 //                ),
-        ), onVehicleClick = {}, onAddVehicle = {})
-        // TODO: Implement `EditVehicleScreen.kt`
+            ), onVehicleClick = {}, onAddVehicle = {})
+        // TODO: Implement `VehicleEditScreen.kt`
     }
 }

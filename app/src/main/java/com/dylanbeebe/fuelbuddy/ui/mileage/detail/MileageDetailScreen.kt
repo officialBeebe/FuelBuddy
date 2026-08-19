@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.screen
+package com.dylanbeebe.fuelbuddy.ui.mileage.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -46,7 +46,6 @@ import coil.compose.SubcomposeAsyncImage
 import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.MileageDetailViewModel
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId

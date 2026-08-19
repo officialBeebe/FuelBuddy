@@ -4,12 +4,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dylanbeebe.fuelbuddy.ui.screen.EditMileageScreen
-import com.dylanbeebe.fuelbuddy.ui.screen.EditVehicleScreen
-import com.dylanbeebe.fuelbuddy.ui.screen.ExportMileageScreen
-import com.dylanbeebe.fuelbuddy.ui.screen.HomeScreen
-import com.dylanbeebe.fuelbuddy.ui.screen.MileageScreen
-import com.dylanbeebe.fuelbuddy.ui.screen.VehicleScreen
+import com.dylanbeebe.fuelbuddy.ui.mileage.edit.EditMileageScreen
+import com.dylanbeebe.fuelbuddy.ui.vehicle.EditVehicleScreen
+import com.dylanbeebe.fuelbuddy.ui.mileage.export.ExportMileageScreen
+import com.dylanbeebe.fuelbuddy.ui.home.HomeScreen
+import com.dylanbeebe.fuelbuddy.ui.mileage.detail.MileageScreen
+import com.dylanbeebe.fuelbuddy.ui.vehicle.VehicleScreen
 
 @Composable
 fun NavGraph() {

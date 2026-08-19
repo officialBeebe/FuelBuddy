@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.viewmodel
+package com.dylanbeebe.fuelbuddy.ui.mileage.export
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,6 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -94,7 +93,8 @@ class VehicleMileageViewModel(
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val savedStateHandle = createSavedStateHandle()
-                val app = (this[APPLICATION_KEY] as FuelBuddyApplication)
+                val app =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as FuelBuddyApplication)
                 VehicleMileageViewModel(savedStateHandle, app.mileageRepositoryImpl, app)
             }
         }

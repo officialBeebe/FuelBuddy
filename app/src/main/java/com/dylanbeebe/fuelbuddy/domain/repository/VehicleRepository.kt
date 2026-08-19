@@ -12,5 +12,5 @@ interface VehicleRepository {
     suspend fun update(vehicle: Vehicle)
     suspend fun delete(vehicle: Vehicle)
     suspend fun addAttachment(attachment: VehicleAttachment)
-    suspend fun removeAttachment(attachment: VehicleAttachment)
+    suspend fun deleteAttachment(attachment: VehicleAttachment)
 }

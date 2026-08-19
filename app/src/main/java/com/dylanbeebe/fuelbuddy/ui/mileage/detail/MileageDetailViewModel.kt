@@ -1,9 +1,8 @@
-package com.dylanbeebe.fuelbuddy.ui.viewmodel
+package com.dylanbeebe.fuelbuddy.ui.mileage.detail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
@@ -64,14 +63,15 @@ class MileageDetailViewModel(
     }
 
     fun removeAttachment(attachment: MileageAttachment) {
-        viewModelScope.launch { mileageRepositoryImpl.removeAttachment(attachment) }
+        viewModelScope.launch { mileageRepositoryImpl.deleteAttachment(attachment) }
     }
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val savedStateHandle = createSavedStateHandle()
-                val app = (this[APPLICATION_KEY] as FuelBuddyApplication)
+                val app =
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as FuelBuddyApplication)
                 MileageDetailViewModel(savedStateHandle, app.mileageRepositoryImpl)
             }
         }

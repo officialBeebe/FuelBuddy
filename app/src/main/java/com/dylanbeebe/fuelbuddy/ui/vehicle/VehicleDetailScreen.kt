@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.screen
+package com.dylanbeebe.fuelbuddy.ui.vehicle
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.foundation.layout.Arrangement
@@ -36,14 +36,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dylanbeebe.fuelbuddy.data.room.entity.FuelType
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.component.MileageCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleDetailViewModel
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.VehicleMileageViewModel
+import com.dylanbeebe.fuelbuddy.ui.mileage.export.VehicleMileageViewModel
 import java.time.Instant
 
 @Composable

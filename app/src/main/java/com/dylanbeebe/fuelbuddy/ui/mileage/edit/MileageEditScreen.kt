@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.screen
+package com.dylanbeebe.fuelbuddy.ui.mileage.edit
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -54,18 +54,19 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
-import com.dylanbeebe.fuelbuddy.data.room.entity.FuelType
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.component.rememberCameraLauncher
 import com.dylanbeebe.fuelbuddy.ui.component.rememberMultiPhotoPickerLauncher
-import com.dylanbeebe.fuelbuddy.ui.viewmodel.MileageDetailViewModel
+import com.dylanbeebe.fuelbuddy.ui.mileage.detail.MileageDetailViewModel
 import java.io.File
 
 @Composable
 fun EditMileageScreen(
     modifier: Modifier = Modifier,
+    // TODO: vehicleID: String, // Must handle in NavGraph.kt: pass vehicleID into onMileageEdit()
     onBack: () -> Unit,
     onMileageDeleted: () -> Unit
 ) {

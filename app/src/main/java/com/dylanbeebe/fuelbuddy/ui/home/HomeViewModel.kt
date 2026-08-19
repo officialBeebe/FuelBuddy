@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.viewmodel
+package com.dylanbeebe.fuelbuddy.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

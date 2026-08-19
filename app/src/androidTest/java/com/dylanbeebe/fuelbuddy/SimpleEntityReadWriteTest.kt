@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.dylanbeebe.fuelbuddy.data.room.entity.FuelType
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
 import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
