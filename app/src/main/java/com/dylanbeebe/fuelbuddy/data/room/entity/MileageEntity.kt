@@ -1,5 +1,6 @@
 package com.dylanbeebe.fuelbuddy.data.room.entity
 
+import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -12,19 +13,20 @@ import java.util.UUID
 
 @Serializable
 @Entity(
+    tableName = "mileage",
     foreignKeys = [ForeignKey(
-        entity = Vehicle::class,
+        entity = VehicleEntity::class,
         parentColumns = arrayOf("vehicleID"),
-        childColumns = arrayOf("vehicle"),
+        childColumns = arrayOf("vehicleID"),
         onDelete = ForeignKey.CASCADE
     )],
     indices = [Index(
-        value = ["timestamp", "vehicle"],
+        value = ["timestamp", "vehicleID"],
         unique = true
     )]
 )
 @TypeConverters(FuelTypeConverter::class)
-data class Mileage(
+data class MileageEntity(
     @PrimaryKey val mileageID: String = UUID.randomUUID().toString(),
     val timestamp: String = Instant.now().toString(),
     val odometerMiles: Double,
@@ -34,5 +36,5 @@ data class Mileage(
     val totalDollars: Double,
     val journal: String? = null,
     val isExported: Boolean = false,
-    val vehicle: String,
+    val vehicleID: String,
 )

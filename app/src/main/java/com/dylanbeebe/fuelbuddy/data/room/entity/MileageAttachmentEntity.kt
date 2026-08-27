@@ -7,14 +7,14 @@ import java.util.UUID
 
 @Entity(
     foreignKeys = [ForeignKey(
-        entity = Mileage::class,
+        entity = MileageEntity::class,
         parentColumns = arrayOf("mileageID"),
-        childColumns = arrayOf("mileage"),
+        childColumns = arrayOf("mileageID"),
         onDelete = ForeignKey.CASCADE
     )],
 )
-data class MileageAttachment(
+data class MileageAttachmentEntity(
     @PrimaryKey val attachmentID: String = UUID.randomUUID().toString(),
-    val filePath: String,
-    val mileage: String
+    val filepath: String,
+    val mileageID: String
 )

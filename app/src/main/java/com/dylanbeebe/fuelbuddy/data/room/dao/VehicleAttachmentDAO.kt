@@ -2,7 +2,7 @@ package com.dylanbeebe.fuelbuddy.data.room.dao
 
 import androidx.room.Dao
 import com.dylanbeebe.fuelbuddy.data.dao.BaseDao
-import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
+import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachmentEntity
 
 @Dao
-interface VehicleAttachmentDAO : BaseDao<VehicleAttachment>
+interface VehicleAttachmentDAO : BaseDao<VehicleAttachmentEntity>

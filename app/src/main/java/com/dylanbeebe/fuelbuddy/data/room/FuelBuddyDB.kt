@@ -6,14 +6,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.dylanbeebe.fuelbuddy.data.dao.MileageDAO
 import com.dylanbeebe.fuelbuddy.data.dao.VehicleDAO
-import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
-import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleEntity
 import com.dylanbeebe.fuelbuddy.data.room.dao.MileageAttachmentDAO
 import com.dylanbeebe.fuelbuddy.data.room.dao.VehicleAttachmentDAO
-import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
-import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachment
+import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachmentEntity
+import com.dylanbeebe.fuelbuddy.data.room.entity.MileageEntity
+import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleAttachmentEntity
 
-@Database(entities = [Vehicle::class, VehicleAttachment::class, Mileage::class, MileageAttachment::class], version = 1)
+@Database(entities = [VehicleEntity::class, VehicleAttachmentEntity::class, MileageEntity::class, MileageAttachmentEntity::class], version = 1)
 abstract class FuelBuddyDB : RoomDatabase() {
     abstract fun vehicleDAO(): VehicleDAO
     abstract fun vehicleAttachmentDAO(): VehicleAttachmentDAO

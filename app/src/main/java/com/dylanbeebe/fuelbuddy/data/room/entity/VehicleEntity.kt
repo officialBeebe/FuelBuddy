@@ -5,8 +5,10 @@ import androidx.room.PrimaryKey
 import java.util.UUID
 
 // Foreign Keys: https://stackoverflow.com/a/56707343
-@Entity
-data class Vehicle(
+@Entity(
+    tableName = "vehicle"
+)
+data class VehicleEntity(
     @PrimaryKey val vehicleID: String = UUID.randomUUID().toString(),
     val nickname: String,
     val make: String? = null,
