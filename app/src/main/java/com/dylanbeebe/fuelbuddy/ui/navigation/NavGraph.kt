@@ -4,12 +4,14 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dylanbeebe.fuelbuddy.ui.mileage.edit.EditMileageScreen
-import com.dylanbeebe.fuelbuddy.ui.vehicle.EditVehicleScreen
-import com.dylanbeebe.fuelbuddy.ui.mileage.export.ExportMileageScreen
-import com.dylanbeebe.fuelbuddy.ui.home.HomeScreen
-import com.dylanbeebe.fuelbuddy.ui.mileage.detail.MileageScreen
-import com.dylanbeebe.fuelbuddy.ui.vehicle.VehicleScreen
+import com.dylanbeebe.fuelbuddy.ui.core.mileage.add.MileageAddScreen
+import com.dylanbeebe.fuelbuddy.ui.core.mileage.detail.MileageDetailScreen
+import com.dylanbeebe.fuelbuddy.ui.core.mileage.edit.MileageEditScreen
+import com.dylanbeebe.fuelbuddy.ui.core.mileage.export.MileageExportScreen
+import com.dylanbeebe.fuelbuddy.ui.core.vehicle.edit.VehicleEditScreen
+import com.dylanbeebe.fuelbuddy.ui.core.vehicle.add.VehicleAddScreen
+import com.dylanbeebe.fuelbuddy.ui.core.vehicle.list.VehicleListScreen
+import com.dylanbeebe.fuelbuddy.ui.core.vehicle.detail.VehicleDetailScreen
 
 @Composable
 fun NavGraph() {
@@ -17,10 +19,10 @@ fun NavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Home,
+        startDestination = VehicleList,
     ) {
-        composable<Home> {
-            HomeScreen(
+        composable<VehicleList> {
+            VehicleListScreen(
                 onVehicleClick = { vehicleID: String ->
                     navController.navigate(
                         VehicleDetail(
@@ -28,11 +30,20 @@ fun NavGraph() {
                         )
                     )
                 },
-                onAddVehicle = { navController.navigate(EditVehicle()) }
+                // NOTE: Routes.kt now has a dedicated VehicleAdd object, but no
+                // screen is wired to it yet — keeping this on VehicleEdit()
+                // (nullable vehicleID, add-when-null) to match current
+                // EditVehicleScreen behavior. Revisit once vehicle add is split out.
+                onAddVehicle = { navController.navigate(VehicleAdd) }
+            )
+        }
+        composable<VehicleAdd> {
+            VehicleAddScreen(
+                onBack = { navController.popBackStack() }
             )
         }
         composable<VehicleDetail> {
-            VehicleScreen(
+            VehicleDetailScreen(
                 onMileageClick = { mileageID: String ->
                     navController.navigate(
                         MileageDetail(
@@ -40,9 +51,9 @@ fun NavGraph() {
                         )
                     )
                 },
-                onEditVehicle = { vehicleID: String -> navController.navigate(EditVehicle(vehicleID)) },
+                onEditVehicle = { vehicleID: String -> navController.navigate(VehicleEdit(vehicleID)) },
                 onBack = { navController.popBackStack() },
-                onAddMileage = { vehicleID: String -> navController.navigate(EditMileage(vehicleID = vehicleID)) },
+                onAddMileage = { vehicleID: String -> navController.navigate(MileageAdd(vehicleID)) },
                 onExportMileage = { vehicleID: String ->
                     navController.navigate(
                         ExportMileage(
@@ -52,33 +63,34 @@ fun NavGraph() {
                 }
             )
         }
-        composable<MileageDetail> {
-            MileageScreen(
-                onEditMileage = { mileageID: String ->
-                    navController.navigate(EditMileage(mileageID = mileageID))
-                },
-                onBack = { navController.popBackStack() },
-            )
-        }
-        composable<EditMileage> {
-            EditMileageScreen(
-                onBack = { navController.popBackStack() },
-                onMileageDeleted = {
-                    navController.popBackStack<VehicleDetail>(inclusive = false)
-                },
-            )
-        }
-
-        composable<EditVehicle> {
-            EditVehicleScreen(
+        composable<VehicleEdit> {
+            VehicleEditScreen(
                 onBack = { navController.popBackStack() },
                 onVehicleDeleted = {
-                    navController.popBackStack<Home>(inclusive = false)
+                    navController.popBackStack<VehicleList>(inclusive = false)
                 }
             )
         }
+        composable<MileageDetail> {
+            MileageDetailScreen(
+                onEditMileage = { mileageID: String ->
+                    navController.navigate(MileageEdit(mileageID))
+                },
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<MileageAdd> {
+            MileageAddScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
+        composable<MileageEdit> {
+            MileageEditScreen(
+                onBack = { navController.popBackStack() },
+            )
+        }
         composable<ExportMileage> {
-            ExportMileageScreen(
+            MileageExportScreen(
                 onBack = { navController.popBackStack() }
             )
         }

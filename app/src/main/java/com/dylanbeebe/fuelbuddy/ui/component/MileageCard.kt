@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
-import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 import java.time.Instant
 import java.time.ZoneId
@@ -126,7 +126,8 @@ fun MileageCardPreview() {
         fuelType = FuelType.REGULAR,
         totalDollars = 19.84,
         journal = "This is a test mileage log.",
-        vehicle = "test-vehicle-uuid"
+        isExported = false,
+        vehicleID = "test-vehicle-uuid"
     )
     FuelBuddyTheme {
         Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {

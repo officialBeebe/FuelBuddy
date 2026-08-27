@@ -4,24 +4,26 @@ import kotlinx.serialization.Serializable
 
 // Displays vehicle inventory.
 @Serializable
-object Home
+object VehicleList
 
-// Displays vehicle mileage logs.
+@Serializable
+object VehicleAdd
+
 @Serializable
 data class VehicleDetail(val vehicleID: String)
 
-// Displays a single mileage entry's details and attachments.
+@Serializable
+data class VehicleEdit(val vehicleID: String? = null)
+
+@Serializable
+data class MileageAdd(val vehicleID: String)
+
 @Serializable
 data class MileageDetail(val mileageID: String)
 
-// Vehicle details for new and existing vehicles.
 @Serializable
-data class EditVehicle(val vehicleID: String? = null)
+data class MileageEdit(val mileageID: String)
 
-// Mileage details for new and existing mileage logs.
-@Serializable
-data class EditMileage(val vehicleID: String? = null, val mileageID: String? = null)
 
-// Mileage export form.
 @Serializable
 data class ExportMileage(val vehicleID: String)

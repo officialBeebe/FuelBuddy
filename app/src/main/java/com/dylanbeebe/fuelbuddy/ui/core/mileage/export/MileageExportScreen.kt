@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.mileage.export
+package com.dylanbeebe.fuelbuddy.ui.core.mileage.export
 
 import android.content.Intent
 import androidx.compose.foundation.clickable
@@ -45,50 +45,54 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.ExportMileageInput
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
-import com.dylanbeebe.fuelbuddy.ui.vehicle.VehicleDetailViewModel
+import com.dylanbeebe.fuelbuddy.ui.core.vehicle.detail.VehicleDetailViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun ExportMileageScreen(
+fun MileageExportScreen(
     onBack: () -> Unit,
 ) {
+    val context = LocalContext.current
+
     val vehicleDetailViewModel: VehicleDetailViewModel = viewModel(
         factory = VehicleDetailViewModel.Factory
     )
-    val vehicleMileageViewModel: VehicleMileageViewModel = viewModel(
-        factory = VehicleMileageViewModel.Factory
+    val mileageExportViewModel: MileageExportViewModel = viewModel(
+        factory = MileageExportViewModel.Factory
     )
-    val detailState by vehicleDetailViewModel.uiState.collectAsState()
-    val context = LocalContext.current
 
-    detailState.vehicle?.let { vehicle ->
-        ExportMileageScreenContent(
-            onExport = { rangeMode, start, end, format ->
-                vehicleMileageViewModel.exportMileage(
-                    vehicle = vehicle,
+    val uiState by mileageExportViewModel.uiState.collectAsState()
+    ExportMileageScreenContent(
+        onDownload = { rangeMode, start, end, format ->
+            mileageExportViewModel.downloadMileage(
+                vehicleID = uiState.vehicleID,
+                ExportMileageInput(
                     rangeMode = rangeMode,
                     startDate = start,
                     endDate = end,
                     format = format,
-                ) { intent ->
-                    context.startActivity(Intent.createChooser(intent, "Share mileage export"))
-                    onBack()
-                }
-            },
-            onCancel = onBack,
-            onBack = onBack,
-        )
-    }
+                ),
+                context = context
+            ) { intent ->
+                context.startActivity(Intent.createChooser(intent, "Share mileage export"))
+                onBack()
+            }
+            onBack()
+        },
+        onCancel = onBack,
+        onBack = onBack,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExportMileageScreenContent(
-    onExport: (ExportRangeMode, LocalDate?, LocalDate?, ExportFormat) -> Unit,
+    onDownload: (ExportRangeMode, LocalDate?, LocalDate?, ExportFormat) -> Unit,
     onCancel: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -131,12 +135,18 @@ fun ExportMileageScreenContent(
                         RadioOption(
                             label = "Latest (pending, not yet exported)",
                             selected = rangeMode == ExportRangeMode.LATEST,
-                            onSelect = { rangeMode = ExportRangeMode.LATEST }
+                            onSelect = {
+                                rangeMode =
+                                    ExportRangeMode.LATEST
+                            }
                         )
                         RadioOption(
                             label = "Custom date range",
                             selected = rangeMode == ExportRangeMode.CUSTOM,
-                            onSelect = { rangeMode = ExportRangeMode.CUSTOM }
+                            onSelect = {
+                                rangeMode =
+                                    ExportRangeMode.CUSTOM
+                            }
                         )
                     }
                 }
@@ -164,12 +174,18 @@ fun ExportMileageScreenContent(
                         RadioOption(
                             label = "CSV",
                             selected = format == ExportFormat.CSV,
-                            onSelect = { format = ExportFormat.CSV }
+                            onSelect = {
+                                format =
+                                    ExportFormat.CSV
+                            }
                         )
                         RadioOption(
                             label = "JSON",
                             selected = format == ExportFormat.JSON,
-                            onSelect = { format = ExportFormat.JSON }
+                            onSelect = {
+                                format =
+                                    ExportFormat.JSON
+                            }
                         )
                     }
                 }
@@ -202,7 +218,7 @@ fun ExportMileageScreenContent(
             val exportEnabled =
                 rangeMode == ExportRangeMode.LATEST || (startDate != null && endDate != null)
             FloatingActionButton(
-                onClick = { if (exportEnabled) onExport(rangeMode, startDate, endDate, format) },
+                onClick = { if (exportEnabled) onDownload(rangeMode, startDate, endDate, format) },
                 modifier = Modifier
                     .size(64.dp)
                     .align(Alignment.CenterEnd),

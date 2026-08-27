@@ -1,4 +1,4 @@
-package com.dylanbeebe.fuelbuddy.ui.mileage.detail
+package com.dylanbeebe.fuelbuddy.ui.core.mileage.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,8 +43,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
-import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
-import com.dylanbeebe.fuelbuddy.data.room.entity.MileageAttachment
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import java.io.File
 import java.time.Instant
@@ -52,7 +52,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun MileageScreen(
+fun MileageDetailScreen(
     onEditMileage: (String) -> Unit, onBack: () -> Unit
 ) {
     /**
@@ -68,7 +68,7 @@ fun MileageScreen(
     val detailState by mileageDetailViewModel.uiState.collectAsState()
     MileageScreenContent(
         mileage = detailState.mileage,
-        mileageAttachments = detailState.mileageAttachments,
+        mileageAttachmentEntities = detailState.mileageAttachments,
         onEditMileage = onEditMileage,
         onDeleteMileage = {
             mileageDetailViewModel.deleteMileage()
@@ -81,7 +81,7 @@ fun MileageScreen(
 @Composable
 fun MileageScreenContent(
     mileage: Mileage?,
-    mileageAttachments: List<MileageAttachment>,
+    mileageAttachmentEntities: List<MileageAttachment>,
     onEditMileage: (String) -> Unit,
     onDeleteMileage: () -> Unit,
     onBack: () -> Unit,
@@ -117,6 +117,16 @@ fun MileageScreenContent(
                     )
                 )
             }
+
+            // Edit Mileage Icon
+//            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                ClickableIcon(
+                    icon = Icons.Filled.Edit,
+                    contentDescription = "Edit mileage details",
+                    onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
+                    modifier = Modifier.size(24.dp)
+                )
+//            }
         }
 
 
@@ -194,7 +204,7 @@ fun MileageScreenContent(
                             }
 
                             // Attachments section
-                            if (mileageAttachments.isNotEmpty()) {
+                            if (mileageAttachmentEntities.isNotEmpty()) {
                                 HorizontalDivider()
                                 // Heading
                                 Text(
@@ -211,16 +221,16 @@ fun MileageScreenContent(
                                     ),
                                     verticalArrangement = Arrangement.spacedBy(8.dp),
                                 ) {
-                                    mileageAttachments.forEach { attachment ->
+                                    mileageAttachmentEntities.forEach { attachment ->
                                         SubcomposeAsyncImage(
-                                            model = File(attachment.filePath),
+                                            model = File(attachment.filepath),
                                             contentDescription = "Attachment",
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
                                                 .size(80.dp)
                                                 .clip(RoundedCornerShape(16.dp))
                                                 .clickable {
-                                                    viewingAttachmentPath = attachment.filePath
+                                                    viewingAttachmentPath = attachment.filepath
                                                 },
                                             loading = {
                                                 Box(
@@ -260,19 +270,19 @@ fun MileageScreenContent(
                 }
             }
         }
-        FloatingActionButton(
-                onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
-                modifier = Modifier.size(64.dp).align(Alignment.End),
-                shape = RoundedCornerShape(16.dp),
-                containerColor = MaterialTheme.colorScheme.primary,
-                contentColor = MaterialTheme.colorScheme.onPrimary,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit mileage",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
+//        FloatingActionButton(
+//                onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
+//                modifier = Modifier.size(64.dp).align(Alignment.End),
+//                shape = RoundedCornerShape(16.dp),
+//                containerColor = MaterialTheme.colorScheme.primary,
+//                contentColor = MaterialTheme.colorScheme.onPrimary,
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Default.Edit,
+//                    contentDescription = "Edit mileage",
+//                    modifier = Modifier.size(32.dp)
+//                )
+//            }
     }
 
     if (showDeleteConfirmation) {

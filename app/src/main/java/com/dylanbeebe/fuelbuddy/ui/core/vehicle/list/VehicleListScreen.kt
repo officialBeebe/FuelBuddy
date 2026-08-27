@@ -1,7 +1,8 @@
-package com.dylanbeebe.fuelbuddy.ui.home
+package com.dylanbeebe.fuelbuddy.ui.core.vehicle.list
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -29,14 +30,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleEntity
+import com.dylanbeebe.fuelbuddy.domain.model.vehicle.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 import com.dylanbeebe.fuelbuddy.ui.component.VehicleCard
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 
 @Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier, onVehicleClick: (String) -> Unit, onAddVehicle: () -> Unit
+fun VehicleListScreen(
+    modifier: Modifier = Modifier.Companion, onVehicleClick: (String) -> Unit, onAddVehicle: () -> Unit
 ) {
     /**
      * Home Screen
@@ -52,7 +54,7 @@ fun HomeScreen(
     )
     val uiState by vehicleListViewModel.uiState.collectAsState()
     HomeScreenContent(
-        vehicles = uiState,
+        vehicleList = uiState.vehicleList,
         onAddVehicle = onAddVehicle,
         onVehicleClick = onVehicleClick,
         modifier = modifier
@@ -61,10 +63,10 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreenContent(
-    vehicles: List<Vehicle>,
+    vehicleList: List<Vehicle>,
     onVehicleClick: (String) -> Unit,
     onAddVehicle: () -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier = Modifier.Companion,
 ) {
 
     Column(
@@ -98,23 +100,34 @@ fun HomeScreenContent(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                items(vehicles, key = { it.vehicleID }) { vehicle ->
-                    VehicleCard(
-                        vehicle = vehicle, onClick = { onVehicleClick(it.vehicleID) })
+            Box(modifier = Modifier.fillMaxSize()) {
+                LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    items(vehicleList, key = { it.vehicleID }) { vehicle ->
+                        VehicleCard(
+                            vehicle = vehicle, onClick = { onVehicleClick(it.vehicleID) })
+                    }
                 }
+
+                ActionFAB(
+                    icon = Icons.Default.Add,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    contentDescription = "Add vehicle",
+                    onClick = onAddVehicle,
+                    modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+                )
             }
         }
-        ActionFAB(
-            icon = Icons.Default.Add,
-            contentDescription = "Add vehicle",
-            onClick = onAddVehicle,
-            modifier = Modifier.align(Alignment.End)
-        )
+//        ActionFAB(
+//            icon = Icons.Default.Add,
+//            contentDescription = "Add vehicle",
+//            onClick = onAddVehicle,
+//            modifier = Modifier.align(Alignment.End)
+//        )
     }
 }
 
@@ -127,7 +140,7 @@ fun HomeScreenContent(
 fun HomeScreenPreview() {
     FuelBuddyTheme {
         HomeScreenContent(
-            vehicles = listOf(
+            vehicleList = listOf(
                 Vehicle(
                     vehicleID = "the-test-vehicle-uuid",
                     nickname = "The Kia",

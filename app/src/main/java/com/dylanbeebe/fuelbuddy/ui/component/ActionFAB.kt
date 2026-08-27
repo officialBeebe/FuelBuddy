@@ -10,6 +10,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -18,16 +19,17 @@ import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 @Composable
 fun ActionFAB(
     icon: ImageVector,
+    containerColor: Color,
+    contentColor: Color,
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     FloatingActionButton(
-        onClick = onClick,
-        modifier = modifier.size(64.dp),
-        shape = RoundedCornerShape(16.dp),
-        containerColor = MaterialTheme.colorScheme.primary,
-        contentColor = MaterialTheme.colorScheme.onPrimary,
+        onClick = onClick, modifier = modifier.size(64.dp), shape = RoundedCornerShape(16.dp),
+//        containerColor = MaterialTheme.colorScheme.primary,
+//        contentColor = MaterialTheme.colorScheme.onPrimary,
+        containerColor = containerColor, contentColor = contentColor
     ) {
         Icon(
             imageVector = icon,
@@ -46,8 +48,9 @@ fun ActionFABPreview() {
     FuelBuddyTheme {
         ActionFAB(
             icon = Icons.Default.Add,
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary,
             contentDescription = "Add vehicle",
-            onClick = {}
-        )
+            onClick = {})
     }
 }
