@@ -5,11 +5,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
-import com.dylanbeebe.fuelbuddy.data.room.entity.Mileage
-import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
 import com.dylanbeebe.fuelbuddy.data.room.FuelBuddyDB
-import com.dylanbeebe.fuelbuddy.data.room.repository.MileageRepositoryImpl
-import com.dylanbeebe.fuelbuddy.data.room.repository.VehicleRepositoryImpl
+import com.dylanbeebe.fuelbuddy.data.room.repository.MileageRepositoryRoomImpl
+import com.dylanbeebe.fuelbuddy.data.room.repository.VehicleRepositoryRoomImpl
+import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
+import com.dylanbeebe.fuelbuddy.domain.model.vehicle.Vehicle
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.equalTo
@@ -20,6 +20,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import java.io.IOException
 import java.time.LocalDateTime
+import java.util.UUID
+
 /** Instrumented test
  *
  * Confirm basic entity create and read functionality.
@@ -28,8 +30,8 @@ import java.time.LocalDateTime
 class SimpleEntityReadWriteTest {
 //    private lateinit var vehicleDAO: VehicleDAO
 //    private lateinit var mileageDAO: MileageDAO
-    private lateinit var vehicleRepositoryImpl: VehicleRepositoryImpl
-    private lateinit var mileageRepositoryImpl: MileageRepositoryImpl
+    private lateinit var vehicleRepositoryRoomImpl: VehicleRepositoryRoomImpl
+    private lateinit var mileageRepositoryRoomImpl: MileageRepositoryRoomImpl
     private lateinit var db: FuelBuddyDB
 
     @Before
@@ -37,8 +39,8 @@ class SimpleEntityReadWriteTest {
         val context = ApplicationProvider.getApplicationContext<Context>()
         db = Room.inMemoryDatabaseBuilder(
             context, FuelBuddyDB::class.java).build()
-        vehicleRepositoryImpl = VehicleRepositoryImpl(db.vehicleDAO(), db.vehicleAttachmentDAO())
-        mileageRepositoryImpl = MileageRepositoryImpl(db.mileageDAO(), db.mileageAttachmentDAO())
+        vehicleRepositoryRoomImpl = VehicleRepositoryRoomImpl(db.vehicleDAO(), db.vehicleAttachmentDAO())
+        mileageRepositoryRoomImpl = MileageRepositoryRoomImpl(db.mileageDAO(), db.mileageAttachmentDAO())
     }
 
     @After
@@ -51,15 +53,16 @@ class SimpleEntityReadWriteTest {
     @Throws(Exception::class)
     fun writeVehicleAndReadInList() = runTest {
         val vehicle = Vehicle(
+            vehicleID = UUID.randomUUID().toString(),
             nickname = "The Kia",
             make = "Kia",
             model = "Sorento",
             modelYear = 2015,
             plate = "ih8dis1",
         )
-        vehicleRepositoryImpl.insert(vehicle)
+        vehicleRepositoryRoomImpl.insert(vehicle)
 
-        val vehicles = vehicleRepositoryImpl.observeAllVehicles().first()
+        val vehicles = vehicleRepositoryRoomImpl.observeAllVehicles().first()
 
         val expectedVehicle = Vehicle(
             vehicleID = vehicle.vehicleID,
@@ -76,15 +79,17 @@ class SimpleEntityReadWriteTest {
     @Throws(Exception::class)
     fun writeMileageAndReadInList() = runTest {
         val vehicle = Vehicle(
+            vehicleID = UUID.randomUUID().toString(),
             nickname = "The Kia",
             make = "Kia",
             model = "Sorento",
             modelYear = 2015,
             plate = "ih8dis1",
         )
-        vehicleRepositoryImpl.insert(vehicle)
+        vehicleRepositoryRoomImpl.insert(vehicle)
 
         val mileage = Mileage(
+            mileageID = UUID.randomUUID().toString(),
             timestamp = LocalDateTime.now().toString(),
             odometerMiles = 80085.69,
             volumeGallons = 6.9,
@@ -92,10 +97,12 @@ class SimpleEntityReadWriteTest {
             fuelType = FuelType.REGULAR,
             totalDollars = 19.84,
             journal = "This is a test mileage log.",
-            vehicle = vehicle.vehicleID)
-        mileageRepositoryImpl.insert(mileage).toString()
+            isExported = false,
+            vehicleID = vehicle.vehicleID
+        )
+        mileageRepositoryRoomImpl.insert(mileage).toString()
 
-        val vehicleMileages = mileageRepositoryImpl.observeAllForVehicle(vehicle.vehicleID).first()
+        val vehicleMileages = mileageRepositoryRoomImpl.observeAllMileageForVehicle(vehicle.vehicleID).first()
 
         val expectedMileage = Mileage(
             mileageID = mileage.mileageID,
@@ -106,8 +113,8 @@ class SimpleEntityReadWriteTest {
             fuelType = mileage.fuelType,
             totalDollars = mileage.totalDollars,
             journal = mileage.journal,
-            vehicle = mileage.vehicle,
-            isExported = mileage.isExported
+            isExported = mileage.isExported,
+            vehicleID = mileage.vehicleID,
         )
         assertThat(vehicleMileages[0], equalTo(expectedMileage))
     }

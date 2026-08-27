@@ -6,11 +6,23 @@
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="ExampleInstrumentedTest">
+      <SelectionState runConfigName="addVehicleUseCase()">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SimpleEntityReadWriteTest">
+      <SelectionState runConfigName="SimpleVehicleUseCaseTest">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="addMileageWithAttachmentsUseCase()">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="SimpleMileageUseCaseTest">
+        <option name="selectionMode" value="DROPDOWN" />
+        <DialogSelection />
+      </SelectionState>
+      <SelectionState runConfigName="Tests in 'com.dylanbeebe.fuelbuddy'">
         <option name="selectionMode" value="DROPDOWN" />
         <DialogSelection />
       </SelectionState>

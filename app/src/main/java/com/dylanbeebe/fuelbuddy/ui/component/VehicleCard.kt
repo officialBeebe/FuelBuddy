@@ -15,7 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dylanbeebe.fuelbuddy.data.room.entity.Vehicle
+import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleEntity
+import com.dylanbeebe.fuelbuddy.domain.model.vehicle.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.theme.FuelBuddyTheme
 
 @Composable
