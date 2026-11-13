@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,19 +39,19 @@ fun VehicleForm(
     onBack: () -> Unit
 ) {
     // Form state
-    var nickname by remember(initialVehicle) {
+    var nickname by rememberSaveable(initialVehicle) {
         mutableStateOf(initialVehicle?.vehicle?.nickname ?: "")
     }
-    var make by remember(initialVehicle) {
+    var make by rememberSaveable(initialVehicle) {
         mutableStateOf(initialVehicle?.vehicle?.make ?: "")
     }
-    var model by remember(initialVehicle) {
+    var model by rememberSaveable(initialVehicle) {
         mutableStateOf(initialVehicle?.vehicle?.model ?: "")
     }
-    var modelYear by remember(initialVehicle) {
+    var modelYear by rememberSaveable(initialVehicle) {
         mutableStateOf(initialVehicle?.vehicle?.modelYear?.toString() ?: "")
     }
-    var plate by remember(initialVehicle) {
+    var plate by rememberSaveable(initialVehicle) {
         mutableStateOf(initialVehicle?.vehicle?.plate ?: "")
     }
 

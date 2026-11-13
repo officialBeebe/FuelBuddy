@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,37 +48,37 @@ fun MileageForm(
     onBack: () -> Unit,
 ) {
     // Form state
-    var odometerMiles by remember(initialMileage) {
+    var odometerMiles by rememberSaveable(initialMileage) {
         mutableStateOf(initialMileage?.odometerMiles?.toString() ?: "")
     }
 
-    var volumeGallons by remember(initialMileage) {
+    var volumeGallons by rememberSaveable(initialMileage) {
         mutableStateOf(initialMileage?.volumeGallons?.toString() ?: "")
     }
 
-    var totalDollars by remember(initialMileage) {
+    var totalDollars by rememberSaveable(initialMileage) {
         mutableStateOf(initialMileage?.totalDollars?.toString() ?: "")
     }
 
-    var fuelType by remember(initialMileage) {
+    var fuelType by rememberSaveable(initialMileage) {
         mutableStateOf(initialMileage?.fuelType ?: FuelType.REGULAR)
     }
 
-    var isFullTank by remember(initialMileage) {
+    var isFullTank by rememberSaveable(initialMileage) {
         mutableStateOf(initialMileage?.isFullTank ?: true)
     }
 
-    var journal by remember(initialMileage) {
+    var journal by rememberSaveable(initialMileage) {
         mutableStateOf(initialMileage?.journal ?: "")
     }
 
     // Attachments are always staged here and only flushed to
     // MileageAttachmentInput on save — same path for add and edit.
-    var stagedAttachments by remember {
+    var stagedAttachments by rememberSaveable {
         mutableStateOf<List<File>>(emptyList())
     }
 
-    var removedAttachments by remember(initialMileage) {
+    var removedAttachments by rememberSaveable(initialMileage) {
         mutableStateOf<List<MileageAttachment>>(emptyList())
     }
 
