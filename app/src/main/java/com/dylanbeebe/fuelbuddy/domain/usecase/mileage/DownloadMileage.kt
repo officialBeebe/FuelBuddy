@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Environment
 import android.provider.MediaStore
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.ExportMileageInput
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
 import com.dylanbeebe.fuelbuddy.domain.repository.MileageRepository
@@ -25,20 +26,20 @@ class DownloadMileage(
 ) {
     suspend fun invoke(vehicleID: String, input: ExportMileageInput, context: Context): Uri {
         val vehicle = vehicleRepository.getVehicle(vehicleID)
-        val toExport = fetchMileage(vehicleID, input)
-        check(toExport.isNotEmpty()) { "No mileage entries to export" }
+        val toExport = fetchMileage(vehicleID, input, context)
+        check(toExport.isNotEmpty()) { context.getString(R.string.mileage_export_no_entries) }
         val content = buildContent(toExport, input.format)
         val uri = writeToDownloads(context, vehicle.nickname, input.format, content)
         toExport.forEach { m -> mileageRepository.update(m.copy(isExported = true)) }
         return uri
     }
 
-    private suspend fun fetchMileage(vehicleID: String, input: ExportMileageInput): List<Mileage> =
+    private suspend fun fetchMileage(vehicleID: String, input: ExportMileageInput, context: Context): List<Mileage> =
         when (input.rangeMode) {
             ExportRangeMode.LATEST -> mileageRepository.getUnexportedMileageForVehicle(vehicleID)
             ExportRangeMode.CUSTOM -> {
-                val start = requireNotNull(input.startDate) { "startDate required for custom range" }
-                val end = requireNotNull(input.endDate) { "endDate required for custom range" }
+                val start = requireNotNull(input.startDate) { context.getString(R.string.mileage_export_start_date_required) }
+                val end = requireNotNull(input.endDate) { context.getString(R.string.mileage_export_end_date_required) }
                 mileageRepository.getMileageForVehicleInRange(
                     vehicleID,
                     start.atStartOfDay().toString(),
@@ -67,11 +68,11 @@ class DownloadMileage(
 
         val resolver = context.contentResolver
         val uri = resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
-            ?: throw IOException("MediaStore insert failed for $fileName")
+            ?: throw IOException(context.getString(R.string.mileage_export_media_insert_failed, fileName))
 
         resolver.openOutputStream(uri)?.use { out ->
             out.write(content.toByteArray())
-        } ?: throw IOException("Could not open output stream for $fileName")
+        } ?: throw IOException(context.getString(R.string.mileage_export_media_stream_failed, fileName))
 
         return uri
     }

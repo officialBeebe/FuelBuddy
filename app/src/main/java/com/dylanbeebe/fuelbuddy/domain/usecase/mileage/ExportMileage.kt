@@ -2,7 +2,9 @@ package com.dylanbeebe.fuelbuddy.domain.usecase.mileage
 
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.res.stringResource
 import androidx.core.content.FileProvider
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.ExportMileageInput
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
 import com.dylanbeebe.fuelbuddy.domain.model.vehicle.Vehicle
@@ -25,8 +27,8 @@ class ExportMileage(
 ) {
     suspend fun invoke(vehicleID: String, input: ExportMileageInput, context: Context): Intent {
         val vehicle = vehicleRepository.getVehicle(vehicleID)
-        val toExport = fetchMileage(vehicleID, input)
-        check(toExport.isNotEmpty()) { "No mileage entries to export" }
+        val toExport = fetchMileage(vehicleID, input, context)
+        check(toExport.isNotEmpty()) { context.getString(R.string.mileage_export_no_entries) }
 
         val content = buildContent(toExport, input.format)
         val file = writeExportFile(context, vehicle, input.format, content)
@@ -37,12 +39,12 @@ class ExportMileage(
         return intent
     }
 
-    private suspend fun fetchMileage(vehicleID: String, input: ExportMileageInput): List<Mileage> =
+    private suspend fun fetchMileage(vehicleID: String, input: ExportMileageInput, context: Context): List<Mileage> =
         when (input.rangeMode) {
-            _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportRangeMode.LATEST -> mileageRepository.getUnexportedMileageForVehicle(vehicleID)
-            _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportRangeMode.CUSTOM -> {
-                val start = requireNotNull(input.startDate) { "startDate required for custom range" }
-                val end = requireNotNull(input.endDate) { "endDate required for custom range" }
+            ExportRangeMode.LATEST -> mileageRepository.getUnexportedMileageForVehicle(vehicleID)
+            ExportRangeMode.CUSTOM -> {
+                val start = requireNotNull(input.startDate) { context.getString(R.string.mileage_export_start_date_required) }
+                val end = requireNotNull(input.endDate) { context.getString(R.string.mileage_export_end_date_required) }
                 mileageRepository.getMileageForVehicleInRange(
                     vehicleID,
                     start.atStartOfDay().toString(),
@@ -51,21 +53,21 @@ class ExportMileage(
             }
         }
 
-    private fun buildContent(mileage: List<Mileage>, format: com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat): String =
+    private fun buildContent(mileage: List<Mileage>, format: ExportFormat): String =
         when (format) {
-            _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat.CSV -> mileageRepository.buildMileageExportCsv(mileage)
-            _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat.JSON -> mileageRepository.buildMileageExportJson(mileage)
+            ExportFormat.CSV -> mileageRepository.buildMileageExportCsv(mileage)
+            ExportFormat.JSON -> mileageRepository.buildMileageExportJson(mileage)
         }
 
-    private fun writeExportFile(context: Context, vehicle: Vehicle, format: com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat, content: String): File {
-        val extension = if (format == _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat.CSV) "csv" else "json"
+    private fun writeExportFile(context: Context, vehicle: Vehicle, format: ExportFormat, content: String): File {
+        val extension = if (format == ExportFormat.CSV) "csv" else "json"
         val exportDir = File(context.cacheDir, "exports").apply { mkdirs() }
         val safeName = vehicle.nickname.trim().replace(Regex("\\s+"), "-")
         return File(exportDir, "${safeName}_${LocalDate.now()}.$extension").apply { writeText(content) }
     }
 
-    private fun buildShareIntent(context: Context, file: File, format: com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat): Intent {
-        val mimeType = if (format == _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.export.ExportFormat.CSV) "text/csv" else "application/json"
+    private fun buildShareIntent(context: Context, file: File, format: ExportFormat): Intent {
+        val mimeType = if (format == ExportFormat.CSV) "text/csv" else "application/json"
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
         return Intent(Intent.ACTION_SEND).apply {
             type = mimeType

@@ -1,6 +1,7 @@
 package com.dylanbeebe.fuelbuddy.ui.core.mileage.export
 
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.ChevronLeft
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -41,10 +44,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.ExportMileageInput
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import com.dylanbeebe.fuelbuddy.ui.core.vehicle.detail.VehicleDetailViewModel
@@ -67,22 +74,38 @@ fun MileageExportScreen(
     )
 
     val uiState by mileageExportViewModel.uiState.collectAsState()
+
+    val savedMessage = stringResource(R.string.mileage_export_download_success)
+    val failedMessage = stringResource(R.string.mileage_export_failed)
+    val shareIntentTitle = stringResource(R.string.mileage_export_share_intent_title)
     ExportMileageScreenContent(
         onDownload = { rangeMode, start, end, format ->
             mileageExportViewModel.downloadMileage(
                 vehicleID = uiState.vehicleID,
-                ExportMileageInput(
-                    rangeMode = rangeMode,
-                    startDate = start,
-                    endDate = end,
-                    format = format,
-                ),
-                context = context
-            ) { intent ->
-                context.startActivity(Intent.createChooser(intent, "Share mileage export"))
-                onBack()
-            }
-            onBack()
+                input = ExportMileageInput(rangeMode, start, end, format),
+                context = context,
+                onSuccess = {
+                    Toast.makeText(context, savedMessage, Toast.LENGTH_SHORT).show()
+                    onBack()
+                },
+                onError = {
+                    Toast.makeText(context, it ?: failedMessage, Toast.LENGTH_SHORT).show()
+                },
+            )
+        },
+        onShare = { rangeMode, start, end, format ->
+            mileageExportViewModel.exportMileage(
+                vehicleID = uiState.vehicleID,
+                input = ExportMileageInput(rangeMode, start, end, format),
+                context = context,
+                onSuccess = { intent ->
+                    context.startActivity(Intent.createChooser(intent, shareIntentTitle))
+                    onBack()
+                },
+                onError = {
+                    Toast.makeText(context, it ?: failedMessage, Toast.LENGTH_SHORT).show()
+                },
+            )
         },
         onCancel = onBack,
         onBack = onBack,
@@ -93,6 +116,7 @@ fun MileageExportScreen(
 @Composable
 fun ExportMileageScreenContent(
     onDownload: (ExportRangeMode, LocalDate?, LocalDate?, ExportFormat) -> Unit,
+    onShare: (ExportRangeMode, LocalDate?, LocalDate?, ExportFormat) -> Unit,
     onCancel: () -> Unit,
     onBack: () -> Unit,
 ) {
@@ -107,17 +131,19 @@ fun ExportMileageScreenContent(
             .padding(16.dp, 48.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
+        // Header
         Row(verticalAlignment = Alignment.CenterVertically) {
             ClickableIcon(
                 icon = Icons.Filled.ChevronLeft,
-                contentDescription = "Go back",
+                contentDescription = stringResource(R.string.common_go_back),
                 onClick = { onBack() })
             Text(
-                text = "Export mileage",
+                text = stringResource(R.string.mileage_export_screen_title),
                 style = MaterialTheme.typography.headlineLarge.copy(fontWeight = FontWeight.Bold)
             )
         }
 
+        // TODO: Move FABs to bottom of shaded surface area with form fields.
         Surface(
             color = MaterialTheme.colorScheme.surfaceVariant,
             shape = RoundedCornerShape(16.dp),
@@ -125,114 +151,176 @@ fun ExportMileageScreenContent(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            LazyColumn(
-                contentPadding = PaddingValues(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Range", style = MaterialTheme.typography.titleMedium)
-                        RadioOption(
-                            label = "Latest (pending, not yet exported)",
-                            selected = rangeMode == ExportRangeMode.LATEST,
-                            onSelect = {
-                                rangeMode =
-                                    ExportRangeMode.LATEST
-                            }
-                        )
-                        RadioOption(
-                            label = "Custom date range",
-                            selected = rangeMode == ExportRangeMode.CUSTOM,
-                            onSelect = {
-                                rangeMode =
-                                    ExportRangeMode.CUSTOM
-                            }
-                        )
-                    }
-                }
-
-                if (rangeMode == ExportRangeMode.CUSTOM) {
+            Column {
+                LazyColumn(
+                    modifier = Modifier.weight(1f),
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
                     item {
-                        DatePickerField(
-                            label = "Start date",
-                            date = startDate,
-                            onDatePicked = { startDate = it }
-                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text("Range", style = MaterialTheme.typography.titleMedium)
+                            RadioOption(
+                                label = stringResource(R.string.mileage_export_range_latest),
+                                selected = rangeMode == ExportRangeMode.LATEST,
+                                onSelect = {
+                                    rangeMode =
+                                        ExportRangeMode.LATEST
+                                }
+                            )
+                            RadioOption(
+                                label = stringResource(R.string.mileage_export_range_custom),
+                                selected = rangeMode == ExportRangeMode.CUSTOM,
+                                onSelect = {
+                                    rangeMode =
+                                        ExportRangeMode.CUSTOM
+                                }
+                            )
+                        }
                     }
+
+                    if (rangeMode == ExportRangeMode.CUSTOM) {
+                        item {
+                            DatePickerField(
+                                label = stringResource(R.string.mileage_export_start_date),
+                                date = startDate,
+                                onDatePicked = { startDate = it }
+                            )
+                        }
+                        item {
+                            DatePickerField(
+                                label = stringResource(R.string.mileage_export_end_date),
+                                date = endDate,
+                                onDatePicked = { endDate = it }
+                            )
+                        }
+                    }
+
                     item {
-                        DatePickerField(
-                            label = "End date",
-                            date = endDate,
-                            onDatePicked = { endDate = it }
-                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Text(stringResource(R.string.mileage_export_format), style = MaterialTheme.typography.titleMedium)
+                            RadioOption(
+                                label = "CSV",
+                                selected = format == ExportFormat.CSV,
+                                onSelect = {
+                                    format =
+                                        ExportFormat.CSV
+                                }
+                            )
+                            RadioOption(
+                                label = "JSON",
+                                selected = format == ExportFormat.JSON,
+                                onSelect = {
+                                    format =
+                                        ExportFormat.JSON
+                                }
+                            )
+                        }
                     }
                 }
 
-                item {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Text("Format", style = MaterialTheme.typography.titleMedium)
-                        RadioOption(
-                            label = "CSV",
-                            selected = format == ExportFormat.CSV,
-                            onSelect = {
-                                format =
-                                    ExportFormat.CSV
-                            }
-                        )
-                        RadioOption(
-                            label = "JSON",
-                            selected = format == ExportFormat.JSON,
-                            onSelect = {
-                                format =
-                                    ExportFormat.JSON
-                            }
-                        )
-                    }
-                }
-            }
-        }
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-        ) {
-            // Cancel FAB
-            FloatingActionButton(
-                onClick = onCancel,
-                modifier = Modifier
-                    .size(64.dp)
-                    .align(Alignment.CenterStart),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Close,
-                    contentDescription = "Cancel export",
-                    modifier = Modifier.size(32.dp)
-                )
-            }
-
-            // Export FAB
-            val exportEnabled =
-                rangeMode == ExportRangeMode.LATEST || (startDate != null && endDate != null)
-            FloatingActionButton(
-                onClick = { if (exportEnabled) onDownload(rangeMode, startDate, endDate, format) },
-                modifier = Modifier
-                    .size(64.dp)
-                    .align(Alignment.CenterEnd),
-                shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp),
-                containerColor = if (exportEnabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                contentColor = if (exportEnabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Send,
-                    contentDescription = "Export",
-                    modifier = Modifier.size(32.dp)
+                ExportActionBar(
+                    exportEnabled = rangeMode == ExportRangeMode.LATEST ||
+                            (startDate != null && endDate != null),
+                    onCancel = onCancel,
+                    onDownload = { onDownload(rangeMode, startDate, endDate, format) },
+                    onShare = { onShare(rangeMode, startDate, endDate, format) },
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun ExportActionBar(
+    exportEnabled: Boolean,
+    onCancel: () -> Unit,
+    onDownload: () -> Unit,
+    onShare: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        ExportFab(
+            icon = Icons.Default.Close,
+            contentDescription = stringResource(R.string.common_cancel),
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            onClick = onCancel,
+        )
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            ExportFab(
+                icon = Icons.Default.Download,
+                contentDescription = stringResource(R.string.mileage_export_download),
+                containerColor = if (exportEnabled) MaterialTheme.colorScheme.secondary
+                else MaterialTheme.colorScheme.surface,
+                contentColor = if (exportEnabled) MaterialTheme.colorScheme.onSecondary
+                else MaterialTheme.colorScheme.onSurface,
+                onClick = { if (exportEnabled) onDownload() },
+            )
+            ExportFab(
+                icon = Icons.Default.Share,
+                contentDescription = stringResource(R.string.mileage_export_share),
+                containerColor = if (exportEnabled) MaterialTheme.colorScheme.primary
+                else MaterialTheme.colorScheme.surface,
+                contentColor = if (exportEnabled) MaterialTheme.colorScheme.onPrimary
+                else MaterialTheme.colorScheme.onSurface,
+                onClick = { if (exportEnabled) onShare() },
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExportActionBar(
+    exportEnabled: Boolean,
+    onCancel: () -> Unit,
+    onExport: () -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        ExportFab(
+            icon = Icons.Default.Close,
+            contentDescription = stringResource(R.string.common_cancel),
+            containerColor = MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            onClick = onCancel,
+        )
+        ExportFab(
+            icon = Icons.Default.Send,
+            contentDescription = stringResource(R.string.common_export),
+            containerColor = if (exportEnabled) MaterialTheme.colorScheme.primary
+            else MaterialTheme.colorScheme.surface,
+            contentColor = if (exportEnabled) MaterialTheme.colorScheme.onPrimary
+            else MaterialTheme.colorScheme.onSurface,
+            onClick = { if (exportEnabled) onExport() },
+        )
+    }
+}
+
+@Composable
+private fun ExportFab(
+    icon: ImageVector,
+    contentDescription: String,
+    containerColor: Color,
+    contentColor: Color,
+    onClick: () -> Unit,
+) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = Modifier.size(64.dp),
+        shape = RoundedCornerShape(16.dp),
+        containerColor = containerColor,
+        contentColor = contentColor,
+    ) {
+        Icon(icon, contentDescription, Modifier.size(32.dp))
     }
 }
 
@@ -288,10 +376,10 @@ private fun DatePickerField(label: String, date: LocalDate?, onDatePicked: (Loca
                             onDatePicked(picked)
                         }
                         showDialog = false
-                    }) { Text("OK") }
+                    }) { Text(stringResource(R.string.common_ok)) }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showDialog = false }) { Text("Cancel") }
+                    TextButton(onClick = { showDialog = false }) { Text(stringResource(R.string.common_close)) }
                 }
             ) {
                 DatePicker(state = datePickerState)

@@ -3,8 +3,10 @@ package com.dylanbeebe.fuelbuddy.ui.core.mileage.edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.ui.core.mileage.form.MileageForm
 
 @Composable
@@ -21,7 +23,7 @@ fun MileageEditScreen(
     val current = mileageWithAttachments ?: return
 
     MileageForm(
-        formTitle = "Edit",
+        formTitle = stringResource(R.string.mileage_edit_screen_title),
         initialMileage = current.mileage,
         attachments = current.attachments,
         vehicleID = current.mileage.vehicleID,
@@ -41,7 +43,7 @@ fun MileageEditScreen(
 @Composable
 private fun MileageFormPreview() {
     MileageForm(
-        formTitle = "Edit",
+        formTitle = stringResource(R.string.mileage_edit_screen_title),
         initialMileage = null,
         attachments = emptyList(),
         vehicleID = "something-something-something",

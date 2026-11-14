@@ -26,10 +26,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.data.room.entity.VehicleEntity
 import com.dylanbeebe.fuelbuddy.domain.model.vehicle.Vehicle
 import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
@@ -86,7 +88,7 @@ fun HomeScreenContent(
             )
             // Title
             Text(
-                text = "Inventory",
+                text = stringResource(R.string.vehicle_list_screen_title),
                 style = MaterialTheme.typography.headlineLarge.copy(
                     fontWeight = FontWeight.Bold
                 )
@@ -116,7 +118,7 @@ fun HomeScreenContent(
                     icon = Icons.Default.Add,
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
-                    contentDescription = "Add vehicle",
+                    contentDescription = stringResource(R.string.vehicle_add),
                     onClick = onAddVehicle,
                     modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
                 )

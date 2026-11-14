@@ -23,8 +23,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.MileageAttachment
@@ -96,7 +98,7 @@ fun MileageForm(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 ClickableIcon(
                     icon = Icons.Filled.ChevronLeft,
-                    contentDescription = "Go back",
+                    contentDescription = stringResource(R.string.common_go_back),
                     onClick = { onBack() })
                 Text(
                     text = formTitle,

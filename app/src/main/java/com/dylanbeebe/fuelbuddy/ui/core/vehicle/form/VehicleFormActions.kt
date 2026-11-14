@@ -22,7 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.ui.component.ActionFAB
 
 @Composable
@@ -39,12 +41,12 @@ fun VehicleFormActions(
             .height(64.dp)
     ) {
         if (canDelete) {
-            // Delete FAB
+            // Delete vehicle FAB
             ActionFAB(
                 icon = Icons.Default.Delete,
                 containerColor = MaterialTheme.colorScheme.error,
                 contentColor = MaterialTheme.colorScheme.onError,
-                contentDescription = "Add vehicle",
+                contentDescription = stringResource(R.string.vehicle_delete),
                 onClick = { showDeleteConfirmation = true },
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -67,12 +69,12 @@ fun VehicleFormActions(
 //            }
         }
 
-        // Save FAB
+        // Save vehicle FAB
         ActionFAB(
             icon = Icons.Default.Save,
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary,
-            contentDescription = "Add vehicle",
+            contentDescription = stringResource(R.string.vehicle_save),
             onClick = onSave,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -95,22 +97,23 @@ fun VehicleFormActions(
 //        }
     }
 
+    // Delete vehicle confirmation alert
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Delete mileage entry?") },
-            text = { Text("This can't be undone.") },
+            title = { Text(stringResource(R.string.delete_vehicle_alert_title)) },
+            text = { Text(stringResource(R.string.delete_vehicle_alert_text)) },
             confirmButton = {
                 TextButton(onClick = {
                     onDelete?.invoke()
                     showDeleteConfirmation = false
                 }) {
-                    Text("Delete")
+                    Text(stringResource(R.string.common_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.common_cancel))
                 }
             })
     }

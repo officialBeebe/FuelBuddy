@@ -1,6 +1,105 @@
 <resources>
+    <!--    Application-->
     <string name="app_name">Fuel Buddy</string>
-    <string name="take_photo">Take Photo</string>
-    <string name="start_capture">Start Capture</string>
-    <string name="stop_capture">Stop Capture</string>
+
+    <!--    Camera-->
+    <string name="take_photo">Take photo</string>
+    <string name="select_photo">Select photo</string>
+
+    <!-- Vehicle Screen Titles -->
+    <string name="vehicle_list_screen_title">Vehicles</string>
+    <string name="vehicle_add_screen_title">Add Vehicle</string>
+    <string name="vehicle_edit_screen_title">Edit Vehicle</string>
+    <string name="vehicle_details_screen_title">\"%1$s\"</string>
+
+    <!--    Vehicle Button/Misc Descriptions-->
+    <string name="vehicle_add">Add a new vehicle</string>
+    <string name="vehicle_edit">Edit vehicle details</string>
+    <string name="vehicle_save">Save vehicle details</string>
+    <string name="vehicle_delete">Delete vehicle</string>
+    <string name="vehicle_export_mileage">Export vehicle mileage logs</string>
+
+    <!--    Vehicle Add/Edit Form-->
+    <string name="vehicle_form_nickname">Nickname</string>
+    <string name="vehicle_form_make">Make</string>
+    <string name="vehicle_form_model">Model</string>
+    <string name="vehicle_form_model_year">Model Year</string>
+    <string name="vehicle_form_license_plate">License Plate</string>
+
+    <!--    Mileage Screen Titles-->
+    <string name="mileage_add_screen_title">Add Mileage</string>
+    <string name="mileage_edit_screen_title">Edit Mileage</string>
+    <string name="mileage_details_screen_title">\"%1$s\"</string>
+    <string name="mileage_export_screen_title">Export mileage</string>
+
+    <!--    Mileage Details Screen-->
+    <string name="mileage_details_header">Details</string>
+    <string name="mileage_details_odometer">Odometer: %1$.1f mi</string>
+    <string name="mileage_details_volume">Volume: %1$.2f gallons</string>
+    <string name="mileage_details_total_cost">Total Cost: %1$s</string>
+    <string name="mileage_details_price_per_gallon">Price per gallon: %1$s</string>
+    <string name="mileage_details_fill_status_full">Fill status: Full tank</string>
+    <string name="mileage_details_fill_status_partial">Fill status: Partial fill</string>
+    <string name="mileage_details_journal_header">Journal</string>
+    <string name="mileage_details_attachments_header">Attachments</string>
+
+    <!--    Mileage Add/Edit Form-->
+    <string name="mileage_form_odometer">Odometer</string>
+    <string name="mileage_form_odometer_suffix">mi</string>
+    <string name="mileage_form_volume">Volume</string>
+    <string name="mileage_form_volume_suffix">gal</string>
+    <string name="mileage_form_total_cost">Total Cost</string>
+    <string name="mileage_form_total_cost_suffix">$</string>
+    <string name="mileage_form_fuel_type">Fuel Type</string>
+    <string name="mileage_form_fuel_type_option">%1$s</string>
+    <string name="mileage_form_full_tank">Full Tank</string>
+    <string name="mileage_form_journal">Journal</string>
+
+    <!--    TODO: Need to go back and replace generic descriptions on FABs with explicit content descriptions for FAB purpose. E.g. "Add" -> "Add mileage log"-->
+    <!--    Mileage Button/Misc Descriptions-->
+    <string name="mileage_export">Export mileage</string>
+    <string name="mileage_attachment">Mileage attachment</string>
+    <string name="mileage_attachment_preview">Mileage attachment preview</string>
+    <string name="mileage_remove_attachment">Remove mileage attachment</string>
+    <string name="mileage_camera_attachment">Take photo attachment</string>
+
+    <!--    Mileage Export-->
+    <string name="mileage_export_share_chooser">Share mileage export</string>
+    <string name="mileage_export_range">Mileage log date range</string>
+    <string name="mileage_export_range_latest">Latest (pending, not yet exported)</string>
+    <string name="mileage_export_range_custom">Custom date range</string>
+    <string name="mileage_export_start_date">Start date</string>
+    <string name="mileage_export_end_date">End date</string>
+    <string name="mileage_export_format">Format</string>
+    <string name="mileage_export_download">Download</string>
+    <string name="mileage_export_share">Share</string>
+
+    <string name="mileage_export_no_entries">No mileage entries to export</string>
+    <string name="mileage_export_start_date_required">Start date required for custom range</string>
+    <string name="mileage_export_end_date_required">End date required for custom range</string>
+    <string name="mileage_export_media_insert_failed">MediaStore insert failed for %1$s</string>
+    <string name="mileage_export_media_stream_failed">Could not open output stream for %1$s</string>
+
+    <string name="mileage_export_download_success">Download mileage log success</string>
+    <string name="mileage_export_failed">Download or share mileage log export failure</string>
+    <string name="mileage_export_share_intent_title">Download or share mileage log export</string>
+
+    <!--    Common-->
+    <string name="common_go_back">Go back</string>
+    <string name="common_ok">OK</string>
+    <string name="common_close">Close</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_add">Add</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_save">Save</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_export">Export</string>
+
+    <!--    Delete Alerts-->
+    <string name="delete_vehicle_alert_title">Delete vehicle?</string>
+    <string name="delete_vehicle_alert_text">This cannot be undone.</string>
+
+    <string name="delete_mileage_alert_title">Delete mileage entry?</string>
+    <string name="delete_mileage_alert_text">This cannot be undone.</string>
+
 </resources>

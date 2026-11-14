@@ -29,8 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.rememberCameraLauncher
 import com.dylanbeebe.fuelbuddy.ui.component.rememberMultiPhotoPickerLauncher
@@ -80,7 +82,7 @@ fun MileageFormAttachments(
                 Box(modifier = Modifier.size(80.dp)) {
                     SubcomposeAsyncImage(
                         model = File(displayItem.filePath),
-                        contentDescription = "Attachment",
+                        contentDescription = stringResource(R.string.mileage_attachment),
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
                             .fillMaxSize()
@@ -126,7 +128,7 @@ fun MileageFormAttachments(
                             .size(20.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.error)
-                            .clickable(onClickLabel = "Remove attachment") {
+                            .clickable(onClickLabel = stringResource(R.string.mileage_remove_attachment)) {
                                 when (displayItem) {
                                     is AttachmentDisplayItem.Existing ->
                                         onRemoveExisting(displayItem.attachment)
@@ -158,7 +160,7 @@ fun MileageFormAttachments(
                     .size(80.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.primary)
-                    .clickable(onClickLabel = "Take photo") { takePhoto() },
+                    .clickable(onClickLabel = stringResource(R.string.take_photo)) { takePhoto() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -180,7 +182,7 @@ fun MileageFormAttachments(
                     .size(80.dp)
                     .clip(RoundedCornerShape(16.dp))
                     .background(MaterialTheme.colorScheme.primary)
-                    .clickable(onClickLabel = "Pick photo") { pickPhotos() },
+                    .clickable(onClickLabel = stringResource(R.string.select_photo)) { pickPhotos() },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(

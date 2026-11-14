@@ -4,7 +4,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.ui.core.vehicle.form.VehicleForm
 
 @Composable
@@ -21,7 +23,7 @@ fun VehicleEditScreen(
     val current = vehicle ?: return
 
     VehicleForm(
-        formTitle = "Edit",
+        formTitle = stringResource(R.string.vehicle_edit_screen_title),
         initialVehicle = current,
         onSave = { input ->
             viewModel.update(current.vehicle.vehicleID, input)

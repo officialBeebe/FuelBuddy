@@ -32,10 +32,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
 import com.dylanbeebe.fuelbuddy.domain.model.vehicle.Vehicle
@@ -114,12 +116,15 @@ fun VehicleScreenContent(
                 // Go back
                 ClickableIcon(
                     icon = Icons.Filled.ChevronLeft,
-                    contentDescription = "Go back",
+                    contentDescription = stringResource(R.string.common_go_back),
                     onClick = { onBack() }
                 )
                 // Title
                 Text(
-                    text = vehicleWithAttachments.let { "\"${it?.vehicle?.nickname}\"" },
+                    text = stringResource(
+                        R.string.vehicle_details_screen_title,
+                        vehicleWithAttachments?.vehicle?.nickname.orEmpty()
+                    ),
                     style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold
                     )
@@ -132,13 +137,13 @@ fun VehicleScreenContent(
             ) {
                 ClickableIcon(
                     icon = Icons.Filled.Download,
-                    contentDescription = "Download mileage export",
+                    contentDescription = stringResource(R.string.vehicle_export_mileage),
                     onClick = { onExportMileage(vehicle.vehicleID) },
                     modifier = Modifier.size(24.dp)
                 )
                 ClickableIcon(
                     icon = Icons.Filled.Edit,
-                    contentDescription = "Edit vehicle details",
+                    contentDescription = stringResource(R.string.vehicle_edit),
                     onClick = { onEditVehicle(vehicle.vehicleID) },
                     modifier = Modifier.size(24.dp)
                 )
@@ -188,7 +193,7 @@ fun VehicleScreenContent(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Add mileage",
+                            contentDescription = stringResource(R.string.vehicle_add),
                             modifier = Modifier.size(32.dp)
                         )
                     }

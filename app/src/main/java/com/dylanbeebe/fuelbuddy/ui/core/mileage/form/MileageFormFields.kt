@@ -15,13 +15,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.FuelType
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,10 +50,9 @@ fun MileageFormFields(
         OutlinedTextField(
             value = odometerMiles,
             onValueChange = onOdometerMilesChange,
-            label = { Text("Odometer (mi)") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Decimal
-            ),
+            label = { Text(stringResource(R.string.mileage_form_odometer)) },
+            suffix = { Text(stringResource(R.string.mileage_form_odometer_suffix)) },
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth(),
         )
 
@@ -60,7 +60,8 @@ fun MileageFormFields(
         OutlinedTextField(
             value = volumeGallons,
             onValueChange = onVolumeGallonsChange,
-            label = { Text("Volume (gallons)") },
+            label = { Text(stringResource(R.string.mileage_form_volume)) },
+            suffix = { Text(stringResource(R.string.mileage_form_volume_suffix)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -69,12 +70,12 @@ fun MileageFormFields(
         OutlinedTextField(
             value = totalDollars,
             onValueChange = onTotalDollarsChange,
-            label = { Text("Total cost ($)") },
+            label = { Text(stringResource(R.string.mileage_form_total_cost)) },
+            suffix = { Text(stringResource(R.string.mileage_form_total_cost_suffix)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
             modifier = Modifier.fillMaxWidth(),
         )
 
-        // Fuel type dropdown
         // Fuel type dropdown
         val fuelTypeLabel = fuelType.name
             .lowercase()
@@ -88,7 +89,7 @@ fun MileageFormFields(
                 value = fuelTypeLabel,
                 onValueChange = {},
                 readOnly = true,
-                label = { Text("Fuel type") },
+                label = { Text(stringResource(R.string.mileage_form_fuel_type)) },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(
                         expanded = showFuelTypeMenu
@@ -109,7 +110,12 @@ fun MileageFormFields(
                         .replaceFirstChar { it.uppercase() }
 
                     DropdownMenuItem(
-                        text = { Text(optionLabel) },
+                        text = {
+                            Text(stringResource(
+                                R.string.mileage_form_fuel_type_option,
+                                optionLabel
+                            ))
+                        },
                         onClick = {
                             onFuelTypeChange(option)
                             showFuelTypeMenu = false
@@ -125,14 +131,14 @@ fun MileageFormFields(
                 checked = isFullTank,
                 onCheckedChange = onFullTankChange
             )
-            Text("Full tank")
+            Text(stringResource(R.string.mileage_form_full_tank))
         }
 
         // Journal
         OutlinedTextField(
             value = journal,
             onValueChange = onJournalChange,
-            label = { Text("Journal") },
+            label = { Text(stringResource(R.string.mileage_form_journal)) },
             modifier = Modifier.fillMaxWidth(),
         )
     }

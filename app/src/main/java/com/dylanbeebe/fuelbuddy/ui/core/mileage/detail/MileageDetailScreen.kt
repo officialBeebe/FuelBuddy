@@ -37,19 +37,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
+import com.dylanbeebe.fuelbuddy.R
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.Mileage
 import com.dylanbeebe.fuelbuddy.domain.model.mileage.MileageAttachment
 import com.dylanbeebe.fuelbuddy.ui.component.ClickableIcon
 import java.io.File
+import java.text.NumberFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun MileageDetailScreen(
@@ -104,13 +108,13 @@ fun MileageScreenContent(
                 // Go back
                 ClickableIcon(
                     icon = Icons.Filled.ChevronLeft,
-                    contentDescription = "Go back",
+                    contentDescription = stringResource(R.string.common_go_back),
                     onClick = { onBack() })
                 // Title
                 val dateText = mileage?.timestamp?.let {
                     Instant.parse(it).atZone(ZoneId.systemDefault()).toLocalDate()
-                        .format(DateTimeFormatter.ofPattern("MMM d, yyyy"))
-                } ?: ""
+                        .format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+                }.orEmpty()
                 Text(
                     text = dateText, style = MaterialTheme.typography.headlineLarge.copy(
                         fontWeight = FontWeight.Bold
@@ -120,12 +124,12 @@ fun MileageScreenContent(
 
             // Edit Mileage Icon
 //            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                ClickableIcon(
-                    icon = Icons.Filled.Edit,
-                    contentDescription = "Edit mileage details",
-                    onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
-                    modifier = Modifier.size(24.dp)
-                )
+            ClickableIcon(
+                icon = Icons.Filled.Edit,
+                contentDescription = stringResource(R.string.common_edit),
+                onClick = { onEditMileage(mileage?.mileageID.orEmpty()) },
+                modifier = Modifier.size(24.dp)
+            )
 //            }
         }
 
@@ -145,39 +149,75 @@ fun MileageScreenContent(
                 if (mileage != null) {
                     item {
                         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            // Details section
-                            // Heading
+                            // Details Section Heading
                             Text(
-                                text = "Details",
+                                text = stringResource(R.string.mileage_details_header),
                                 style = MaterialTheme.typography.headlineMedium.copy(
                                     fontWeight = FontWeight.ExtraBold
                                 )
                             )
+
                             // Odometer
                             Text(
-                                text = "Odometer: %.1f mi".format(mileage.odometerMiles),
+                                text = stringResource(
+                                    R.string.mileage_details_odometer,
+                                    mileage.odometerMiles
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
-                            // Gallons
+
+                            // Volume
                             Text(
-                                text = "Volume: %.2f gallons".format(mileage.volumeGallons),
+                                text = stringResource(
+                                    R.string.mileage_details_volume,
+                                    mileage.volumeGallons
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
+
                             // Total cost
+                            val costText = remember(mileage.totalDollars) {
+                                NumberFormat.getCurrencyInstance().format(mileage.totalDollars)
+                            }
                             Text(
-                                text = "Total cost: $%.2f".format(mileage.totalDollars),
+                                text = stringResource(
+                                    R.string.mileage_details_total_cost,
+                                    costText
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
+
+                            // TODO: Rename mileage (and vehicle) model fields to unit-agnostic names
+                            // (odometerMiles -> odometer, volumeGallons -> volume, totalDollars -> totalCost)
+                            // and add unit/currency settings.
+
                             // Price per gallon
+                            val pricePerGallon = if (mileage.volumeGallons > 0) {
+                                mileage.totalDollars / mileage.volumeGallons
+                            } else null
+                            val pricePerGallonText = remember(pricePerGallon) {
+                                NumberFormat.getCurrencyInstance().apply {
+                                    minimumFractionDigits = 3
+                                    maximumFractionDigits = 3
+                                }.format(pricePerGallon)
+                            }
                             Text(
-                                text = "Price per gallon: $%.2f/gallon".format(mileage.totalDollars / mileage.volumeGallons),
+                                text = stringResource(
+                                    R.string.mileage_details_price_per_gallon,
+                                    pricePerGallonText
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
+
                             // Fill status
                             Text(
-                                text = "Fill status: " + if (mileage.isFullTank) "Full tank" else "Partial fill",
+                                text = stringResource(
+                                    if (mileage.isFullTank) R.string.mileage_details_fill_status_full
+                                    else R.string.mileage_details_fill_status_partial
+                                ),
                                 style = MaterialTheme.typography.bodyLarge,
                             )
+
                             // Fuel type
                             Text(
                                 text = "Fuel type: ${
@@ -185,12 +225,13 @@ fun MileageScreenContent(
                                         .replaceFirstChar { it.uppercase() }
                                 }", style = MaterialTheme.typography.bodyLarge)
 
-                            // Journal section
+
+                            // Journal Section
                             mileage.journal?.let { journal ->
                                 HorizontalDivider()
                                 // Heading
                                 Text(
-                                    text = "Journal",
+                                    text = stringResource(R.string.mileage_details_journal_header),
                                     style = MaterialTheme.typography.headlineMedium.copy(
                                         fontWeight = FontWeight.ExtraBold
                                     )
@@ -203,12 +244,13 @@ fun MileageScreenContent(
                                 )
                             }
 
-                            // Attachments section
+
+                            // Attachments Section
                             if (mileageAttachmentEntities.isNotEmpty()) {
                                 HorizontalDivider()
                                 // Heading
                                 Text(
-                                    text = "Attachments",
+                                    text = stringResource(R.string.mileage_details_attachments_header),
                                     style = MaterialTheme.typography.headlineMedium.copy(
                                         fontWeight = FontWeight.ExtraBold
                                     )
@@ -224,7 +266,7 @@ fun MileageScreenContent(
                                     mileageAttachmentEntities.forEach { attachment ->
                                         SubcomposeAsyncImage(
                                             model = File(attachment.filepath),
-                                            contentDescription = "Attachment",
+                                            contentDescription = stringResource(R.string.mileage_attachment),
                                             contentScale = ContentScale.Crop,
                                             modifier = Modifier
                                                 .size(80.dp)
@@ -288,19 +330,19 @@ fun MileageScreenContent(
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Delete mileage entry?") },
-            text = { Text("This can't be undone.") },
+            title = { Text(stringResource(R.string.delete_mileage_alert_title)) },
+            text = { Text(stringResource(R.string.delete_mileage_alert_text)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteConfirmation = false
                     mileage?.let { onDeleteMileage() }
                 }) {
-                    Text("Delete")
+                    Text(stringResource(R.string.common_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.common_cancel))
                 }
             })
     }
@@ -309,7 +351,7 @@ fun MileageScreenContent(
         Dialog(onDismissRequest = { viewingAttachmentPath = null }) {
             AsyncImage(
                 model = File(path),
-                contentDescription = "Attachment preview",
+                contentDescription = stringResource(R.string.mileage_attachment_preview),
                 contentScale = ContentScale.Fit,
                 modifier = Modifier
                     .fillMaxWidth()

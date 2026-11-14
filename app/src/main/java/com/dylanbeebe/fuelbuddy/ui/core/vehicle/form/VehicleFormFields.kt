@@ -8,8 +8,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.dylanbeebe.fuelbuddy.R
 
 @Composable
 fun VehicleFormFields(
@@ -32,7 +34,7 @@ fun VehicleFormFields(
         OutlinedTextField(
             value = nickname,
             onValueChange = onNicknameChange,
-            label = { Text("Nickname") },
+            label = { Text(stringResource(R.string.vehicle_form_nickname)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text
             ),
@@ -43,7 +45,7 @@ fun VehicleFormFields(
         OutlinedTextField(
             value = make,
             onValueChange = onMakeChange,
-            label = { Text("Make") },
+            label = { Text(stringResource(R.string.vehicle_form_make)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text
             ),
@@ -54,7 +56,7 @@ fun VehicleFormFields(
         OutlinedTextField(
             value = model,
             onValueChange = onModelChange,
-            label = { Text("Model") },
+            label = { Text(stringResource(R.string.vehicle_form_model)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text
             ),
@@ -65,7 +67,7 @@ fun VehicleFormFields(
         OutlinedTextField(
             value = modelYear,
             onValueChange = onModelYearChange,
-            label = { Text("Model Year") },
+            label = { Text(stringResource(R.string.vehicle_form_model_year)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
             ),
@@ -76,7 +78,7 @@ fun VehicleFormFields(
         OutlinedTextField(
             value = plate,
             onValueChange = onPlateChange,
-            label = { Text("Plate") },
+            label = { Text(stringResource(R.string.vehicle_form_license_plate)) },
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Text
             ),

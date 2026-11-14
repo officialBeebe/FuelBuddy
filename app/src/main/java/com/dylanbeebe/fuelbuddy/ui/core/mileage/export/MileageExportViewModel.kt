@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.coroutines.cancellation.CancellationException
 
 /**VehicleMileageViewModel
  *
@@ -52,33 +53,45 @@ class MileageExportViewModel(
                 VehicleMileageUiState()
             )
 
+    private fun <T> launchExport(
+        block: suspend () -> T,
+        onSuccess: (T) -> Unit,
+        onError: (String?) -> Unit,
+    ) {
+        viewModelScope.launch {
+            try {
+                onSuccess(block())
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                onError(e.message)
+            }
+        }
+    }
+
     fun downloadMileage(
         vehicleID: String,
         input: ExportMileageInput,
         context: Context,
-        onReady: (Intent) -> Unit
-    ) {
-        viewModelScope.launch {
-            try {
-                val uri: Uri = downloadMileage.invoke(vehicleID, input, context)
-                Toast.makeText(context, "Saved to Downloads", Toast.LENGTH_SHORT).show()
-            } catch (e: Exception) {
-                Toast.makeText(context, e.message ?: "Export failed", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+        onSuccess: () -> Unit,
+        onError: (String?) -> Unit,
+    ) = launchExport(
+        block = { downloadMileage.invoke(vehicleID, input, context) },
+        onSuccess = { onSuccess() },
+        onError = onError,
+    )
 
     fun exportMileage(
         vehicleID: String,
         input: ExportMileageInput,
         context: Context,
-        onReady: (Intent) -> Unit
-    ) {
-        viewModelScope.launch {
-            val intent = exportMileage.invoke(vehicleID, input, context)
-            onReady(intent) // file sharing intent
-        }
-    }
+        onSuccess: (Intent) -> Unit,
+        onError: (String?) -> Unit,
+    ) = launchExport(
+        block = { exportMileage.invoke(vehicleID, input, context) },
+        onSuccess = onSuccess,
+        onError = onError,
+    )
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
