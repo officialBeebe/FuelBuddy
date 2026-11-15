@@ -2,8 +2,6 @@
 
 A succinct Android app for recording vehicle mileage.
 
-> **Status:** Alpha
-
 ## Features
 
 - Add, view, edit, and delete vehicles.
@@ -12,7 +10,7 @@ A succinct Android app for recording vehicle mileage.
 - Average MPG displayed on vehicle details screen **(WIP)**.
 - Price per gallon displayed on the vehicle mileage details screen.
 - Vehicle mileage records listed newest-first, non-exported records visually marked.
-- Export mileage records as CSV or JSON via system share utilities (Email, SMS, etc).
+- Export mileage records as CSV or JSON to device or share via system share utilities (Email, SMS, etc.).
 
 ## Requirements
 
@@ -38,7 +36,7 @@ This project was built as a chance to explore Jetpack Compose and MVVM Clean Arc
 
 ### Average MPG
 
-Average MPG is computed from the vehicle's last 10 mileage records: total miles driven divided by total gallons pumped with non-full-tank records included as is.
+Average MPG is computed from the vehicle's last 10 mileage records: total miles driven divided by total gallons pumped, with non-full-tank records included as is.
 
 ### Attachments
 
@@ -51,7 +49,7 @@ From the vehicle details screen, tap the export button, then choose:
 1. **Range:** latest (non-exported) records, or custom date range.
 2. **Format:** CSV or JSON.
 
-Export is then handed off to a system share activity, such as email or SMS. Once successful, each exported record is updated to display its exported status.
+The export is then handed off to a system-share activity, such as email or SMS. Once the export is successful, each exported record is updated to display its export status.
 
 ### Timestamps
 
