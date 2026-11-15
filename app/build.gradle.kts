@@ -24,7 +24,7 @@ android {
         minSdk = 34
         targetSdk = 36
         versionCode = 4
-        versionName = "1.3"
+        versionName = "1.3.1"
 
         // Required for src/androidTest (connectedDebugAndroidTest).
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
