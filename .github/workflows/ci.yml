@@ -73,8 +73,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - uses: gradle/actions/setup-gradle@v4
-      # Runs assemble and check (includes lint and unit tests)
-      - run: ./gradlew build
+      # Debug only: release signing in cd.yml
+      - run: ./gradlew assembleDebug testDebugUnitTest
 
   dependency-submission:
     name: Dependency Submission
