@@ -14,4 +14,3 @@ jobs:
           node-version: '24'
       - runs: npm install -g bats
       - runs: bats -v
-
