@@ -26,24 +26,24 @@ class MileageDetailViewModel(
     private val _mileageID: String? = savedStateHandle["mileageID"]
     private val _vehicleID: String? = savedStateHandle["vehicleID"]
 
-    val uiState: StateFlow<com.dylanbeebe.fuelbuddy.ui.core.mileage.detail.MileageDetailUiState> =
+    val uiState: StateFlow<MileageDetailUiState> =
         if (_mileageID == null) {
             MutableStateFlow(
-                _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.detail.MileageDetailUiState(
+                MileageDetailUiState(
                     vehicleID = _vehicleID
                 )
             ).asStateFlow()
         } else {
             mileageRepositoryRoomImpl.observeMileageWithAttachments(_mileageID)
                 .map {
-                    _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.detail.MileageDetailUiState(
+                    MileageDetailUiState(
                         mileage = it?.mileage,
                         mileageAttachments = (it?.attachments ?: emptyList()),
                         vehicleID = it?.mileage?.vehicleID ?: _vehicleID,
                     )
                 }
                 .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000),
-                    _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.detail.MileageDetailUiState(
+                    MileageDetailUiState(
                         vehicleID = _vehicleID
                     )
                 )
@@ -81,7 +81,7 @@ class MileageDetailViewModel(
                 val savedStateHandle = createSavedStateHandle()
                 val app =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as FuelBuddyApplication)
-                _root_ide_package_.com.dylanbeebe.fuelbuddy.ui.core.mileage.detail.MileageDetailViewModel(
+                MileageDetailViewModel(
                     savedStateHandle,
                     app.mileageRepositoryRoomImpl
                 )
